@@ -62,7 +62,7 @@ class Wenxuan_model extends CI_Model {
 		}
 
 		// Get Previous Year
-		$this->db->select('y.*, p.year')
+		$this->db->select('y.wenxuan_id, y.package_id, y.fullpayment, y.status, y.gift_taken, y.md5_id, y.start_date, y.end_date, y.remarks, p.year')
 			->from('tbs_wenxuan_subscriber_year y')
 			->join('tbs_wenxuan_subscriber_package p','y.package_id = p.package_id', 'left')
 			->where('p.year >=',date('Y') - 1);
@@ -74,10 +74,51 @@ class Wenxuan_model extends CI_Model {
 		return $res;
 	}
 
+	public function get_subscriber_list($year){
+		$this->db = $this->load->database('local', TRUE);
+
+		// Get All Contact
+		$this->db->select('s.*')
+			->from('tbs_wenxuan_subscriber s')
+			->where('s.type','contact');
+		$i = $this->db->get();
+		foreach($i->result_array() as $r){
+			$res2[$r['wenxuan_id']] = $r;
+		}
+
+		// Get Subscriber
+		$this->db->select('s.*, y.wenxuan_id, y.package_id, y.fullpayment, y.status, y.gift_taken, y.md5_id, y.start_date, y.end_date, y.remarks, p.year')
+			->from('tbs_wenxuan_subscriber_year y')
+			->join('tbs_wenxuan_subscriber_package p','y.package_id = p.package_id', 'left')
+			->join('tbs_wenxuan_subscriber s','s.wenxuan_id = y.wenxuan_id')
+			->where('p.year =',$year)
+			->where('s.type','contact');
+		$i = $this->db->get();
+		foreach($i->result_array() as $r){
+			$res[$r['wenxuan_id']] = $res2[$r['wenxuan_id']];
+			$res[$r['wenxuan_id']]['package'][$r['year']] = $r;
+		}
+
+		return $res;
+	}
+
 	public function replace_package_year($packages,$wenxuan_id){
 		$this->db = $this->load->database('local', TRUE);
-		$this->db->replace('tbs_wenxuan_subscriber_year',array_merge(array('wenxuan_id' => $wenxuan_id),$packages));
 
+		$exists = $this->db->from('tbs_wenxuan_subscriber_year')
+			->where('wenxuan_id',$wenxuan_id)
+			->where('package_id',$packages['package_id'])
+			->get()
+			->num_rows();
+
+		if($exists){
+			$this->db
+				->where('wenxuan_id',$wenxuan_id)
+				->where('package_id',$packages['package_id'])
+				->update('tbs_wenxuan_subscriber_year',$packages);
+		}else{
+			$this->db->replace('tbs_wenxuan_subscriber_year',array_merge(array('wenxuan_id' => $wenxuan_id),$packages));
+		}
 		return ($this->db->affected_rows() != 1) ? false : true;
 	}
 
@@ -142,5 +183,15 @@ class Wenxuan_model extends CI_Model {
 		$i = $this->db->query($query);
 		$res = $i->result_array();
 		if(count($res)) return $res[0];
+	}
+
+	public function delete_contact($wenxuan_id){
+
+		$this->db = $this->load->database('local', TRUE);
+		$this->db->delete('tbs_wenxuan_subscriber_year', array('wenxuan_id' => $wenxuan_id));
+
+		$this->db->delete('tbs_wenxuan_subscriber', array('wenxuan_id' => $wenxuan_id));
+
+
 	}
 }

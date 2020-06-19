@@ -124,16 +124,7 @@ function delete_data(){
     <div class="row">
         <div class="box">
             <div class="col-lg-8 col-lg-offset-2 text-center">
-                <h1>個人訂閱</h1>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="box text-right">
-            <div class="col-lg-10 col-lg-offset-1">
-                <button type="button" id="btn_modal_add_new" class="btn btn-info" onclick="load_box('new');" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus-square fa-fw" aria-hidden="true"></i> 添加新個人檔案</button>
-                <br /><br />
+                <h1>文宣功德主名單（ <?=$year;?> 年）</h1>
             </div>
         </div>
     </div>
@@ -141,7 +132,7 @@ function delete_data(){
 
     <div class="row">
         <div class="box">
-            <div class="col-lg-10 col-lg-offset-1">
+            <div class="col-lg-8 col-lg-offset-2">
 
                 
                 <table id="example" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
@@ -149,26 +140,20 @@ function delete_data(){
                         <tr class="info">
                             <td rowspan=2><b>名字<br /><small>** 點擊可查看 / 更新資料 **</small></b></td>
                             <td rowspan=2><b>聯絡</b></td>
-                            <td colspan=2><b>真佛報</b></td>
-                            <td colspan=2><b>燃燈</b></td>
-                            <td colspan=2><b>文宣功德主</b></td>
+                            <td colspan=<?=sizeof($total);?>><b>功德主方案</b></td>
+                            <td rowspan=2><b>已發贈品</b></td>
                         </tr>
                         <tr class="info">
-                            <td><b>贈送</b></td>
-                            <td><b>訂閱</b></td>
-                            <td><b>贈送</b></td>
-                            <td><b>訂閱</b></td>
-                            <td><b><?= date('Y'); ?></b></td>
-                            <td><b><?= date('Y') - 1; ?></b></td>
+                            <?php foreach($total as $package_id => $t):?>
+                            <td><b><?= $package[$package_id]['package_name'].' (RM '.$package[$package_id]['package_amount'].')'; ?></b></td>
+                            <?php endforeach;?>
                         </tr>
                         <tr class="success">
                             <td colspan=2><b>總數</b></td>
-                            <td><b><?= $total['tbnews_free']; ?></b></td>
-                            <td><b><?= $total['tbnews_paid']; ?></b></td>
-                            <td><b><?= $total['randeng_free']; ?></b></td>
-                            <td><b><?= $total['randeng_paid']; ?></b></td>
-                            <td><b></b></td>
-                            <td><b></b></td>
+                            <?php foreach($total as $package_id => $t):?>
+                            <td><b><?= $t; ?></b></td>
+                            <?php endforeach;?>
+                            <td><b><?= $gift_sent; ?></b></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -177,12 +162,11 @@ function delete_data(){
                                 <td><input type=hidden value='<?= json_encode($c); ?>' />
                                     <a href='javascript:void(0)' onclick="load_box($(this).prev().val())" data-toggle="modal" data-target="#myModal"><?= $c['wenxuan_name']; ?></a></td>
                                 <td><?= $c['wenxuan_contact']; ?></td>
-                                <td><?= $c['tbnews_free']; ?></td>
-                                <td><?= $c['tbnews_paid']; ?></td>
-                                <td><?= $c['randeng_free']; ?></td>
-                                <td><?= $c['randeng_paid']; ?></td>
-                                <td><?= isset($c['package'][date('Y')]['package_id']) ? $package[$c['package'][date('Y')]['package_id']]['package_name'] : '-'; ?></td>
-                                <td><?= isset($c['package'][date('Y')-1]['package_id']) ? $package[$c['package'][date('Y')-1]['package_id']]['package_name'] : '-'; ?></td>
+                                <?php foreach($total as $package_id => $t):?>
+                                <td><b><?= ($package_id == $c['package'][$year]['package_id']) ? '<i class="fa fa-check" aria-hidden="true"></i>' : ""; ?></b></td>
+                                <?php endforeach;?>
+                                <td><b><?= $c['package'][$year]['gift_taken'] ? '<i class="fa fa-check" aria-hidden="true"></i>' : ""; ?></b></td>
+
                         <?php endforeach; ?>
                     </tbody>
                 </table>

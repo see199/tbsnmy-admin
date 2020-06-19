@@ -18,12 +18,19 @@
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">真佛報 & 燃燈 <span class="caret"></span></a>
                   <ul class="dropdown-menu" role="menu">
-                    <li><a href="<?= base_url(); ?>wenxuan/lists/chapter"><i class="fa fa-dashboard fa-fw"></i> 道場訂閱</a></li>
-                    <li><a href="<?= base_url(); ?>wenxuan/lists/contact"><i class="fa fa-dashboard fa-fw"></i> 個人訂閱</a></li>
+                    <li><a href="<?= base_url(); ?>wenxuan/lists/chapter"><i class="fa fa-university fa-fw"></i> 道場訂閱</a></li>
+                    <li><a href="<?= base_url(); ?>wenxuan/lists/contact"><i class="fa fa-user fa-fw"></i> 個人訂閱</a></li>
                   </ul>
                 </li>
 
-                <li><a href="<?= base_url(); ?>wenxuan/lists/package"> 文宣方案</a></li>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">文宣功德主 <span class="caret"></span></a>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="<?= base_url(); ?>wenxuan/lists/package"><i class="fa fa-book fa-fw"></i> 文宣方案</a></li>
+                    <li><a href="<?= base_url(); ?>wenxuan/lists/subscriber"><i class="fa fa-users fa-fw"></i> 功德主 (今年)</a></li>
+                    <li><a href="<?= base_url(); ?>wenxuan/lists/subscriber/<?=date('Y') -1;?>"><i class="fa fa-users fa-fw"></i> 功德主 (去年)</a></li>
+                  </ul>
+                </li>
               </ul>
 
               <ul class="nav navbar-nav navbar-right" style='margin-right:10px;'>

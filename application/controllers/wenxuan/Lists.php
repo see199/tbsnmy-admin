@@ -67,6 +67,30 @@ class Lists extends CI_Controller {
 
 	}
 
+	public function subscriber($year=''){
+		if(!$year) $year = date('Y');
+
+		$data = $this->data;
+		$gift_sent = 0;
+
+		$list = $this->wenxuan_model->get_subscriber_list($year);
+		//echo'<pre>';print_r($list);
+		foreach($list as $wenxuan_id => $subscriber){
+			@$total[$subscriber['package'][$year]['package_id']] += 1;
+			$gift_sent += $subscriber['package'][$year]['gift_taken'];
+		}
+		$data['list']  = $list;
+		$data['total'] = $total;
+		$data['year']  = $year;
+		$data['gift_sent'] = $gift_sent;
+		$data['package']   = $this->wenxuan_model->get_package();
+
+		$this->load->view('wenxuan/header', $data);
+		$this->load->view('wenxuan/navigation', $data);
+		$this->load->view('wenxuan/lists_subscriber_view',$data);
+		$this->load->view('wenxuan/footer');
+	}
+
 	public function package(){
 		$data = $this->data;
 
@@ -106,6 +130,7 @@ class Lists extends CI_Controller {
 
 		if($post_data['wenxuan_id']){
 			foreach($package_data as $pid => $new_v){
+				$new_v['md5_id'] = md5($post_data['wenxuan_id'].$new_v['package_id']);
 				if($new_v['package_id']) $this->wenxuan_model->replace_package_year($new_v,$post_data['wenxuan_id']);
 			}
 		}
@@ -116,8 +141,10 @@ class Lists extends CI_Controller {
 	public function ajax_generate_package_tbody(){
 		$post_data = $this->input->post();
 		$html = $this->load->view('wenxuan/ajax_generate_package_tbody_view',array(
-			'sp'      => $post_data,
+			'sp'      => isset($post_data['package']) ? $post_data['package'] : array(),
 			'package' => $this->wenxuan_model->get_package(),
+			'wenxuan_contact' => $post_data['wenxuan_contact'],
+			'receipt_url' => $this->config->item('url_wenxuan_form').'	/receipt/',
 		), TRUE);
 		echo json_encode(array('html' => $html));
 	}
@@ -125,6 +152,13 @@ class Lists extends CI_Controller {
 	public function ajax_package_update(){
 		$post_data = $this->input->post();
 		$this->wenxuan_model->replace_package($post_data,$post_data['package_id']);
+		echo 1;
+	}
+
+	public function ajax_delete_contact(){
+		$post_data = $this->input->post();
+		$this->wenxuan_model->delete_contact($post_data['wenxuan_id']);
+		$this->snapshot_list();
 		echo 1;
 	}
 
@@ -141,7 +175,7 @@ class Lists extends CI_Controller {
 			$report['package'][$s['year']][$s['package_name']] = $s;
 		}
 
-		echo '<pre>';print_r($report);
+		//echo '<pre>';print_r($report);
 		write_file($this->config->item('file_wenxuan_snapshot'),json_encode($report));
 	}
 
@@ -201,7 +235,7 @@ class Lists extends CI_Controller {
 		}
 	}
 
-	public function process_remarks(){
+	private function process_remarks(){
 
 		$this->db = $this->load->database('local', TRUE);
 
@@ -230,6 +264,28 @@ class Lists extends CI_Controller {
 			$this->db = $this->load->database('local', TRUE);
 			$this->db->replace('tbs_wenxuan_subscriber_year',array_merge($array,$array));
 		}
+	}
+
+	public function update_md5(){
+		$this->db = $this->load->database('local', TRUE);
+
+		$query = "SELECT wenxuan_id,package_id FROM tbs_wenxuan_subscriber_year WHERE md5_id = ''";
+		//echo $query;
+		$i = $this->db->query($query);
+		$res = $i->result_array();
+		
+		echo "<pre>";
+		print_r($res);
+		//$md5_id = md5($wenxuan_id.$package_id);
+		foreach($res as $r){
+			$this->db
+				->where('wenxuan_id',$r['wenxuan_id'])
+				->where('package_id',$r['package_id'])
+				->update('tbs_wenxuan_subscriber_year',array(
+					'md5_id' => md5($r['wenxuan_id'].$r['package_id'])
+				));
+		}
+
 	}
 
 }

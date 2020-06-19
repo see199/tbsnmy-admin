@@ -12,19 +12,21 @@
                 
                 <table class="table table-bordered">
                   <thead>
-                    <tr class='warning'><td colspan=7><b>刊物統計</b></td></tr>
+                    <tr class='warning'><td colspan=9><b>刊物統計</b></td></tr>
                     <tr class="info">
                         <td rowspan=2><b></b></td>
-                        <td colspan=2><b>真佛報</b></td>
-                        <td colspan=2><b>燃燈</b></td>
+                        <td colspan=3><b>真佛報</b></td>
+                        <td colspan=3><b>燃燈</b></td>
                         <td rowspan=2><b>文集</b></td>
                         <td rowspan=2><b>最後更新</b></td>
                     </tr>
                     <tr class="info">
                         <td><b>贈送</b></td>
                         <td><b>訂閱</b></td>
+                        <td><b>總數</b></td>
                         <td><b>贈送</b></td>
                         <td><b>訂閱</b></td>
+                        <td><b>總數</b></td>
                     </tr>
                   </thead>
                   <tbody>
@@ -32,16 +34,30 @@
                       <td><b>道場 (<?= $wenxuan_snapshot['subscriber']['chapter']['total_subscriber']; ?>間)</b></td>
                       <td><?= $wenxuan_snapshot['subscriber']['chapter']['tbnews_free']; ?></td>
                       <td><?= $wenxuan_snapshot['subscriber']['chapter']['tbnews_paid']; ?></td>
+                      <td><?= $wenxuan_snapshot['subscriber']['chapter']['tbnews_free']+$wenxuan_snapshot['subscriber']['chapter']['tbnews_paid']; ?></td>
                       <td><?= $wenxuan_snapshot['subscriber']['chapter']['randeng_free']; ?></td>
                       <td><?= $wenxuan_snapshot['subscriber']['chapter']['randeng_paid']; ?></td>
+                      <td><?= $wenxuan_snapshot['subscriber']['chapter']['randeng_paid']+$wenxuan_snapshot['subscriber']['chapter']['randeng_free']; ?></td>
                       <td><?= $wenxuan_snapshot['subscriber']['chapter']['gmbook']; ?></td>
                       <td><?= $wenxuan_snapshot['subscriber']['chapter']['update_date']; ?></td>
                     </tr><tr>
                       <td><b>個人 (<?= $wenxuan_snapshot['subscriber']['contact']['total_subscriber']; ?>人)</b></td>
                       <td><?= $wenxuan_snapshot['subscriber']['contact']['tbnews_free']; ?></td>
                       <td><?= $wenxuan_snapshot['subscriber']['contact']['tbnews_paid']; ?></td>
+                      <td><?= $wenxuan_snapshot['subscriber']['contact']['tbnews_free']+$wenxuan_snapshot['subscriber']['contact']['tbnews_paid']; ?></td>
                       <td><?= $wenxuan_snapshot['subscriber']['contact']['randeng_free']; ?></td>
                       <td><?= $wenxuan_snapshot['subscriber']['contact']['randeng_paid']; ?></td>
+                      <td><?= $wenxuan_snapshot['subscriber']['contact']['randeng_free']+$wenxuan_snapshot['subscriber']['contact']['randeng_paid']; ?></td>
+                      <td>- N/A -</td>
+                      <td><?= $wenxuan_snapshot['subscriber']['contact']['update_date']; ?></td>
+                    </tr><tr>
+                      <td><b>總數</b></td>
+                      <td><b><?= $wenxuan_snapshot['subscriber']['chapter']['tbnews_free']+$wenxuan_snapshot['subscriber']['contact']['tbnews_free']; ?></b></td>
+                      <td><b><?= $wenxuan_snapshot['subscriber']['chapter']['tbnews_paid']+$wenxuan_snapshot['subscriber']['contact']['tbnews_paid']; ?></b></td>
+                      <td><b><?= $wenxuan_snapshot['subscriber']['chapter']['tbnews_free']+$wenxuan_snapshot['subscriber']['contact']['tbnews_free']+$wenxuan_snapshot['subscriber']['chapter']['tbnews_paid']+$wenxuan_snapshot['subscriber']['contact']['tbnews_paid']; ?></b></td>
+                      <td><b><?= $wenxuan_snapshot['subscriber']['chapter']['randeng_free']+$wenxuan_snapshot['subscriber']['contact']['randeng_free']; ?></b></td>
+                      <td><b><?= $wenxuan_snapshot['subscriber']['chapter']['randeng_paid']+$wenxuan_snapshot['subscriber']['contact']['randeng_paid']; ?></b></td>
+                      <td><b><?= $wenxuan_snapshot['subscriber']['chapter']['randeng_free']+$wenxuan_snapshot['subscriber']['contact']['randeng_free']+$wenxuan_snapshot['subscriber']['chapter']['randeng_paid']+$wenxuan_snapshot['subscriber']['contact']['randeng_paid']; ?></b></td>
                       <td>- N/A -</td>
                       <td><?= $wenxuan_snapshot['subscriber']['contact']['update_date']; ?></td>
                     </tr>

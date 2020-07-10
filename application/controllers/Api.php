@@ -208,7 +208,7 @@ class Api extends CI_Controller {
 		// File Location
 		$location = '/asset/img/tbsnews/'.$year;
 		$file_location = $this->config->item('site_loc','siteinfo') . $location;
-		$url_location  = $this->config->item('site_url','siteinfo') . $location;
+		$url_location  = $this->config->item('gcs_url','siteinfo') . '/tbs-news/'.$year;
 		$data['pdf'] = $url_location.'/WTBN'.$issue.'.pdf';
 
 		if($download){
@@ -260,11 +260,12 @@ class Api extends CI_Controller {
 		$first_issue  = $this->cal_first_issue(); // server: 792910800; // local: 792892800;
 		$one_week_sec = 604800;
 		$data['year'] = $year = ($this->uri->segment(2)) ? $this->uri->segment(2) : date('Y');
+		$data['year'] = $year = ($this->uri->segment(3)) ? $this->uri->segment(3) : date('Y');
 
 		// File Location
 		$location = '/asset/img/tbsnews/'.$year;
 		$file_location = $this->config->item('site_loc','siteinfo') . $location;
-		$url_location  = $this->config->item('site_url','siteinfo') . $location;
+		$url_location  = $this->config->item('gcs_url','siteinfo') . '/tbs-news/'.$year;
 
 		// Time for latest Thursday
 		$time = ($year == date('Y')) ? time() : strtotime($year.'-12-31');

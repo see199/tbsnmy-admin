@@ -31,6 +31,10 @@
                     <li><a href="<?= base_url(); ?>wenxuan/lists/subscriber/<?=date('Y') -1;?>"><i class="fa fa-users fa-fw"></i> 功德主 (去年)</a></li>
                   </ul>
                 </li>
+
+
+
+                <li><a href="http://form.tbsn.my/wenxuan" target="_form"><i class="fa fa-book fa-fw"></i> 文宣方案表格</a></li>
               </ul>
 
               <ul class="nav navbar-nav navbar-right" style='margin-right:10px;'>

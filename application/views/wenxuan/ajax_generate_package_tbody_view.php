@@ -5,6 +5,7 @@
         <option <?= ($p['package_id'] ==  $cp['package_id']) ? "selected":"" ?> value="<?= $p['package_id']; ?>"><?= $p['year'].'年 '.$p['package_name'].' (RM'.$p['package_amount'].')'; ?></option>
         <?php endforeach;?>
     </select>
+    <br />* <?= ($cp['fullpayment']) ? "一次付清" : "分期付款"; ?>
 </td>
 <td><input type="date" id='<?=$cp['package_id'];?>_start_date' value="<?= $cp['start_date']; ?>"> - 
     <input type="date" id='<?=$cp['package_id'];?>_end_date' value="<?= $cp['end_date']; ?>"></td>

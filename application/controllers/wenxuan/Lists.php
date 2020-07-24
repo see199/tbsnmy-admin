@@ -145,6 +145,7 @@ class Lists extends CI_Controller {
 			'package' => $this->wenxuan_model->get_package(),
 			'wenxuan_contact' => $post_data['wenxuan_contact'],
 			'receipt_url' => $this->config->item('url_wenxuan_form').'	/receipt/',
+			'form_url' => $this->config->item('url_wenxuan_form').'	/viewform/',
 		), TRUE);
 		echo json_encode(array('html' => $html));
 	}

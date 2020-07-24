@@ -16,6 +16,7 @@
     <br /><input <?= ($cp['gift_taken']) ? "checked":"" ?> type="checkbox" id='<?=$cp['package_id'];?>_gift_taken'> 已領贈品
     <br /><a href='<?= $receipt_url.$cp['md5_id']; ?>' target='_receipt' >收據</a>
     <br /><a href='http://wa.me/6<?=preg_replace('/[^0-9]/', '', $wenxuan_contact);?>?text=<?= urlencode("感謝您的護持。這是您的電子收據：".$receipt_url.$cp['md5_id']); ?>' target='_receipt' >發送收據</a>
+    <br /><a href='<?= $form_url.$cp['md5_id']; ?>' target='_form' >方案表格</a>
 </td>
 </tr><?php endforeach; ?>
 <?php else: ?>

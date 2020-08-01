@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh-tw">
-<head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Type" content="application/pdf; charset=utf-8">
+<meta http-equiv="Content-Disposition" content="inline;">
 <meta http-equiv="Cache-control" content="public">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -39,27 +40,27 @@ iframe{
     overflow: hidden;
 }
 .content{
-	overflow: hidden;
-	position: absolute;
-	top: 40px;
-	left: 0;
-	right: 0;
-	bottom: 0;
+  overflow: hidden;
+  position: absolute;
+  top: 40px;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 .navigation{
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	height: 40px;
-	margin-bottom: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  margin-bottom: 0;
 }
 .pager{
-	margin:5px 0;
+  margin:5px 0;
 }
 </style>
 <div class="container">
-	<div class="row">
+  <div class="row">
         <div class="box">
             <div class="col-lg-12">
                 <nav>
@@ -72,10 +73,11 @@ iframe{
             </div>
         </div>
     </div>
-	
-	<div class='content'>
-    <object data='<?= $pdf; ?>' type='application/pdf' width='100%' height='100%'><p>This browser does not support inline PDFs. Please download the PDF to view it: <a href="<?= $pdf; ?>">Download PDF</a></p></object>
-	</div>
+  
+  <div class='content'>
+    <object data='<?= $pdf; ?>' type='application/pdf' width='100%' height='100%'>
+      <p style='padding-top:70px;text-align:center;'>無法瀏覽，敬請點擊以下鏈接下載: <a href="<?= $pdf; ?>"><?= $pdf; ?></a></p></object>
+  </div>
 </div>
     <!-- Bootstrap Core JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>

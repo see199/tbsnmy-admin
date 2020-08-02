@@ -74,6 +74,15 @@ function post_data(refresh_page){
     </div>
 
     <div class="row">
+        <div class="box text-right">
+            <div class="col-lg-10 col-lg-offset-1">
+                <a class="btn btn-info" href="<?= base_url('wenxuan/export/chapter'); ?>"><i class="fa fa-floppy-o" aria-hidden="true"></i> Export CSV</a>
+                <br /><br />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="box">
             <div class="col-lg-10 col-lg-offset-1">
                 <table id="example" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">

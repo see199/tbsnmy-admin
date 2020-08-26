@@ -10,10 +10,10 @@ class Index extends CI_Controller {
 		$this->load->library(array('session'));
 		$this->load->model('contact_model');
 
-		if(!$this->session->userdata('access_token') || !$this->session->userdata('email')) redirect('dharma/login','refresh');
+		if(!$this->session->userdata('access_token_dharma') || !$this->session->userdata('email')) redirect('dharma/login','refresh');
 
 		// Drop Down Box For Chapter
-		$this->data = load_view_data($this->session);
+		$this->data = load_common_view_data($this->session);
 	}
 
 	public function index(){

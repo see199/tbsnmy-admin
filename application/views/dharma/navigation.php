@@ -197,7 +197,7 @@
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="<?= base_url(); ?>admin/login/logout/"><i class="fa fa-sign-out"></i> Logout</a>
+                            <a href="<?= base_url(); ?>dharma/login/logout/"><i class="fa fa-sign-out"></i> Logout</a>
                         </li>
                     </ul>
                 </li>

@@ -105,6 +105,8 @@ class Chapter extends CI_Controller {
 				}
 			}
 			$d['bday_cal'] = "<br />".$d['nric']."(".$cal."|".$cal2.")";
+		}else{
+			$d['bday_cal'] = "<br />".$d['nric'];
 		}
 		return $d;
 	}

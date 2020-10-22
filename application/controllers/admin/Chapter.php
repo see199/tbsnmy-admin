@@ -90,6 +90,10 @@ class Chapter extends CI_Controller {
 			$cal  = 1+9;
 			$cal2 = 0;
 			$cal3 = 0;
+			if(!$d['nric']){
+				$d['bday_cal'] = '';
+				return $d;
+			}
 			foreach(str_split(explode("-",$d['nric'])[0]) as $i){
 				$cal += $i;
 			}

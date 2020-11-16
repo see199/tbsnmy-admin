@@ -1,17 +1,16 @@
-<script src="//tinymce.cachefly.net/4.2/tinymce.min.js"></script>
+<script src="https://cdn.tiny.cloud/1/z9rl7jtpy5yw8ykt504dw1z6o3xn2lx1dxs6tdlsek0xansi/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
 <script>tinymce.init({
     selector:'textarea.additional_info',
     content_css: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css",
-    plugins: [
-        "advlist autolink lists link image hr anchor",
-        "wordcount visualblocks visualchars code fullscreen",
-        "nonbreaking save table contextmenu directionality",
-        "template paste textcolor colorpicker textpattern imagetools"
-    ],
-    menubar: false,
-    toolbar_items_size: 'small',
-    toolbar1: "fullpage | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | styleselect formatselect fontselect fontsizeselect",
-    toolbar2: "cut copy paste | searchreplace | bullist numlist | outdent indent blockquote | undo redo | link unlink image | forecolor | table | hr removeformat ",
+    
+
+
+    plugins: 'a11ychecker advcode casechange formatpainter linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tinycomments tinymcespellchecker',
+      toolbar: 'casechange checklist code formatpainter pageembed tablebullist numlist | outdent indent blockquote | undo redo | link unlink image | forecolor | table | hr removeformat ',
+      toolbar_mode: 'floating',
+      tinycomments_mode: 'embedded',
+
+
     image_advtab: false,
     height:'300px',
 });</script>
@@ -303,7 +302,6 @@ function toggle_form(){
                         <div class='col-xs-10 col-xs-offset-1' style='border:1px solid #CCC;'>
                             <div class='display'><?= $chapter['additional_info']; ?></div>
                             <div class='form form-group'><textarea id='additional_info' class='form-control col-xs-8 additional_info' name='chapter[additional_info]'><?= $chapter['additional_info']; ?></textarea>
-                            <a href='javascript:void(0);' onclick="tinymce.execCommand('mceToggleEditor',false,'additional_info');">Toggle Editor</a>
                             </div>
                         </div>
                     </div>

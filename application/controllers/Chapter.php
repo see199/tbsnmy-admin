@@ -12,7 +12,7 @@ class Chapter extends CI_Controller {
         $chapter_url = ($this->uri->segment(3) == "") ? $this->uri->segment(1) : $this->uri->segment(3);
         $chapter = $this->get_chapter_details($chapter_url);
         $default_bgimg = 'asset/img/bg_default.jpg';
-        $chapter_bgimg = 'asset/img/bg_'.$chapter['url_name'].'.jpg';
+        $chapter_bgimg = (isset($chapter['url_name'])) ? 'asset/img/bg_'.$chapter['url_name'].'.jpg' : $default_bgimg;
         $chapter['bgimgurl'] = (file_exists($chapter_bgimg)) ? $chapter_bgimg : $default_bgimg;
         $this->chapter = $chapter;
     }
@@ -46,6 +46,7 @@ class Chapter extends CI_Controller {
         $response = $this->api_model->get_chapter_details($url_name);
         $chapter = json_decode($response,1);
 
+        if(isset($chapter['dharma_staff']))
         preg_replace('@,@',', ',$chapter['dharma_staff']);
 
         return $chapter;

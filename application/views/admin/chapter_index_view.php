@@ -5,7 +5,7 @@
     
 
 
-    plugins: 'a11ychecker advcode casechange formatpainter linkchecker autolink lists checklist media mediaembed pageembed permanentpen powerpaste table advtable tinycomments tinymcespellchecker',
+    plugins: 'autolink lists media table',
       toolbar: 'casechange checklist code formatpainter pageembed tablebullist numlist | outdent indent blockquote | undo redo | link unlink image | forecolor | table | hr removeformat ',
       toolbar_mode: 'floating',
       tinycomments_mode: 'embedded',

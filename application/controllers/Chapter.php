@@ -30,6 +30,10 @@ class Chapter extends CI_Controller {
         echo $this->api_model->get_all_chapter_details_active();
     }
 
+    public function get_active_by_state($state="Selangor"){
+        echo $this->api_model->get_all_chapter_details_active_by_state($state);
+    }
+
     public function index(){
         $data['chapter'] = $this->chapter;
         $data['chapter']['encoded_address'] = preg_replace('/\s/','+',$data['chapter']['address']);

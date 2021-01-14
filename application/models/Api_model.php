@@ -55,6 +55,21 @@ class api_model extends CI_Model {
 		return json_encode($res);
 	}
 
+	public function get_all_chapter_details_active_by_state($state){
+		$this->db = $this->load->database('local', TRUE);
+
+		$this->db->select('name_chinese,name_malay,url_name,CONCAT(address," ",postcode," ",city,", ",state) as full_address, contact_person, phone, fax, email, website, fb_page')
+			->from('tbs_chapter')
+			->where('status','A')
+			->where('state',urldecode($state))
+			->where('name_malay <>','')
+			->where('name_malay <>','Pertubuhan Pengurusan Pusat Jagaan Warga Emas Harmopeace,Perak')
+			->order_by('state,chapter_id');
+		$i = $this->db->get();
+		$res = $i->result_array();
+		return json_encode($res);
+	}
+
 	public function get_chapter_meeting_list(){
 		$this->db = $this->load->database('local', TRUE);
 		$query = "SELECT membership_id,chapter_id,name_chinese, meeting_id, meeting_pinyin, meeting_fpinyin FROM tbs_chapter WHERE meeting_pinyin <> '' AND meeting_id <> 'GA01' ORDER BY membership_id";

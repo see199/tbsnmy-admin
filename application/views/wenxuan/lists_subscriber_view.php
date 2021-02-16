@@ -162,7 +162,7 @@ function delete_data(){
                     <tbody>
                         <?php foreach($list as $c): ?>
                             <tr>
-                                <td><input type=hidden value='<?= json_encode($c); ?>' />
+                                <td><textarea style="display:none;"><?= json_encode($c); ?></textarea>
                                     <a href='javascript:void(0)' onclick="load_box($(this).prev().val())" data-toggle="modal" data-target="#myModal"><?= $c['wenxuan_name']; ?></a></td>
                                 <td><?= $c['wenxuan_contact']; ?></td>
                                 <?php foreach($total as $package_id => $t):?>

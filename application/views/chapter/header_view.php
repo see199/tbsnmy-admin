@@ -20,15 +20,18 @@ if(!isset($minisite['bgcolor'])) $minisite['bgcolor'] = '#800';
     <title><?= $chapter['name_chinese']; ?> | 馬來西亞真佛宗道場</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="<?= base_url();?>assets/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preload" href="<?= base_url();?>assets/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="<?= base_url();?>assets/css/bootstrap.min.css"></noscript>
 
     <!-- Custom CSS -->
-    
-    <link rel="stylesheet" type="text/css" href="<?= base_url();?>assets/css/slick-team-slider.css" />
-    <link rel="stylesheet" type="text/css" href="<?= base_url();?>assets/css/style.css">
+    <link rel="preload" href="<?= base_url();?>assets/css/slick-team-slider.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="<?= base_url();?>assets/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="<?= base_url();?>assets/css/slick-team-slider.css"></noscript>
+    <noscript><link rel="stylesheet" href="<?= base_url();?>assets/css/style.css"></noscript>
 
     <!-- Fonts -->
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300,600|Raleway:600,300|Josefin+Slab:400,700,600italic,600,400italic' rel='stylesheet' type='text/css'>
+    <link rel="preload" href="https://fonts.googleapis.com/css?family=Open+Sans:300,600|Raleway:600,300|Josefin+Slab:400,700,600italic,600,400italic" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,600|Raleway:600,300|Josefin+Slab:400,700,600italic,600,400italic"></noscript>
 
     <link href="http://www.tbsn.my/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
     

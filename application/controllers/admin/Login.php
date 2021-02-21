@@ -20,14 +20,22 @@ class Login extends CI_Controller {
 
     public function index() {
 
+        require_once APPPATH . "libraries/GVendor/autoload.php";
+
+        $client = new Google_Client();
+        $client->setAuthConfig(APPPATH . '/config/google-webservice-credential.json');
+        $client->setRedirectUri($this->config->item('redirect_uri'));
+        $client->addScope("https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile");
+
+
         // Send Client Request
-        $client = $this->create_google_client();
         $objOAuthService = new Google_Service_Oauth2($client);
 
         
         // Add Access Token to Session
         if ($this->input->get('code')) {
-            $resp = $client->authenticate($this->input->get('code'));
+            echo $this->config->item('redirect_uri');
+            $client->authenticate($this->input->get('code'));
             $this->session->set_userdata('access_token', $client->getAccessToken());
             header('Location: ' . filter_var($this->config->item('redirect_uri'), FILTER_SANITIZE_URL));
         }
@@ -86,23 +94,6 @@ class Login extends CI_Controller {
             $data['authUrl'] = $authUrl;
             $this->load->view('admin/login_view', $data);
         }
-    }
-
-    private function create_google_client(){
-
-        require_once APPPATH . "libraries/Google/autoload.php";
-        include_once APPPATH . "libraries/Google/Client.php";
-        include_once APPPATH . "libraries/Google/Service/Oauth2.php";
-
-        // Create Client Request to access Google API
-        $client = new Google_Client();
-        $client->setClientId($this->config->item('client_id'));
-        $client->setClientSecret($this->config->item('client_secret'));
-        $client->setRedirectUri($this->config->item('redirect_uri'));
-        $client->setDeveloperKey($this->config->item('simple_api_key'));
-        $client->addScope("https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile");
-
-        return $client;
     }
 
     // Unset session and logout

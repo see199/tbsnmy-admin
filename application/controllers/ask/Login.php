@@ -88,7 +88,7 @@ class Login extends CI_Controller {
         } else {
             $authUrl = $client->createAuthUrl();
             $data['authUrl'] = $authUrl;
-            $this->load->view('admin/login_view', $data);
+            $this->load->view('ask/login_view', $data);
         }
     }
 

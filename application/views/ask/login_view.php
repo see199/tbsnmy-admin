@@ -51,7 +51,7 @@
                 <div class="panel panel-default drop-shadow">
                     <div class="panel-body">
                         <div class='row text-center'>
-                            <div class='col-md-12' style='padding:30px;'><img src="http://admin.tbsn.my/asset/img/tbsn-my-logo.jpg" /></div>
+                            <div class='col-md-12' style='padding:30px;'><img src="https://lh4.googleusercontent.com/Zri1_oL3oLalkDCiPb36JrJIfUI967CDdBWCMz8SQheVMSRY--BUtZM3qozSPkFdEzWqd8J3qNGrBXnpvaI-LByuzTlte2OZ2M_OlFucPpCpUi9fBLVUYAbh_RZA=w740" style="width:100%" /></div>
                             <div class='col-md-12'><a href="<?php echo $authUrl; ?>"><img class='col-md-6 col-md-offset-3' id="google_signin" src="<?=base_url()?>assets/img/icon-google.png"></a></div>
                         </div>
                     </div>

@@ -13,6 +13,8 @@ class Index extends CI_Controller {
 
 		// Drop Down Box For Chapter
 		$this->data = load_common_view_data($this->session);
+
+		$this->spreadsheetId = "1dK_PKgTZXch-wPtYBL6BvPYkLOZf8vCl1vgEItlc1fQ";
 	}
 
 	public function index()
@@ -54,19 +56,24 @@ class Index extends CI_Controller {
 		return json_decode(read_file(APPPATH.'/logs/test.json'));
 	}
 
-	private function read_gsheet(){
-
+	private function load_google_client(){
 		require_once APPPATH . "libraries/GVendor/autoload.php";
 		$client = new \Google_Client();
 		$client->setScopes([\Google_Service_Sheets::SPREADSHEETS]);
 		$client->setAccessType('offline');
 		$client->setAuthConfig(APPPATH . '/config/google-sheets-credentials.json');
+
+		return $client;
+	}
+
+	private function read_gsheet(){
+
+		$client  = $this->load_google_client();
 		$service = new Google_Service_Sheets($client);
-		$spreadsheetId = "1dK_PKgTZXch-wPtYBL6BvPYkLOZf8vCl1vgEItlc1fQ"; //It is present in your URL
-		$get_range = "Form Responses 1!A2:J";
+		$get_range = "Form Responses 1!A2:K";
 		
 		//Request to get data from spreadsheet.
-		return $service->spreadsheets_values->get($spreadsheetId, $get_range)->getValues();
+		return $service->spreadsheets_values->get($this->spreadsheetId, $get_range)->getValues();
 	}
 
 	private function process_gsheet_data($array){
@@ -88,10 +95,37 @@ class Index extends CI_Controller {
 				'status'    => @$row[8],
 				'answer_by' => @$row[9],
 				'answer'    => @$row[10],
+				'row'       => $k + 2,
 			);
 			
 		}
 		return $processed_data;
+	}
+
+	public function update_status($id,$status){
+
+		$status_column = "I";
+		$options = array('valueInputOption' => 'RAW');
+
+		$client  = $this->load_google_client();
+		$service = new Google_Service_Sheets($client);
+		$body    = new Google_Service_Sheets_ValueRange(['values' => [[urldecode($status)]]]);
+		$result  = $service->spreadsheets_values->update($this->spreadsheetId, $status_column.$id.':'.$status_column.$id, $body, $options);
+
+		if($result->updatedCells > 0) echo 1;
+	}
+
+	public function update_answer($id){
+
+		$status_column = "K";
+		$options = array('valueInputOption' => 'RAW');
+
+		$client  = $this->load_google_client();
+		$service = new Google_Service_Sheets($client);
+		$body    = new Google_Service_Sheets_ValueRange(['values' => [[$this->input->post('answer')]]]);
+		$result  = $service->spreadsheets_values->update($this->spreadsheetId, $status_column.$id.':'.$status_column.$id, $body, $options);
+
+		if($result->updatedCells > 0) echo 1;
 	}
 
 

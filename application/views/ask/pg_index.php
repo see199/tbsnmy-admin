@@ -1,3 +1,40 @@
+<script>
+  function update_status(id,status){
+    //alert("<?= base_url('ask/index/update_status'); ?>/"+id+"/"+status);
+
+    var data = {};
+    $.ajax({
+        type:"POST",
+        url: "<?= base_url('ask/index/update_status'); ?>/"+id+"/"+status,
+        data:data
+    }).done(function(res) {
+
+        if(res == 1){
+          $('#alert-'+id).show();
+          $('#alert-'+id).html("已更新成-"+status+" -<a href='#' onclick='location.reload();'>refresh</a>-");
+        }
+    });
+  }
+
+  function update_answer(id){
+
+    var data = {
+      answer : $('#answer-'+id).val()
+    };
+    $.ajax({
+        type:"POST",
+        url: "<?= base_url('ask/index/update_answer'); ?>/"+id,
+        data:data
+    }).done(function(res) {
+
+        if(res == 1){
+          $('#answer-alert-'+id).show();
+          $('#answer-alert-'+id).html("已保存回復！");
+        }
+    });
+  }
+</script>
+
 <div id="page-wrapper">
   <div class="row">&nbsp;</div>
   <div class="row">

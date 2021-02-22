@@ -164,7 +164,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="<?= base_url(); ?>dharma/index">互動就是力量 - 你問我答</a>
+                <a class="navbar-brand" href="<?= base_url(); ?>ask/index">互動就是力量 - 你問我答</a>
             </div>
             <!-- /.navbar-header -->
 
@@ -189,7 +189,7 @@
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="<?= base_url(); ?>dharma/login/logout/"><i class="fa fa-sign-out"></i> Logout</a>
+                            <a href="<?= base_url(); ?>ask/login/logout/"><i class="fa fa-sign-out"></i> Logout</a>
                         </li>
                     </ul>
                 </li>

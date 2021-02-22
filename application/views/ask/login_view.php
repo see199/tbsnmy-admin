@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>馬密總弘法人員系統</title>
+        <title>互動就是力量 - 你問我答</title>
         <link rel="shortcut icon" href="<?php echo base_url(); ?>assets/images/icon/tab-icon.png" type="image/x-icon">
 
         <!-- Bootstrap -->
@@ -47,7 +47,7 @@
     <body>
         <div class="jumbotron vertical-center backcolor-replace">
             <div class="col-xs-12 col-sm-8 col-md-4 col-lg-4 col-sm-offset-2 col-md-offset-4 col-lg-offset-4">
-                <h2 class='text-center'>馬密總弘法人員系統</h2>
+                <h2 class='text-center'>互動就是力量 - 你問我答</h2>
                 <div class="panel panel-default drop-shadow">
                     <div class="panel-body">
                         <div class='row text-center'>

@@ -64,17 +64,12 @@ class Login extends CI_Controller {
             $res = $this->ask_model->check_login($userData->email);
             if(sizeof($res) == 0){
                 echo "<script>alert('You are not allowed to login');
-                window.location='".site_url()."admin/login/logout';
+                window.location='".site_url()."ask/login/logout';
                 </script>";
             }
             else{
 
                 $this->ask_model->update_login($res[0]['user_id']);
-
-                // Set Chapter Default
-                $chapter = json_decode($res[0]['chapter'],1);
-                if($chapter[0] == 'all') $chapter_used = 'boyeh';
-                else $chapter_used = $chapter[0];
 
                 // Add to Session
                 $this->session->set_userdata(array(

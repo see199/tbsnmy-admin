@@ -13,7 +13,7 @@ white-space: break-spaces;
     <?php foreach($mydata as $key => $v): ?>
     <tr>
       <td>
-        <?= $v['name'];?> [<?= $v['country'];?>] (<?= $v['contact'];?>) <small>@ <?= $v['date'];?></small>
+        <?= $v['name'];?> [<?= $v['country'];?>] (<?= $v['contact'];?>) <small>@ <?= $v['date'];?></small><b>ID: <?=$v['id'];?></b>
         <br /><pre><?= $v['question'];?></pre>
 
         <?php if(in_array($v['status'],array('待回'))):?>
@@ -56,6 +56,10 @@ white-space: break-spaces;
 
         <?php if(in_array($v['status'],array('新','落選'))):?>
         <button type="button" class="btn btn-danger" onclick="update_status(<?= $v['row']; ?>,'不理');">不理</button>
+        <?php endif;?>
+
+        <?php if(in_array($v['status'],array('新'))):?>
+        <button type="button" class="btn btn-danger" onclick="update_status(<?= $v['row']; ?>,'重複');">重複</button>
         <?php endif;?>
 
         <div id="alert-<?= $v['row']; ?>" class="alert alert-success" role="alert" style="display:none;">

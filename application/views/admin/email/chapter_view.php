@@ -10,6 +10,7 @@
     <div class="row">
         <div class="box">
             <div class="col-lg-10 col-lg-offset-1">
+                Shortcut Key: press "C" to copy selected email
                 <table id="example" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
                     <thead>
                         <tr class="info">
@@ -69,7 +70,7 @@
     <div class="row">
         <div class="box">
             <div class="col-lg-10 col-lg-offset-1">
-                <textarea rows=20 id="all_email" class='form-control' onclick="$(this).select();"></textarea>
+                <textarea rows=20 id="all_email" class='form-control' onclick="$(this).select();" readonly></textarea>
             </div>
         </div>
     </div>
@@ -108,5 +109,15 @@
     $(document).ready(function() {
         $('#all_box').prop("checked", true);
         check_all_box($('#all_box'));
+
+        //Shortcut Key "C" to copy
+        document.onkeyup = function(e){
+            if(e.which == 67){
+                $('#all_email').select();
+                document.execCommand("copy");
+                alert("Email copied!");
+
+            }
+        };
     });
 </script>

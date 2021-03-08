@@ -60,15 +60,18 @@ class Agm extends CI_Controller {
 			$chapter_list[$chapter['chapter_id']] = $chapter;
 		}
 
+		// Years 
+		$years = array();
+		for($i = 0; $i< 5; $i++){
+			$y = date('Y') - $i;
+			$years[$y] = $y;
+		}
+
 		$data = $this->data;
 		$data['chapter'] = $chapter_list;
 		$data['total']   = $total;
 		$data['year']    = $year;
-		$data['years']   = array(
-			"2021" => "2021",
-			"2020" => "2020",
-			"2019" => "2019",
-		);
+		$data['years']   = $years;
 
 		$this->load->view('admin/header', $data);
 		$this->load->view('admin/navigation', $data);

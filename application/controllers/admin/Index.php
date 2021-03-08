@@ -67,7 +67,8 @@ class Index extends CI_Controller {
 				'tbs_wenxuan_subscriber',
 				'tbs_wenxuan_subscriber_package',
 				'tbs_wenxuan_subscriber_year',
-				'tbs_wenxuan_user'
+				'tbs_wenxuan_user',
+				'tbs_agm_attendance'
 			),   // Array of tables to backup.
 			'ignore'        => array(),                     // List of tables to omit from the backup
 			'format'        => 'txt',                       // gzip, zip, txt

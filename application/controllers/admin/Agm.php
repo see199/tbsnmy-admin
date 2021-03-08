@@ -37,6 +37,10 @@ class Agm extends CI_Controller {
 		}
 
 		// Count Total
+		$total = array(
+			'chapter' => 0,
+			'chapter_member' => 0,
+		);
 		foreach($agm_attendance as $aa){
 
 			if($aa['cm_id_1'] || $aa['cm_id_2'] || $aa['cm_id_3']){

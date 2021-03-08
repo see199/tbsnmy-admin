@@ -18,7 +18,7 @@ class Agm extends CI_Controller {
 	}
 
 	public function index(){
-		$this->year(date('Y'));
+		$this->list();
 	}
 
 	public function year($year){
@@ -75,6 +75,66 @@ class Agm extends CI_Controller {
 		$this->load->view('admin/agm/year_view',$data);
 		$this->load->view('admin/footer');
 
+	}
+
+	public function list(){
+
+		$data = $this->data;
+
+		$years = array();
+		$total = array(
+			'chapter' => array(),
+			'chapter_member' => array(),
+		);
+
+		// Get Year Attendance
+		$agm_attendance = array();
+		for($i = 0; $i< 5; $i++){
+			$year = date('Y') - $i;
+			foreach($this->agm_model->get_agm_attendance($year) as $aa){
+
+				$aa['total'] = 0;
+				$aa['total'] += ($aa['cm_id_1']) ? 1 : 0;
+				$aa['total'] += ($aa['cm_id_2']) ? 1 : 0;
+				$aa['total'] += ($aa['cm_id_3']) ? 1 : 0;
+				$agm_attendance[$aa['chapter_id']][$year] = $aa;
+			}
+			$years[$year] = $year;
+			$total['chapter'][$year] = 0;
+			$total['chapter_member'][$year] = 0;
+		}
+
+		
+		// Count Total
+		foreach($agm_attendance as $chapter_id => $d){
+			foreach($d as $year => $aa){
+
+				if($aa['cm_id_1'] || $aa['cm_id_2'] || $aa['cm_id_3']){
+					@$total['chapter'][$year] += 1;
+
+					@$total['chapter_member'][$year] += ($aa['cm_id_1']) ? 1 : 0;
+					@$total['chapter_member'][$year] += ($aa['cm_id_2']) ? 1 : 0;
+					@$total['chapter_member'][$year] += ($aa['cm_id_3']) ? 1 : 0;
+				}
+			}
+		}
+		
+		// Place AJK into chapter
+		$chapter_list = array();
+		foreach($this->agm_model->get_chapter_list($year) as $chapter){
+			$chapter['agm'] = @$agm_attendance[$chapter['chapter_id']];
+			$chapter_list[$chapter['chapter_id']] = $chapter;
+		}
+
+		$data = $this->data;
+		$data['chapter'] = $chapter_list;
+		$data['total']   = $total;
+		$data['years']   = $years;
+
+		$this->load->view('admin/header', $data);
+		$this->load->view('admin/navigation', $data);
+		$this->load->view('admin/agm/list_view',$data);
+		$this->load->view('admin/footer');
 	}
 
 	public function replace_agm_attendance(){

@@ -29,6 +29,8 @@
         <div class="box">
             <div class="col-lg-8 col-lg-offset-2 text-center form-inline">
                 <h1>會員大會出席表 <?= form_dropdown('',$years,$year,'class="form-control" id="selectYear" onchange="changeYear(this.value)" style="font-size:1em;height:1.4em;"');?></h1>
+                <br />出席道場： <?= $total['chapter']; ?>
+                <br />出席人數： <?= $total['chapter_member']; ?>
             </div>
         </div>
     </div>

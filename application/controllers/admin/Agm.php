@@ -35,6 +35,18 @@ class Agm extends CI_Controller {
 		foreach($this->agm_model->get_agm_attendance($year) as $aa){
 			$agm_attendance[$aa['chapter_id']] = $aa;
 		}
+
+		// Count Total
+		foreach($agm_attendance as $aa){
+
+			if($aa['cm_id_1'] || $aa['cm_id_2'] || $aa['cm_id_3']){
+				@$total['chapter'] += 1;
+
+				@$total['chapter_member'] += ($aa['cm_id_1']) ? 1 : 0;
+				@$total['chapter_member'] += ($aa['cm_id_2']) ? 1 : 0;
+				@$total['chapter_member'] += ($aa['cm_id_3']) ? 1 : 0;
+			}
+		}
 		
 		// Place AJK into chapter
 		$chapter_list = array();
@@ -46,6 +58,7 @@ class Agm extends CI_Controller {
 
 		$data = $this->data;
 		$data['chapter'] = $chapter_list;
+		$data['total']   = $total;
 		$data['year']    = $year;
 		$data['years']   = array(
 			"2021" => "2021",

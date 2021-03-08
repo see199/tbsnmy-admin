@@ -171,6 +171,11 @@
             
             <!-- /.navbar-top-links -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+              <ul class="nav navbar-nav">
+                <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSeTAYK17lIdzhwhIq5arj6FD0fBYzeODEI7l_2Imkqw9Mp-wQ/viewform" target="_blank">Google 表格</a></li>
+                <li><a href="https://docs.google.com/spreadsheets/d/1dK_PKgTZXch-wPtYBL6BvPYkLOZf8vCl1vgEItlc1fQ/edit?usp=forms_web_b#gid=1619459023" target="_blank">Google Sheet Data</a></li>
+              </ul>
               
 
               <ul class="nav navbar-nav navbar-right" style='margin-right:10px;'>

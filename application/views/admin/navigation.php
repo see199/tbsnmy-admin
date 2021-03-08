@@ -214,6 +214,10 @@
                     <li>
                         <a href="<?= base_url(); ?>admin/event/detail"><i class="fa fa-plus-square fa-fw"></i> <?= lang('glb_nav_event_add'); ?></a>
                     </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="<?= base_url(); ?>admin/agm/"><i class="fa fa-briefcase"></i> 會員大會</a>
+                    </li>
 
                   </ul>
                 </li>

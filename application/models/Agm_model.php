@@ -12,7 +12,7 @@ class Agm_model extends CI_Model {
 	public function get_chapter_list(){
 		$this->db = $this->load->database('local', TRUE);
 
-		$this->db->select('name_chinese,membership_id,chapter_id')
+		$this->db->select('name_chinese,membership_id,chapter_id,status')
 			->where('membership_id <>','')
 			->order_by('membership_id');
 

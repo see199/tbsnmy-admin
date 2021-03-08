@@ -31,7 +31,9 @@
                         <?php foreach($chapter as $chapter_id => $c): ?>
                             <tr>
                                 <td><?= $c['membership_id'];?></td>
-                                <td><?= $c['name_chinese'];?></td>
+                                <td><?= $c['name_chinese'];?>
+                                    <?= ($c['status'] == 'A') ? "" : " (".$this->config->item('tbs')['chapter_status'][$c['status']].")"; ?>
+                                </td>
                                 <?php foreach($years as $y): ?>
                                 <td><?=@($c['agm'][$y]['total']) ? $c['agm'][$y]['total'] : '-';?></td>
                                 <?php endforeach;?>

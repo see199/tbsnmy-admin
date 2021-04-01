@@ -84,6 +84,7 @@ class Lists extends CI_Controller {
 		$data['year']  = $year;
 		$data['gift_sent'] = $gift_sent;
 		$data['package']   = $this->wenxuan_model->get_package();
+		$data['form_url']  = $this->config->item('url_wenxuan_form').'/viewform/';
 
 		$this->load->view('wenxuan/header', $data);
 		$this->load->view('wenxuan/navigation', $data);

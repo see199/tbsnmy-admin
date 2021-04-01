@@ -76,7 +76,7 @@ iframe{
   
   <div class='content'>
     <object data='<?= $pdf; ?>' type='application/pdf' width='100%' height='100%'>
-      <p style='padding-top:70px;text-align:center;'>無法瀏覽，敬請點擊以下鏈接下載: <a href="<?= $pdf; ?>"><?= $pdf; ?></a></p></object>
+      <p style='padding-top:70px;text-align:center;'>若無法瀏覽，敬請點擊以下鏈接下載: <a href="<?= $pdf; ?>"><?= $pdf; ?></a></p></object>
   </div>
 </div>
     <!-- Bootstrap Core JavaScript -->

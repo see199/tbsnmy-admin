@@ -145,6 +145,7 @@ function delete_data(){
                             <td rowspan=2><b>聯絡</b></td>
                             <td colspan=<?=sizeof($total);?>><b>功德主方案</b></td>
                             <td rowspan=2><b>已發贈品</b></td>
+                            <td rowspan=3><b><?=$year;?>年<br />報名表格</b></td>
                         </tr>
                         <tr class="info">
                             <?php foreach($total as $package_id => $t):?>
@@ -169,6 +170,11 @@ function delete_data(){
                                 <td><b><?= ($package_id == $c['package'][$year]['package_id']) ? '<i class="fa fa-check" aria-hidden="true"></i>' : ""; ?></b></td>
                                 <?php endforeach;?>
                                 <td><b><?= $c['package'][$year]['gift_taken'] ? '<i class="fa fa-check" aria-hidden="true"></i>' : ""; ?></b></td>
+                                <td><?php foreach($c['package'] as $pyear => $p):?>
+                                        <?php $form_full_url = ($pyear == $year ) ? $form_url.$p['md5_id'] : "" ?>
+                                        <a href="<?= $form_full_url; ?>" target="_blank">view</a>
+                                    <?php endforeach; ?>
+                                </td>
 
                         <?php endforeach; ?>
                     </tbody>

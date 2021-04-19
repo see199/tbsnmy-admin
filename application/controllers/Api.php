@@ -283,6 +283,17 @@ class Api extends CI_Controller {
 					'date' => date('Y年m月d日',$i),
 					'link' => $url_location.'/WTBN'.$issue.'.pdf',
 				);
+			}else{
+
+				// if file not exists, check google console & create fake file
+				@$a = file_get_contents("https://storage.googleapis.com/tbs-news/2021/WTBN".$issue.".pdf");
+				if($a){
+					file_put_contents($file_location.'/WTBN'.$issue.'.pdf',"");
+					$data['tbsnews'][$issue] = array(
+						'date' => date('Y年m月d日',$i),
+						'link' => $url_location.'/WTBN'.$issue.'.pdf',
+					);
+				}
 			}
 		}
 

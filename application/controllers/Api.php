@@ -234,11 +234,13 @@ class Api extends CI_Controller {
 		}
 
 		$data['issue'] = $issue;
+		$meta_image_url = "https://storage.googleapis.com/tbs-news/".$year."/WTBN".$issue.".jpg";
 		$data['meta_fb'] = array(
 			'og:title'       => sprintf(lang('viewtbsnews_fb_like_title'),$issue),
 			'og:site_name'   => lang('viewtbsnews_fb_like_site_name'),
 			'og:description' => sprintf(lang('viewtbsnews_fb_like_description'),$issue,$issue,$date,$issue),
-			'og:image'       => file_exists($file_location.'/WTBN'.$issue.'.jpg') ? $url_location.'/WTBN'.$issue.'.jpg' : lang('viewtbsnews_fb_like_image'),
+			//'og:image'       => file_exists($file_location.'/WTBN'.$issue.'.jpg') ? $url_location.'/WTBN'.$issue.'.jpg' : lang('viewtbsnews_fb_like_image'),
+			'og:image'       => @file_get_contents($meta_image_url) ? $meta_image_url : lang('viewtbsnews_fb_like_image'),
 		);
 
 		$this->load->view('api/viewtbsnews',$data);
@@ -286,7 +288,7 @@ class Api extends CI_Controller {
 			}else{
 
 				// if file not exists, check google console & create fake file
-				@$a = file_get_contents("https://storage.googleapis.com/tbs-news/2021/WTBN".$issue.".pdf");
+				@$a = file_get_contents("https://storage.googleapis.com/tbs-news/".$year."/WTBN".$issue.".pdf");
 				if($a){
 					file_put_contents($file_location.'/WTBN'.$issue.'.pdf',"");
 					$data['tbsnews'][$issue] = array(

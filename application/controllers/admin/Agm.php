@@ -326,7 +326,7 @@ class Agm extends CI_Controller {
             'name_malay'   => $post['name_malay'],
             'membership_id'=> $post['membership_id'],
         );
-        if($post['position']) $registrant_value['position'] = $post['position'];
+        if(@isset($post['position'])) $registrant_value['position'] = $post['position'];
         $this->agm_model->add_registrant($registrant_primary,$registrant_value);
 
         echo json_encode(array(

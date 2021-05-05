@@ -32,6 +32,16 @@ class api_model extends CI_Model {
 		
 	}
 
+	public function get_chapter_details_by_id($chapter_id = ''){
+		$this->db = $this->load->database('local', TRUE);
+
+		$query = "SELECT * FROM tbs_chapter WHERE chapter_id = $chapter_id";
+		$i = $this->db->query($query);
+		$res = $i->result_array();
+		if(count($res)) return $res[0];
+		
+	}
+
 	public function get_all_chapter_details(){
 		$this->db = $this->load->database('local', TRUE);
 
@@ -72,7 +82,7 @@ class api_model extends CI_Model {
 
 	public function get_chapter_meeting_list(){
 		$this->db = $this->load->database('local', TRUE);
-		$query = "SELECT membership_id,chapter_id,name_chinese, meeting_id, meeting_pinyin, meeting_fpinyin FROM tbs_chapter WHERE meeting_pinyin <> '' AND meeting_id <> 'GA01' ORDER BY membership_id";
+		$query = "SELECT membership_id,chapter_id,name_chinese, meeting_id, meeting_pinyin, meeting_fpinyin, state FROM tbs_chapter WHERE meeting_pinyin <> '' AND meeting_id <> 'GA01' ORDER BY membership_id";
 		$i = $this->db->query($query);
         return ($i->num_rows() > 0) ? $i->result_array() : array();
 	}

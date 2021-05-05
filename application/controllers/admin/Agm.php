@@ -154,6 +154,213 @@ class Agm extends CI_Controller {
 		
 	}
 
+	public function list_zoom_registrant(){
+
+		$registrant_by_chapter = array();
+		$list = $this->agm_model->list_zoom_registrant();
+		foreach($list as $registrant){
+			$registrant_by_chapter[$registrant['chapter_id']][] = $registrant;
+		}
+
+		$chapter_list = array();
+		$total = array('chapter' => 0, 'chapter_member' => 0);
+		foreach($this->agm_model->get_chapter_list(date('Y')) as $chapter){
+			$chapter_list[$chapter['chapter_id']] = $chapter;
+
+			if(isset($registrant_by_chapter[$chapter['chapter_id']])){
+				$chapter_list[$chapter['chapter_id']]['registrant'] = $registrant_by_chapter[$chapter['chapter_id']];
+				@$total['chapter'] += 1;
+				@$total['chapter_member'] += (count($registrant_by_chapter[$chapter['chapter_id']]) > 3) ? 3 : count($registrant_by_chapter[$chapter['chapter_id']]);
+			}
+		}
+
+		$data = $this->data;
+		$data['chapter'] = $chapter_list;
+		$data['total']   = $total;
+
+		$this->load->view('admin/header', $data);
+		$this->load->view('admin/navigation', $data);
+		$this->load->view('admin/agm/list_zoom_registrant_view',$data);
+		$this->load->view('admin/footer');
+
+	}
+
+	public function list_zoom_registrant_personal(){
+
+		$list = $this->agm_model->list_zoom_registrant();
+		foreach($list as $l){
+			if($l['membership_id'] < 3000 && $l['membership_id'] > 1000)
+				$registrant[$l['nric']] = $l;
+		}
+
+		$members = $this->agm_model->get_member_meeting_list();
+		foreach($members as $k => $m){
+			if(isset($registrant[$m['nric']])){
+				$members[$k]['registrant'] = $registrant[$m['nric']];
+			}else{
+				$members[$k]['registrant'] = array(
+					'first_name' => $m['membership_id'].'-',
+					'last_name'  => $m['name_chinese'],
+					'email'      => $m['email'],
+					'zoom_link'  => '',
+					'registrant_id' => '',
+					'reg_date'   => '-未登記-',
+				);
+			}
+		}
+
+		$data = $this->data;
+		$data['members'] = $members;
+
+		$this->load->view('admin/header', $data);
+		$this->load->view('admin/navigation', $data);
+		$this->load->view('admin/agm/list_zoom_registrant_personal_view',$data);
+		$this->load->view('admin/footer');
+	}
+
+	public function list_zoom_registrant_nonvote(){
+
+		$list = $this->agm_model->list_zoom_registrant_nonvote();
+		foreach($list as $l){
+			if($l['membership_id'] < 3000 && $l['membership_id'] > 1000)
+				$registrant[$l['nric']] = $l;
+		}
+
+		$members = $this->agm_model->get_member_meeting_list();
+		foreach($members as $k => $m){
+			if(isset($registrant[$m['nric']])){
+				$members[$k]['registrant'] = $registrant[$m['nric']];
+			}else{
+				$members[$k]['registrant'] = array(
+					'first_name' => $m['membership_id'].'-',
+					'last_name'  => $m['name_chinese'],
+					'email'      => $m['email'],
+					'zoom_link'  => '',
+					'registrant_id' => '',
+					'reg_date'   => '-未登記-',
+				);
+			}
+		}
+
+		$data = $this->data;
+		$data['list'] = $list;
+
+		$this->load->view('admin/header', $data);
+		$this->load->view('admin/navigation', $data);
+		$this->load->view('admin/agm/list_zoom_registrant_nonvote_view',$data);
+		$this->load->view('admin/footer');
+	}
+
+	public function ajax_add_registrant(){
+
+        $post = $this->input->post();
+
+        // Submit to Zoom API
+        $registrant = $this->agm_model->api_add_zoom_registrant("89065666966",array(
+            "email"      => $post['email'],
+            "first_name" => $post['first_name'],
+            "last_name"  => $post['last_name'],
+        ));
+
+        // if Error, Display ERROR to contact admin
+        if(isset($registrant['code'])){
+        	echo json_encode(array(
+        		'success' => 0,
+        		'msg'     => "Error ".$registrant['code'].":".$registrant['message'],
+        	));
+            return ;
+        }
+
+
+        $registrant_primary = array(
+            'email'         => $post['email'],
+        );
+        $registrant_value = array(
+            'first_name'   => $post['first_name'],
+            'last_name'    => $post['last_name'],
+            'registrant_id'=> $registrant['registrant_id'],
+            'zoom_link'    => $registrant['join_url'],
+        );
+        $this->agm_model->add_registrant($registrant_primary,$registrant_value);
+
+        echo json_encode(array(
+        	'success' => 1,
+        	'msg'     => 'Success updated!',
+        	'zoom_link' => $registrant['join_url'],
+        ));
+        return;
+    }
+
+    public function ajax_add_registrant_personal(){
+
+        $post = $this->input->post();
+
+        // Submit to Zoom API
+        $registrant = $this->agm_model->api_add_zoom_registrant("89065666966",array(
+            "email"      => $post['email'],
+            "first_name" => $post['first_name'],
+            "last_name"  => $post['last_name'],
+        ));
+
+        // if Error, Display ERROR to contact admin
+        if(isset($registrant['code'])){
+        	echo json_encode(array(
+        		'success' => 0,
+        		'msg'     => "Error ".$registrant['code'].":".$registrant['message'],
+        	));
+            return ;
+        }
+
+
+        $registrant_primary = array(
+            'email'         => $post['email'],
+        );
+        $registrant_value = array(
+            'first_name'   => $post['first_name'],
+            'last_name'    => $post['last_name'],
+            'registrant_id'=> $registrant['registrant_id'],
+            'zoom_link'    => $registrant['join_url'],
+            'nric'         => $post['nric'],
+            'contact_id'   => $post['contact_id'],
+            'name_chinese' => $post['name_chinese'],
+            'name_malay'   => $post['name_malay'],
+            'membership_id'=> $post['membership_id'],
+        );
+        if($post['position']) $registrant_value['position'] = $post['position'];
+        $this->agm_model->add_registrant($registrant_primary,$registrant_value);
+
+        echo json_encode(array(
+        	'success' => 1,
+        	'msg'     => 'Success updated!',
+        	'zoom_link' => $registrant['join_url'],
+        ));
+        return;
+    }
+
+    public function ajax_del_registrant(){
+
+        $post = $this->input->post();
+
+        // Submit to Zoom API
+        $registrant = $this->agm_model->api_del_zoom_registrant("89065666966",$post['registrant_id']);
+
+        // if Error, Display ERROR to contact admin
+        if(isset($registrant['code'])){
+        	echo json_encode(array(
+        		'success' => 0,
+        		'msg'     => "Error ".$registrant['code'].":".$registrant['message'],
+        	));
+            return ;
+        }
+
+        $this->agm_model->del_registrant($post['email']);
+        echo json_encode(array(
+        	'success' => 1,
+        	'msg'     => 'Contact deleted! Refresh to reflect.',
+        ));
+        return;
+    }
+
 	
 }
 

@@ -61,4 +61,184 @@ class Agm_model extends CI_Model {
 			$this->db->insert('tbs_agm_attendance',array_merge($primary,$value));
 		}
 	}
+
+	public function get_member_meeting_list(){
+		$this->db = $this->load->database('local', TRUE);
+
+		$this->db->select('membership_id, member_id, c.name_dharma as name_chinese, name_malay, nric, email')
+				->from('tbs_member m')
+				->join('tbs_contact c','c.contact_id = m.member_id', 'left')
+				->where('m.status','A')
+				->order_by('membership_id');
+		$i = $this->db->get();
+        return ($i->num_rows() > 0) ? $i->result_array() : array();
+	}
+
+	public function add_registrant($primary,$value){
+		$this->db = $this->load->database('local', TRUE);
+
+		$counter = 0;
+		foreach($primary as $k => $v){
+			$this->db->where($k,$v);
+		}
+		$this->db->from('tbs_agm_zoom_reg');
+		$query = $this->db->get();
+
+		if ($query->num_rows() > 0) {
+			$this->db = $this->load->database('local', TRUE);
+			foreach($primary as $k => $v){
+				$this->db->where($k,$v);
+			}
+			$this->db->update('tbs_agm_zoom_reg',$value);
+
+		}else{
+			$this->db = $this->load->database('local', TRUE);
+			$this->db->insert('tbs_agm_zoom_reg',array_merge($primary,$value));
+		}
+	}
+
+	public function del_registrant($email){
+		$this->db = $this->load->database('local', TRUE);
+		$this->db->delete('tbs_agm_zoom_reg', array('email' => $email));
+	}
+
+	public function check_duplicate_email_registrant($email){
+		$this->db = $this->load->database('local', TRUE);
+
+		$this->db->where('email',$email);
+		$res = $this->db->get('tbs_agm_zoom_reg');
+		return $res->result_array();
+	}
+
+	public function count_same_chapter($chapter_id){
+		$this->db = $this->load->database('local', TRUE);
+
+		$this->db->where('chapter_id',$chapter_id);
+		$res = $this->db->get('tbs_agm_zoom_reg');
+		return $res->result_array();
+	}
+
+	public function get_registrant_link($nric){
+		$this->db = $this->load->database('local', TRUE);
+		$this->db->select('zoom_link')
+				->where('nric',$nric);
+		$res = $this->db->get('tbs_agm_zoom_reg');
+		if ($res->num_rows() > 0) {
+			return $res->result_array()[0];
+		}else return array("zoom_link" => '');
+	}
+
+	public function list_zoom_registrant(){
+		$this->db = $this->load->database('local', TRUE);
+		$res = $this->db->get('tbs_agm_zoom_reg');
+		return $res->result_array();
+	}
+
+	public function list_zoom_registrant_nonvote(){
+		$this->db = $this->load->database('local', TRUE);
+
+		$this->db->where('membership_id','列席');
+		$res = $this->db->get('tbs_agm_zoom_reg');
+		return $res->result_array();
+	}
+
+	public function api_add_zoom_registrant($meeting_id,$user){
+
+		// Generate at: https://marketplace.zoom.us/develop/apps/hpkMCtQGQa2t0MAGvIutEA/credentials
+		// Token expired on 2021-06-27 23:59
+		$access_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6Ikw4NWFOandIUkhtVkJZaU55VTh4NWciLCJleHAiOjE2MjQ4MDk1NDAsImlhdCI6MTYxOTE2NzYwMH0.KKgQUyalZ8oZwrspElgKBlXYUHw32Vc26pnZOrSfVGk";
+
+		$curl = curl_init();
+		curl_setopt_array($curl, array(
+			CURLOPT_URL => "https://api.zoom.us/v2/meetings/".$meeting_id."/registrants",
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => "",
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 30,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => "POST",
+			CURLOPT_POSTFIELDS => json_encode($user),
+			CURLOPT_HTTPHEADER => array(
+				"authorization: Bearer ".$access_token,
+				"content-type: application/json"
+			),
+		));
+		$response = curl_exec($curl);
+		$err = curl_error($curl);
+
+		curl_close($curl);
+
+		if ($err) {
+		  return array("error"=>$err);
+		} else {
+		  return json_decode($response,1);
+		}
+
+	}
+
+	public function api_del_zoom_registrant($meeting_id,$registrant_id){
+
+		// Generate at: https://marketplace.zoom.us/develop/apps/hpkMCtQGQa2t0MAGvIutEA/credentials
+		// Token expired on 2021-06-27 23:59
+		$access_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6Ikw4NWFOandIUkhtVkJZaU55VTh4NWciLCJleHAiOjE2MjQ4MDk1NDAsImlhdCI6MTYxOTE2NzYwMH0.KKgQUyalZ8oZwrspElgKBlXYUHw32Vc26pnZOrSfVGk";
+
+		$curl = curl_init();
+
+		curl_setopt_array($curl, array(
+			CURLOPT_URL => "https://api.zoom.us/v2/meetings/".$meeting_id."/registrants/".$registrant_id,
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => "",
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 30,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => "DELETE",
+			CURLOPT_HTTPHEADER => array(
+				"authorization: Bearer ".$access_token
+			),
+		));
+		$response = curl_exec($curl);
+		$err = curl_error($curl);
+
+		curl_close($curl);
+
+		if ($err) {
+		  return array("error"=>$err);
+		} else {
+		  return json_decode($response,1);
+		}
+}
+
+	// Temporary Unused
+	private function api_get_zoom_registrant_link($meeting_id, $page){
+
+		// Generate at: https://marketplace.zoom.us/develop/apps/hpkMCtQGQa2t0MAGvIutEA/credentials
+		// Token expired on 2021-06-27 23:59
+		$access_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6Ikw4NWFOandIUkhtVkJZaU55VTh4NWciLCJleHAiOjE2MjQ4MDk1NDAsImlhdCI6MTYxOTE2NzYwMH0.KKgQUyalZ8oZwrspElgKBlXYUHw32Vc26pnZOrSfVGk";
+
+		$curl = curl_init();
+
+		curl_setopt_array($curl, array(
+			CURLOPT_URL => "https://api.zoom.us/v2/meetings/".$meeting_id."/registrants?page_number=".$page."&page_size=300&status=approved",
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => "",
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 30,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => "GET",
+			CURLOPT_HTTPHEADER => array(
+				"authorization: Bearer ".$access_token
+			),
+		));
+
+		$response = curl_exec($curl);
+		$err = curl_error($curl);
+
+		curl_close($curl);
+
+		if ($err) {
+		  echo "cURL Error #:" . $err;
+		} else {
+		  echo "<pre>";print_r(json_decode($response,1));
+		}
+	}
 }

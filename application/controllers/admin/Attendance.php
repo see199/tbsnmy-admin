@@ -28,11 +28,13 @@ class Attendance extends CI_Controller {
 		foreach($list as $k => $v){
 			if($k){
 				$d = explode("\t",$v);
+				
 				if($v){
+					$type = (preg_match('/Check/',$d[8])) ? trim(rtrim($d[8])) : (((int)substr($d[0],11,2) < 12 )? "Check-In" : "Check-Out");
 					$data = array(
 						'id'   => trim(rtrim($d[1])),
 						'name' => trim(rtrim($d[2])) . ' ' . trim(rtrim($d[3])),
-						'type' => trim(rtrim($d[8])),
+						'type' => $type,
 						'datetime' => trim(rtrim($d[0])),
 					);
 					$this->boyeh_model->insert_attendance($data);

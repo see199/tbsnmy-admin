@@ -218,6 +218,15 @@
                     <li>
                         <a href="<?= base_url(); ?>admin/agm/"><i class="fa fa-briefcase"></i> 會員大會</a>
                     </li>
+                    <li>
+                        <a href="<?= base_url(); ?>admin/agm/list_zoom_registrant"><i class="fa fa-briefcase"></i> AGM Zoom 團體</a>
+                    </li>
+                    <li>
+                        <a href="<?= base_url(); ?>admin/agm/list_zoom_registrant_personal"><i class="fa fa-briefcase"></i> AGM Zoom 個人</a>
+                    </li>
+                    <li>
+                        <a href="<?= base_url(); ?>admin/agm/list_zoom_registrant_nonvote"><i class="fa fa-briefcase"></i> AGM Zoom 列席</a>
+                    </li>
 
                   </ul>
                 </li>

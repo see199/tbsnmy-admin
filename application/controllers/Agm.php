@@ -6,7 +6,7 @@ class AGM extends CI_Controller {
 
 		parent::__construct();
 		$this->load->model('api_model');
-		$this->load->helper(array('url','file'));
+		$this->load->helper(array('url','file','common','form'));
 		$this->config->load('siteinfo', TRUE);
 	}
 
@@ -71,6 +71,134 @@ class AGM extends CI_Controller {
 	    	}
     	}
     	return $attendance;
+    }
+
+
+    // Registration for Zoom
+    public function register(){
+
+        // Sorting by state
+        $chapter_by_state = array();
+        $states = array(
+            "" => " - 請選擇 | Please select - ",
+            '1' => 'Johor',
+            '2' => 'Kedah',
+            '3' => 'Kelantan',
+            '4' => 'Melaka',
+            '5' => 'Negeri Sembilan',
+            '6' => 'Pahang',
+            '7' => 'Penang',
+            '8' => 'Perak',
+            '9' => 'Perlis',
+            '10' => 'Sabah',
+            '11' => 'Sarawak',
+            '12' => 'Selangor',
+            '13' => 'Terengganu',
+            '14' => 'W.Persekutan',
+        );
+        foreach($states as $k => $v){
+            $chapter_by_state[$k][""] = " - 請選擇 | Please select - ";
+        }
+
+        foreach($this->api_model->get_chapter_meeting_list() as $chapter){
+            $chapter_by_state[array_keys($states,$chapter['state'])[0]][$chapter['chapter_id']] = $chapter['name_chinese'];
+            //$states[$chapter['state']] = $chapter['state'];
+        }
+
+        $this->load->view('agm/register_view',array(
+            'chapter_by_state' => $chapter_by_state,
+            'states'           => $states,
+        ));
+    }
+
+    public function get_contact_by_nric($nric){
+        $this->load->model('contact_model');
+        $contact = $this->contact_model->get_contact_by_nric($nric);
+
+        echo json_encode($contact);
+    }
+
+    public function zoom_login(){
+
+        $post = $this->input->post();
+        if(count($post)){
+            $this->load->model('agm_model');
+            $res = $this->agm_model->get_registrant_link($post['nric']);
+            if($res['zoom_link']) header('Location: '.$res['zoom_link']);
+            else echo "您並未申請登記。請 <a href='".base_url('agm/register')."'> - 點擊這裡申請 -</a>";
+
+        }else{
+            $this->load->view('agm/login_view',array());
+        }
+
+        
+    }
+
+    public function add_registrant(){
+        $this->load->model('agm_model');
+
+        $post    = $this->input->post();
+        $chapter = $this->api_model->get_chapter_details_by_id($post['chapter_id']);
+
+        // Check if Email exists or not, if exists, display error
+        $duplicate_emails = $this->agm_model->check_duplicate_email_registrant($post['email']);
+        if(count($duplicate_emails) > 0){
+            if($duplicate_emails[0]['nric'] != $post['nric']){
+                        
+                list($e1,$e2) = explode('@',$post['email']);
+                $new_email1 = $e1.'+1@'.$e2;
+                $new_email2 = $e1.'+2@'.$e2;
+    
+                echo "Error: 此電郵已登記！請使用其他電郵。<br />建議修改： ".$post['email']." 改成 $new_email1 或 $new_email2";
+                echo "<br /><a href=".base_url("agm/register")."> Back </a>";
+                exit;
+            }
+        }
+
+        // Limit 3 Registrant -- Become 列席
+        $count_same_chapter = $this->agm_model->count_same_chapter($post['chapter_id']);
+        if(count($count_same_chapter) >= 3){
+            $chapter['membership_id'] = '列席';
+        }
+
+        // Submit to Zoom API
+        $post['first_name'] = $chapter['membership_id'] . '-' . preg_replace(array('/真佛宗/','/同修會/','/雷藏寺/','/堂/','/（籌委會）/'),'',$chapter['name_chinese']) .'-';
+
+        $registrant = $this->agm_model->api_add_zoom_registrant("89065666966",array(
+            "email"      => $post['email'],
+            "first_name" => $post['first_name'],
+            "last_name"  => $post['name_chinese'],
+        ));
+
+        // if Error, Display ERROR to contact admin
+        if(isset($registrant['code'])){
+            echo "無法登記！請聯絡馬密總秘書處。 Failed to register! Please contact secretary. Error Message: " . $registrant['code'].":".$registrant['message'];
+            echo "<br /><a href=".base_url("agm/register")."> Back </a>";
+            return ;
+        }
+
+
+        $registrant_primary = array(
+            'nric'         => $post['nric'],
+        );
+        $registrant_value = array(
+            'chapter_id'   => $post['chapter_id'],
+            'contact_id'   => $post['contact_id'],
+            'name_chinese' => $post['name_chinese'],
+            'name_malay'   => $post['name_malay'],
+            'membership_id'=> $chapter['membership_id'],
+            'position'     => $post['position'],
+            'email'        => $post['email'],
+            'first_name'   => $post['first_name'],
+            'last_name'    => $post['name_chinese'],
+            'registrant_id'=> $registrant['registrant_id'],
+            'zoom_link'    => $registrant['join_url'],
+        );
+        $this->agm_model->add_registrant($registrant_primary,$registrant_value);
+
+        echo "成功登記！Registration Success! ";
+        echo "<br /><a href=".base_url("agm/register")."> Back </a>";
+        return;
     }
 
 }

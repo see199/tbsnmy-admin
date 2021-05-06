@@ -20,10 +20,14 @@
         <style>
             body {
                 background-color: #E6E6E6;
+                background: url(<?php echo base_url(); ?>asset/img/lotus-2528454_1920.jpg);
+                background-size: cover;
             }
 
             .backcolor-replace {
                 background-color: #E6E6E6;
+                background: url(<?php echo base_url(); ?>asset/img/lotus-2528454_1920.jpg);
+                background-size: cover;
             }
 
             .vertical-center {

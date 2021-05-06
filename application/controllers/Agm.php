@@ -11,7 +11,7 @@ class AGM extends CI_Controller {
 	}
 
 	public function index(){
-		$this->chapter();
+		$this->zoom_login();
 	}
 
     public function chapter(){
@@ -126,7 +126,10 @@ class AGM extends CI_Controller {
         if(count($post)){
             $this->load->model('agm_model');
             $res = $this->agm_model->get_registrant_link($post['nric']);
-            if($res['zoom_link']) header('Location: '.$res['zoom_link']);
+            if($res['zoom_link']){
+                $this->agm_model->login_zoom($post['nric']);
+                header('Location: '.$res['zoom_link']);
+            }
             else{
                 $this->load->view('agm/login_view',array('error' => 'user_not_found'));
             }

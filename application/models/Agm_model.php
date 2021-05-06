@@ -102,6 +102,15 @@ class Agm_model extends CI_Model {
 		$this->db->delete('tbs_agm_zoom_reg', array('email' => $email));
 	}
 
+	public function login_zoom($nric){
+		$this->db = $this->load->database('local', TRUE);
+
+		$this->db->where('nric',$nric);
+		$this->db->update('tbs_agm_zoom_reg',array(
+			'login_time' => date('Y-m-d H:i:s')
+		));
+	}
+
 	public function check_duplicate_email_registrant($email){
 		$this->db = $this->load->database('local', TRUE);
 

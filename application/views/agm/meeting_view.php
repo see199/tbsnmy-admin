@@ -36,7 +36,7 @@ $('#search_box').val("");
 </script>
 <div id="hacker-list">
     <div class='row'>&nbsp;</div>
-    <div class='row'><div class='col-sm-6 text-center'><a href='<?= base_url('agm'); ?>'>道場</a> | <a href='<?= base_url('agm/member'); ?>'>個人</a> | <a href='<?= base_url('agm/stats'); ?>'>統計</a> </div></div>
+    <div class='row'><div class='col-sm-6 text-center'><a href='<?= base_url('agm/chapter'); ?>'>道場</a> | <a href='<?= base_url('agm/member'); ?>'>個人</a> | <a href='<?= base_url('agm/stats'); ?>'>統計</a> </div></div>
     <div class='row'><input class="search col-sm-6" id='search_box' onclick='empty_box();' /></div>
     <ul class="list">
         <?php $id_name = ($type == 'member') ? 'member_id' : 'chapter_id'; foreach($chapter as $d): ?>

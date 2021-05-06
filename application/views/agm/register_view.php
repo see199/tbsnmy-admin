@@ -133,7 +133,7 @@ $(document).ready(function(){
                 <div class='row text-center'>
                     <div class='col-md-12' style='padding:30px;'>
                         <img src="https://storage.googleapis.com/stateless-info-tbsn-my-2/2021/02/91c74a77-logo.png" width="100%" />
-                        <h2 class='text-center'>2021年會員大會登記表</h2>
+                        <h2 class='text-center' style='color:#600'>第8屆<?= date('Y'); ?>年度<br />常年會員代表大會<br />登記表</h2>
 
                         <?php if($msg_code == 'success_reg'): ?>
                             <div class='alert alert-success'><?= $msg; ?></div>

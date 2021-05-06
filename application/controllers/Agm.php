@@ -75,7 +75,7 @@ class AGM extends CI_Controller {
 
 
     // Registration for Zoom
-    public function register(){
+    public function register($msg_code='',$msg=''){
 
         // Sorting by state
         $chapter_by_state = array();
@@ -108,6 +108,8 @@ class AGM extends CI_Controller {
         $this->load->view('agm/register_view',array(
             'chapter_by_state' => $chapter_by_state,
             'states'           => $states,
+            'msg_code'         => $msg_code,
+            'msg'              => $msg,
         ));
     }
 
@@ -125,7 +127,9 @@ class AGM extends CI_Controller {
             $this->load->model('agm_model');
             $res = $this->agm_model->get_registrant_link($post['nric']);
             if($res['zoom_link']) header('Location: '.$res['zoom_link']);
-            else echo "您並未申請登記。請 <a href='".base_url('agm/register')."'> - 點擊這裡申請 -</a>";
+            else{
+                $this->load->view('agm/login_view',array('error' => 'user_not_found'));
+            }
 
         }else{
             $this->load->view('agm/login_view',array());
@@ -148,10 +152,10 @@ class AGM extends CI_Controller {
                 list($e1,$e2) = explode('@',$post['email']);
                 $new_email1 = $e1.'+1@'.$e2;
                 $new_email2 = $e1.'+2@'.$e2;
+
+                $this->register('error',"Error: 此電郵已登記！請使用其他電郵。<br />建議修改： ".$post['email']." 改成 $new_email1 或 $new_email2");
     
-                echo "Error: 此電郵已登記！請使用其他電郵。<br />建議修改： ".$post['email']." 改成 $new_email1 或 $new_email2";
-                echo "<br /><a href=".base_url("agm/register")."> Back </a>";
-                exit;
+                return;
             }
         }
 
@@ -172,8 +176,9 @@ class AGM extends CI_Controller {
 
         // if Error, Display ERROR to contact admin
         if(isset($registrant['code'])){
-            echo "無法登記！請聯絡馬密總秘書處。 Failed to register! Please contact secretary. Error Message: " . $registrant['code'].":".$registrant['message'];
-            echo "<br /><a href=".base_url("agm/register")."> Back </a>";
+
+            $this->register('error',"無法登記！請聯絡馬密總秘書處。 Failed to register! Please contact secretary. Error Message: " . $registrant['code'].":".$registrant['message']);
+
             return ;
         }
 
@@ -196,8 +201,7 @@ class AGM extends CI_Controller {
         );
         $this->agm_model->add_registrant($registrant_primary,$registrant_value);
 
-        echo "成功登記！Registration Success! ";
-        echo "<br /><a href=".base_url("agm/register")."> Back </a>";
+        $this->register('success_reg',"成功登記！Registration Success!");
         return;
     }
 

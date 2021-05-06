@@ -134,6 +134,12 @@ $(document).ready(function(){
                     <div class='col-md-12' style='padding:30px;'>
                         <img src="https://storage.googleapis.com/stateless-info-tbsn-my-2/2021/02/91c74a77-logo.png" width="100%" />
                         <h2 class='text-center'>2021年會員大會登記表</h2>
+
+                        <?php if($msg_code == 'success_reg'): ?>
+                            <div class='alert alert-success'><?= $msg; ?></div>
+                        <?php elseif($msg_code == 'error'):?>
+                            <div class='alert alert-danger'><?= $msg; ?></div>
+                        <?php endif; ?>
                     </div>
 
                     <form class='form-horizontal' id="upload_form" method="post" action="<?= base_url('agm/add_registrant');?>">

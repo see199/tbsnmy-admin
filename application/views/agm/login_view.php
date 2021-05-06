@@ -78,6 +78,7 @@
                     <div class='col-md-12' style='padding:30px;'>
                         <img src="https://storage.googleapis.com/stateless-info-tbsn-my-2/2021/02/91c74a77-logo.png" width="100%" />
                         <h2 class='text-center'><?= date('Y'); ?>年會員大會登入處</h2>
+                        <?php if(@$error == 'user_not_found'): ?><div class='alert alert-danger'>您並未申請登記。請先註冊登記！</div><?php endif; ?>
                     </div>
 
                     <form class='form-horizontal' id="upload_form" method="post" action="<?= base_url('agm/zoom_login');?>">

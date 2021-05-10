@@ -18,7 +18,7 @@ class AGM extends CI_Controller {
         $this->load->view('agm/meeting_view',array(
         	'chapter'    => $this->api_model->get_chapter_meeting_list(),
         	'type'       => 'chapter',
-        	'attendance' => $this->read_attendance(),
+        	'attendance' => $this->read_attendance($this->config->item('file_attendance')),
         ));
     }
 
@@ -26,31 +26,74 @@ class AGM extends CI_Controller {
         $this->load->view('agm/meeting_view',array(
         	'chapter'    => $this->api_model->get_member_meeting_list(),
         	'type'       => 'member',
-        	'attendance' => $this->read_attendance(),
+        	'attendance' => $this->read_attendance($this->config->item('file_attendance')),
         ));
     }
 
     public function stats(){
-    	$data = $this->read_attendance();
+    	$this->load->view('agm/stats_view',array());
+    }
 
-    	$chapter = $chapter_member = $member = 0;
-    	foreach($data as $type => $v){
-    		foreach($v as $id => $total){
-    			if((int)$total > 0){
-    				$$type++;
-    				if($type == 'chapter') $chapter_member += $total;
-    			}
-    		}
-    	}
-    	$this->load->view('agm/stats_view',array(
-        	'total_chapter' => $chapter,
-        	'total_member'  => $member,
-        	'total_chapter_member' => $chapter_member,
+    public function ajax_stats(){
+        
+        // 現場記錄
+        $data = $this->read_attendance($this->config->item('file_attendance'));
+        $chapter = $chapter_member = $member = 0;
+        foreach($data as $type => $v){
+            foreach($v as $id => $total){
+                if((int)$total > 0){
+                    $$type++;
+                    if($type == 'chapter') $chapter_member += $total;
+                }
+            }
+        }
+
+        // Zoom 登入
+        $data_online = $this->read_attendance($this->config->item('file_attendance_online'));
+        $online_chapter = $online_chapter_member = $online_member = 0;
+        foreach($data_online as $type => $v){
+            foreach($v as $id => $total){
+                if((int)$total > 0){
+                   
+                    // Comparing with 現場
+                    if($type == 'member'){
+                        if(@!isset($data['member'][$id]) || @$data['member'][$id] == 0){
+                            $online_member++;
+                        }
+                    }else{
+
+                        // 如果現場 + Zoom >= 3人，Zoom 人數 = 3 - 現場人數
+                        // 如果不是的話， Zoom 人數直接加上去
+                        // Cater for: 現場沒人 / 現場全部出席 / 部分現場 + 部分Zoom
+                        $to_add = (($data['chapter'][$id] + $total) >= 3) ? 3-$data['chapter'][$id] : $total;
+                        $online_chapter_member += $to_add;
+
+                        // 如果沒有現場者，才加入道場數額
+                        if(!isset($data['chapter'][$id]) || $data['chapter'][$id] == 0)
+                        $online_chapter += 1;
+                    }
+                }
+            }
+        }
+
+        echo json_encode(array(
+            'total_chapter' => $chapter,
+            'total_member'  => $member,
+            'total_chapter_member' => $chapter_member,
+
+            'total_online_chapter' => $online_chapter,
+            'total_online_member'  => $online_member,
+            'total_online_chapter_member' => $online_chapter_member,
+
+            'total_total_chapter' => $chapter + $online_chapter,
+            'total_total_member'  => $member + $online_member,
+            'total_total_chapter_member' => $chapter_member + $online_chapter_member,
         ));
     }
 
     public function update_attendance(){
-    	$attendance = $this->read_attendance();
+        $file = $this->config->item('file_attendance');
+    	$attendance = $this->read_attendance($file);
     	$attendance[$this->input->post('type')][$this->input->post('id')] = $this->input->post('status');
 
     	$txt = '';
@@ -59,11 +102,11 @@ class AGM extends CI_Controller {
     			$txt .= $type."\t".$id."\t".$total."\n";
     		}
     	}
-    	write_file($this->config->item('file_attendance'),$txt);
+    	write_file($file,$txt);
     }
 
-    private function read_attendance(){
-    	$data = explode("\n",read_file($this->config->item('file_attendance')));
+    private function read_attendance($file){
+    	$data = explode("\n",read_file($file));
     	foreach($data as $v){
     		if($v){
 	    		list($type,$id,$total) = explode("\t",$v);
@@ -71,6 +114,34 @@ class AGM extends CI_Controller {
 	    	}
     	}
     	return $attendance;
+    }
+
+    public function update_online_attendance(){
+        
+        $this->load->model('agm_model');
+        $list = $this->agm_model->list_login_zoom_registrant();
+
+        $sorted_list = array();
+        foreach($list as $l){
+
+            // 團體會員
+            if($l['membership_id'] > 5000){
+                @$sorted_list['chapter'][$l['chapter_id']] += 1;
+            }
+            // 個人會員
+            elseif($l['membership_id'] > 1000){
+                @$sorted_list['member'][$l['contact_id']] += 1;
+            }
+        }
+
+        // Write to Log file
+        $txt = '';
+        foreach($sorted_list as $type => $v){
+            foreach($v as $id => $total){
+                $txt .= $type."\t".$id."\t".$total."\n";
+            }
+        }
+        write_file($this->config->item('file_attendance_online'),$txt);
     }
 
 

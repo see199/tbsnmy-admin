@@ -143,6 +143,14 @@ class Agm_model extends CI_Model {
 		return $res->result_array();
 	}
 
+	public function list_login_zoom_registrant(){
+		$this->db = $this->load->database('local', TRUE);
+		$this->db->where('login_time <>','0000-00-00 00:00:00')
+				->where('membership_id <>','列席');
+		$res = $this->db->get('tbs_agm_zoom_reg');
+		return $res->result_array();
+	}
+
 	public function list_zoom_registrant_nonvote(){
 		$this->db = $this->load->database('local', TRUE);
 

@@ -40,7 +40,7 @@ iframe{
     overflow: hidden;
 }
 .content{
-  overflow: hidden;
+  /*overflow: hidden;*/
   position: absolute;
   top: 40px;
   left: 0;
@@ -75,8 +75,10 @@ iframe{
     </div>
   
   <div class='content'>
-    <object data='<?= $pdf; ?>' type='application/pdf' width='100%' height='100%'>
+    <object data='<?= $pdf; ?>' type='application/pdf' width='100%' height='100%' style="overflow:scroll">
+      <?php foreach($images as $i_url): ?><img src="<?=$i_url;?>" width='100%'><?php endforeach;?>
       <p style='padding-top:70px;text-align:center;'>若無法瀏覽，敬請點擊以下鏈接下載: <a href="<?= $pdf; ?>"><?= $pdf; ?></a></p></object>
+      
   </div>
 </div>
     <!-- Bootstrap Core JavaScript -->

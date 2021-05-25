@@ -188,6 +188,7 @@ class Agm extends CI_Controller {
 	public function list_zoom_registrant_personal(){
 
 		$list = $this->agm_model->list_zoom_registrant();
+		$registrant = array();
 		foreach($list as $l){
 			if($l['membership_id'] < 3000 && $l['membership_id'] > 1000)
 				$registrant[$l['nric']] = $l;
@@ -211,6 +212,7 @@ class Agm extends CI_Controller {
 
 		$data = $this->data;
 		$data['members'] = $members;
+		$data['total_attends'] = sizeof($registrant);
 
 		$this->load->view('admin/header', $data);
 		$this->load->view('admin/navigation', $data);

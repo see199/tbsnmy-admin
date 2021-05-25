@@ -68,6 +68,7 @@
         <div class="box">
             <div class="col-lg-8 col-lg-offset-2 text-center form-inline">
                 <h1>會員大會 ZOOM 登記記錄<br />個人會員</h1>
+                出席：<?= $total_attends;?>
             </div>
         </div>
     </div>

@@ -238,7 +238,7 @@ class Api extends CI_Controller {
 		$data['images'] = array();
 		do{
 			$image_page++;
-			$image_url = "https://storage.googleapis.com/tbs-news/".$year."/WTBN".$issue."-pg".$image_page.".jpg";
+			$image_url = "https://storage.googleapis.com/tbs-news/".$year."/WTBN".$issue."_page-".sprintf("%04d", $image_page).".jpg";
 			@$a = file_get_contents($image_url);
 			if($a) $data['images'][] = $image_url;
 		}while($a);

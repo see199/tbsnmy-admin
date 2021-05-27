@@ -68,7 +68,7 @@ function check_empty(){
         alert("請選擇通過 ZOOM 出席或現場出席！Please choose within attendance via ZOOM or on site!");
         return false;
     }
-    if(!$('#name_chinese').val() || !$('#name_malay').val() || !$('#email').val() || !$('#position').val()){
+    if(!$('#name_chinese').val() || !$('#name_malay').val() || !$('#email').val()){
         alert("請填寫所有資料！Please fill in all information!");
         return false;
     }
@@ -76,19 +76,6 @@ function check_empty(){
 
 $(document).ready(function(){
     
-    $('#chapter-').show(); // Default display Johor
-
-    $('#state').on('change',function(){
-        hide_all_chapter();
-        $('#chapter-'+this.value).show();
-    });
-
-    function hide_all_chapter(){
-        <?php foreach($states as $k => $state): ?>
-        $('#chapter-<?=$k;?>').hide();
-        <?php endforeach; ?>
-    }
-
     $( "#nric" ).keyup(function() {
         var ic_val = this.value;
         if($.isNumeric(ic_val.charAt(6))) $('#nric').val(ic_val.slice(0,-1)+"-"+ic_val.charAt(6));
@@ -97,11 +84,6 @@ $(document).ready(function(){
 
     $('#btn-check').on('click',function(){
 
-        // Error Checking
-        if(!$('#chapter_id').val()){
-            alert("請選擇代表道場！");
-            return;
-        }
         if(!$('#nric').val()){
             alert("請填入身份證號碼！");
             return;
@@ -116,10 +98,10 @@ $(document).ready(function(){
             type: 'get',
             success: function( data, textStatus, jQxhr ){
                 me = JSON.parse(data);
+                console.log(me);
                 $('#name_chinese').val(me.name_chinese);
                 $('#name_malay').val(me.name_malay);
                 $('#email').val(me.email);
-                $('#position').val(me.position);
                 $('#online').val(me.online);
                 $('#contact_id').val(me.contact_id);
                 $('#page-check').hide();
@@ -138,7 +120,7 @@ $(document).ready(function(){
                 <div class='row text-center'>
                     <div class='col-md-12' style='padding:30px;'>
                         <img src="https://storage.googleapis.com/stateless-info-tbsn-my-2/2021/02/91c74a77-logo.png" width="100%" />
-                        <h2 class='text-center' style='color:#600'>第8屆<?= date('Y'); ?>年度<br />常年會員代表大會<br />登記表 (團體)</h2>
+                        <h2 class='text-center' style='color:#600'>第8屆<?= date('Y'); ?>年度<br />常年會員代表大會<br />登記表 (個人)</h2>
 
                         <?php if($msg_code == 'success_reg'): ?>
                             <div class='alert alert-success'><?= $msg; ?></div>
@@ -147,31 +129,11 @@ $(document).ready(function(){
                         <?php endif; ?>
                     </div>
 
-                    <form class='form-horizontal' id="upload_form" method="post" action="<?= base_url('agm/add_registrant');?>">
+                    <form class='form-horizontal' id="upload_form" method="post" action="<?= base_url('agm/add_registrant_personal');?>">
 
                         <div class='row'>&nbsp;</div>
 
                         <div id="page1">
-                            <div class='row row-data col-xs-10 col-xs-offset-1'>
-                                <div class='col-xs-3 strong_txt'>州屬 States:</div>
-                                <div class='col-xs-9'>
-                                    <div class='form form-group'>
-                                        <?= form_dropdown("state",$states,"",array("class"=>"form-control", "id" => "state")); ?>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class='row row-data col-xs-10 col-xs-offset-1'>
-                                <div class='col-xs-3 strong_txt'>道場 Chapter:</div>
-                                <div class='col-xs-9'>
-                                    <div class='form form-group'>
-                                        <?php foreach($states as $k => $state): ?>
-                                        <?= form_dropdown("chapter",$chapter_by_state[$k],"",array("class"=>"form-control", "id" => "chapter-".$k, "style" => "display:none", "onchange" => "update_chapter_id(this.value)")); ?>
-                                        <?php endforeach; ?>
-                                    </div>
-                                </div>
-                            </div>
-
                            <div class='row row-data col-xs-10 col-xs-offset-1'>
                                 <div class='col-xs-3 strong_txt'>身份證號碼 IC No:</div>
                                 <div class='col-xs-9'>
@@ -223,13 +185,6 @@ $(document).ready(function(){
                                 <div class='col-md-3 strong_txt'>電郵 Email:</div>
                                 <div class='col-md-9'>
                                     <div class='form form-group'><input type='text' class='form-control col-xs-8' name='email' id='email' /></div>
-                                </div>
-                            </div>
-
-                            <div class='row row-data col-xs-10 col-xs-offset-1'>
-                                <div class='col-md-3 strong_txt'>職位 Position:<small>* 主席/秘書/財政/理事</small></div>
-                                <div class='col-md-9'>
-                                    <div class='form form-group'><input type='text' class='form-control col-xs-8' name='position' id='position' /></div>
                                 </div>
                             </div>
 

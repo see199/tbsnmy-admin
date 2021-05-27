@@ -197,9 +197,13 @@ class Agm extends CI_Controller {
 
 		$list = $this->agm_model->list_zoom_registrant();
 		$registrant = array();
+		$total = array('online' => 0, 'offline' => 0);
 		foreach($list as $l){
-			if($l['membership_id'] < 3000 && $l['membership_id'] > 1000)
+			if($l['membership_id'] < 3000 && $l['membership_id'] > 1000){
 				$registrant[$l['nric']] = $l;
+				if($l['zoom_link'] == '現場出席') $total['offline'] += 1;
+				else  $total['online'] += 1;
+			}
 		}
 
 		$members = $this->agm_model->get_member_meeting_list();
@@ -220,7 +224,7 @@ class Agm extends CI_Controller {
 
 		$data = $this->data;
 		$data['members'] = $members;
-		$data['total_attends'] = sizeof($registrant);
+		$data['total'] = $total;
 
 		$this->load->view('admin/header', $data);
 		$this->load->view('admin/navigation', $data);

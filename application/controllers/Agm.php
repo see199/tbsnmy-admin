@@ -184,6 +184,16 @@ class AGM extends CI_Controller {
         ));
     }
 
+    // Registration for Zoom
+    public function register2(){ $this->register_personal();}
+    public function register_personal($msg_code='',$msg=''){
+
+        $this->load->view('agm/register_personal_view',array(
+            'msg_code'         => $msg_code,
+            'msg'              => $msg,
+        ));
+    }
+
     public function get_contact_by_nric($nric){
         $this->load->model('contact_model');
         $contact = $this->contact_model->get_contact_by_nric($nric);
@@ -285,6 +295,77 @@ class AGM extends CI_Controller {
         $this->agm_model->add_registrant($registrant_primary,$registrant_value);
 
         $this->register('success_reg',"成功登記！Registration Success!");
+        return;
+    }
+
+    public function add_registrant_personal(){
+        $this->load->model('agm_model');
+        $this->load->model('contact_model');
+
+        $post    = $this->input->post();
+        $contact = $this->contact_model->get_contact_member($post['contact_id']);
+
+        // Check if Email exists or not, if exists, display error
+        $duplicate_emails = $this->agm_model->check_duplicate_email_registrant($post['email']);
+        if(count($duplicate_emails) > 0){
+            if($duplicate_emails[0]['nric'] != $post['nric']){
+                        
+                list($e1,$e2) = explode('@',$post['email']);
+                $new_email1 = $e1.'+1@'.$e2;
+                $new_email2 = $e1.'+2@'.$e2;
+
+                $this->register_personal('error',"Error: 此電郵已登記！請使用其他電郵。<br />建議修改： ".$post['email']." 改成 $new_email1 或 $new_email2");
+    
+                return;
+            }
+        }
+
+        // Submit to Zoom API
+        $post['first_name'] = $contact['membership_id'] .'-';
+
+        // If choose ZOOM only call ZOOM API
+        
+        if($post['online']){
+            $registrant = $this->agm_model->api_add_zoom_registrant("89065666966",array(
+                "email"      => $post['email'],
+                "first_name" => $post['first_name'],
+                "last_name"  => $post['name_chinese'],
+            ));
+        }else{
+            $registrant = array(
+                'registrant_id' => '',
+                'join_url' => '現場出席',
+            );
+        }
+
+        // if Error, Display ERROR to contact admin
+        if(isset($registrant['code']) && $post['online']){
+
+            $this->register_personal('error',"無法登記！請聯絡馬密總秘書處。 Failed to register! Please contact secretary. Error Message: " . $registrant['code'].":".$registrant['message']);
+
+            return ;
+        }
+
+
+        $registrant_primary = array(
+            'nric'         => $post['nric'],
+        );
+        $registrant_value = array(
+            'chapter_id'   => "",
+            'contact_id'   => $post['contact_id'],
+            'name_chinese' => $post['name_chinese'],
+            'name_malay'   => $post['name_malay'],
+            'membership_id'=> $contact['membership_id'],
+            'position'     => "",
+            'email'        => $post['email'],
+            'first_name'   => $post['first_name'],
+            'last_name'    => $post['name_chinese'],
+            'registrant_id'=> @$registrant['registrant_id'],
+            'zoom_link'    => @$registrant['join_url'],
+        );
+        $this->agm_model->add_registrant($registrant_primary,$registrant_value);
+
+        $this->register_personal('success_reg',"成功登記！Registration Success!");
         return;
     }
 

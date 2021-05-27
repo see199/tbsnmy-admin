@@ -102,7 +102,10 @@
                                         </button>
                                         <br /><br />
                                         <a href="<?= base_url('agm/register'); ?>" class="btn btn-warning">
-                                            註冊登記 Register
+                                            註冊登記 Register (團體 | Group)
+                                        </a><br /><br />
+                                        <a href="<?= base_url('agm/register_personal'); ?>" class="btn btn-warning">
+                                            註冊登記 Register (個人 | Personal)
                                         </a>
                                     </div>
                                 </div>

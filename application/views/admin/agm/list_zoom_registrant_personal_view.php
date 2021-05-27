@@ -68,7 +68,7 @@
         <div class="box">
             <div class="col-lg-8 col-lg-offset-2 text-center form-inline">
                 <h1>會員大會 ZOOM 登記記錄<br />個人會員</h1>
-                出席：<?= $total_attends;?>
+                線上出席：<?= $total['online'];?> | 現場出席：<?= $total['offline'];?>
             </div>
         </div>
     </div>
@@ -100,7 +100,7 @@
                                 <table class='table table-striped table-bordered table-hover'>
                                     <tbody>
                                     <tr>
-                                        <td width="10%" nowrap style="line-height: 2.3;" <?= $r['registrant_id'] ? "class='success'" : ""; ?>>
+                                        <td width="10%" nowrap style="line-height: 2.3;" class="<?= $r['zoom_link'] ? ($r['zoom_link'] == '現場出席' ? "warning" : "success") : "" ;?>">
                                             First Name:
                                             <br />Last Name:
                                             <br />Email:
@@ -119,7 +119,7 @@
                                             <input type='hidden' class='form-control' name='membership_id' id='membership_id_<?=$form_id;?>' value='<?=$m['membership_id'];?>'>
 
                                             <input type='text' class='form-control' name='zoom_link' id='zoom_link_<?=$form_id;?>' value='<?=$r['zoom_link'];?>'>
-                                            <?php if($r['registrant_id']) : ?>
+                                            <?php if($r['zoom_link']) : ?>
                                             <button class='btn btn-warning' onclick="update_registrant('<?=$form_id;?>')">Update</button>
                                             <button class='btn btn-danger' onclick="delete_registrant('<?=$form_id;?>')">Delete</button>
                                             <?php else: ?>

@@ -62,7 +62,7 @@
         <div class="box">
             <div class="col-lg-8 col-lg-offset-2 text-center form-inline">
                 <h1>會員大會 ZOOM 登記記錄<br />團體會員</h1>
-                總道場：<?= $total['chapter'];?> 總人數：<?= $total['chapter_member'];?>
+                總道場：<?= $total['chapter'];?> | ZOOM 總人數：<?= $total['chapter_member'];?> | 現場總人數：<?= $total['chapter_member_offline'];?>
             </div>
         </div>
     </div>
@@ -90,7 +90,7 @@
                                     <thead><tr class='info'><th>代表資料</th><th colspan=2>Zoom Details</th></tr></thead><tbody>
                                 <?php foreach($c['registrant'] as $key => $r): $form_id = $chapter_id."_".$key; ?>
                                     <tr>
-                                        <td width="20%" nowrap>
+                                        <td width="20%" nowrap class="<?= ($r['membership_id'] == '列席') ? "" : (($r['zoom_link'] == '現場出席') ? "warning" : "success") ;?>">
                                             <?= $r['name_chinese']; ?>
                                             <br /><?= $r['name_malay']; ?>
                                             <br /><?= $r['nric']; ?>

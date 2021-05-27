@@ -242,14 +242,23 @@ class AGM extends CI_Controller {
         // Submit to Zoom API
         $post['first_name'] = $chapter['membership_id'] . '-' . preg_replace(array('/真佛宗/','/同修會/','/雷藏寺/','/堂/','/（籌委會）/'),'',$chapter['name_chinese']) .'-';
 
-        $registrant = $this->agm_model->api_add_zoom_registrant("89065666966",array(
-            "email"      => $post['email'],
-            "first_name" => $post['first_name'],
-            "last_name"  => $post['name_chinese'],
-        ));
+        // If choose ZOOM only call ZOOM API
+        
+        if($post['online']){
+            $registrant = $this->agm_model->api_add_zoom_registrant("89065666966",array(
+                "email"      => $post['email'],
+                "first_name" => $post['first_name'],
+                "last_name"  => $post['name_chinese'],
+            ));
+        }else{
+            $registrant = array(
+                'registrant_id' => '',
+                'join_url' => '現場出席',
+            );
+        }
 
         // if Error, Display ERROR to contact admin
-        if(isset($registrant['code'])){
+        if(isset($registrant['code']) && $post['online']){
 
             $this->register('error',"無法登記！請聯絡馬密總秘書處。 Failed to register! Please contact secretary. Error Message: " . $registrant['code'].":".$registrant['message']);
 
@@ -270,8 +279,8 @@ class AGM extends CI_Controller {
             'email'        => $post['email'],
             'first_name'   => $post['first_name'],
             'last_name'    => $post['name_chinese'],
-            'registrant_id'=> $registrant['registrant_id'],
-            'zoom_link'    => $registrant['join_url'],
+            'registrant_id'=> @$registrant['registrant_id'],
+            'zoom_link'    => @$registrant['join_url'],
         );
         $this->agm_model->add_registrant($registrant_primary,$registrant_value);
 

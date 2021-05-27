@@ -163,14 +163,22 @@ class Agm extends CI_Controller {
 		}
 
 		$chapter_list = array();
-		$total = array('chapter' => 0, 'chapter_member' => 0);
+		$total = array('chapter' => 0, 'chapter_member' => 0, 'chapter_member_offline' => 0);
 		foreach($this->agm_model->get_chapter_list(date('Y')) as $chapter){
 			$chapter_list[$chapter['chapter_id']] = $chapter;
 
 			if(isset($registrant_by_chapter[$chapter['chapter_id']])){
-				$chapter_list[$chapter['chapter_id']]['registrant'] = $registrant_by_chapter[$chapter['chapter_id']];
+				$registrant = $registrant_by_chapter[$chapter['chapter_id']];
+				$chapter_list[$chapter['chapter_id']]['registrant'] = $registrant;
 				@$total['chapter'] += 1;
-				@$total['chapter_member'] += (count($registrant_by_chapter[$chapter['chapter_id']]) > 3) ? 3 : count($registrant_by_chapter[$chapter['chapter_id']]);
+
+				foreach($registrant as $r){
+					if($r['membership_id'] != '列席'){
+						if($r['zoom_link'] == '現場出席') @$total['chapter_member_offline'] += 1;
+						else @$total['chapter_member'] += 1;
+					}
+				}
+				unset($registrant);
 			}
 		}
 

@@ -58,8 +58,15 @@
             $(document).ready(function(){
                 $( "#nric" ).keyup(function() {
                     var ic_val = this.value;
-                    if($.isNumeric(ic_val.charAt(6))) $('#nric').val(ic_val.slice(0,-1)+"-"+ic_val.charAt(6));
-                    if($.isNumeric(ic_val.charAt(9))) $('#nric').val(ic_val.slice(0,-1)+"-"+ic_val.charAt(9));
+                    if($.isNumeric(ic_val.charAt(6))) $('#nric').val([ic_val.slice(0,6),'-',ic_val.slice(6)].join(''));
+
+                    if(ic_val.length == 12)
+                        if($.isNumeric(ic_val.charAt(8)) && $.isNumeric(ic_val.charAt(6))) $('#nric').val([ic_val.slice(0,8),'-',ic_val.slice(8)].join(''));
+                    if(ic_val.length == 10){
+                        console.log("here");
+                        console.log($.isNumeric(ic_val.charAt(9)));
+                        if($.isNumeric(ic_val.charAt(9))) $('#nric').val([ic_val.slice(0,9),'-',ic_val.slice(9)].join(''));
+                    }
                 });
             });
            
@@ -88,7 +95,7 @@
                         <div class='row row-data col-xs-10 col-xs-offset-1'>
                             <div class='col-xs-3 strong_txt'>身份證號碼 IC No:</div>
                                 <div class='col-xs-9'>
-                                    <div class='form form-group'><input type='text' class='form-control col-xs-8' name='nric' id='nric' /></div>
+                                    <div class='form form-group'><input type='text' class='form-control col-xs-8' name='nric' id='nric' maxlength="14" /></div>
                                 </div>
                             </div>
 

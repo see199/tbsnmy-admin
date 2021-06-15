@@ -27,7 +27,7 @@ class Index extends CI_Controller {
 		foreach($gsheet_data as $status => $gdata){
 			$gsheet_data[$status]['table-tpl'] = $this->load->view('ask/tpl-table-view',array('mydata' => $gdata), TRUE);
 		}
-
+		
 		$data['gsheet'] = $gsheet_data;
 		$data['gstatus'] = array(
 			"新"   => "全新輸入",
@@ -71,7 +71,7 @@ class Index extends CI_Controller {
 
 		$client  = $this->load_google_client();
 		$service = new Google_Service_Sheets($client);
-		$get_range = "Form Responses 1!A2:K";
+		$get_range = "Form Responses 1!A2:M";
 		
 		//Request to get data from spreadsheet.
 		return $service->spreadsheets_values->get($this->spreadsheetId, $get_range)->getValues();
@@ -82,9 +82,9 @@ class Index extends CI_Controller {
 		$processed_data = array();
 		foreach($array as $k => $row){
 			
-			$row[8] = isset($row[8]) ? $row[8] : '新';
+			$row[9] = isset($row[9]) ? $row[9] : '新';
 
-			$processed_data[$row[8]][$k] = array(
+			$processed_data[$row[9]][$k] = array(
 				'date'      => @$row[0],
 				'name'      => @$row[1],
 				'id'        => @$row[2],
@@ -93,9 +93,10 @@ class Index extends CI_Controller {
 				'contact'   => @$row[5],
 				'agree'     => @$row[6],
 				'x2'        => @$row[7],
-				'status'    => @$row[8],
-				'answer_by' => @$row[9],
-				'answer'    => @$row[10],
+				'x3'        => @$row[8],
+				'status'    => @$row[9],
+				'answer_by' => @$row[10],
+				'answer'    => @$row[11],
 				'row'       => $k + 2,
 			);
 			
@@ -105,7 +106,7 @@ class Index extends CI_Controller {
 
 	public function update_status($id,$status){
 
-		$status_column = "I";
+		$status_column = "J";
 		$options = array('valueInputOption' => 'RAW');
 
 		$client  = $this->load_google_client();
@@ -118,7 +119,7 @@ class Index extends CI_Controller {
 
 	public function update_answer($id){
 
-		$status_column = "K";
+		$status_column = "L";
 		$options = array('valueInputOption' => 'RAW');
 
 		$client  = $this->load_google_client();

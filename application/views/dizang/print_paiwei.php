@@ -43,6 +43,12 @@
 		display: inline-table;
 	}
 
+	.content>div.single>small{
+		font-size: 8pt;
+		width: 22pt;
+		display: inline-table;
+	}
+
 	.content>div.double{
 		font-size: 18pt;
 		width: 18pt;
@@ -74,7 +80,7 @@
 
 			<!-- 單人亡者/壽 -->
 			<?php if($i['deceased_type'] == '亡' &&!$i['deceased_name_2']): ?>
-			<div class='single'><?=$i['deceased_name'];?></div>
+			<div class='single'><?=preg_replace("/蓮花/","<small>蓮花</small>",$i['deceased_name']);?></div>
 
 			<!-- 雙人亡者/壽 -->
 			<?php elseif($i['deceased_type'] == '亡' && $i['deceased_name_2']): ?>

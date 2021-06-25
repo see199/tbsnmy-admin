@@ -31,13 +31,15 @@ class Index extends CI_Controller {
             "壽" => "（壽）",
             "土" => "土地公",
             "拿" => "拿督公",
+            "家" => "家宅靈",
         );
     }
 
     public function index() {
 
         $data = $this->data;
-        $data['date_from'] = date('Y-m-d',strtotime("-2 week"));
+        //$data['date_from'] = date('Y-m-d',strtotime("-2 week"));
+        $data['date_from'] = '1996-07-12';
         $data['date_to']   = date('Y-m-d');
 
         $this->load->view('dizang/header', $data);

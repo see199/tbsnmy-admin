@@ -31,6 +31,11 @@ function load_box(id) {
 
 function post_data(){
 
+    if(!$('#deceased_type').val()){
+        alert("類別不可置空！請選擇類別。");
+        return false;
+    }
+
     var data = {
         deceased_type : $('#deceased_type').val(),
         remarks : $('#remarks').val(),
@@ -56,7 +61,7 @@ function get_data(){
         serverSide: true,
         destroy:true,
         iDisplayLength: 25,
-        order: [[ 0, "asc" ]],
+        order: [[ 5, "desc" ]],
         ajax: {
             "url": "<?= base_url('dizang/index/ajax_get_list'); ?>",
             "type": "POST",

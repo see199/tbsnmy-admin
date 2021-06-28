@@ -14,6 +14,8 @@
 		background-size: 24mm 47mm;
 		display: inline-table;
 		position: relative;
+		font-family: KaiTi;
+		font-weight: bold;
 
 	}
 	.tbl-亡{ background-image: url(<?=base_url('asset/images/dizang-plate-wangzhe.png');?>); }
@@ -33,7 +35,7 @@
 	.tbl>div.content{
 		height: 30mm;
 		position: absolute;
-		top: 4mm;
+		top: 5mm;
 		width: 24mm;
 	}
 
@@ -47,13 +49,14 @@
 		font-size: 8pt;
 		width: 22pt;
 		display: inline-table;
+		margin-top: -1mm;
 	}
 
 	.content>div.double{
-		font-size: 18pt;
+		font-size: 20pt;
 		width: 18pt;
 		display: inline-table;
-		margin: 5pt 2pt;
+		margin: 5pt 1pt;
 	}
 
 	.content>div.life{
@@ -66,6 +69,7 @@
 		font-size: 14pt;
 		width: 22pt;
 		display: inline-table;
+		margin-top: 1.7mm;
 	}
 	* {-webkit-print-color-adjust:exact;}
 
@@ -111,4 +115,4 @@
 	<?php endforeach; ?>
 </body>
 
-<script>window.print();</script>
+<script>/*window.print();*/</script>

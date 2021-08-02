@@ -163,7 +163,7 @@ class Agm_model extends CI_Model {
 
 		// Generate at: https://marketplace.zoom.us/develop/apps/hpkMCtQGQa2t0MAGvIutEA/credentials
 		// Token expired on 2021-06-27 23:59
-		$access_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6Ikw4NWFOandIUkhtVkJZaU55VTh4NWciLCJleHAiOjE2MjQ4MDk1NDAsImlhdCI6MTYxOTE2NzYwMH0.KKgQUyalZ8oZwrspElgKBlXYUHw32Vc26pnZOrSfVGk";
+		$access_token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6Ikw4NWFOandIUkhtVkJZaU55VTh4NWciLCJleHAiOjE2MzMzMzE0MDAsImlhdCI6MTYyNjMyOTcwNn0.BC2a76bcYCFoMYt2y_aEV4Dszw_vIcmOZLXlALJpAXY";
 
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
@@ -197,7 +197,7 @@ class Agm_model extends CI_Model {
 
 		// Generate at: https://marketplace.zoom.us/develop/apps/hpkMCtQGQa2t0MAGvIutEA/credentials
 		// Token expired on 2021-06-27 23:59
-		$access_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6Ikw4NWFOandIUkhtVkJZaU55VTh4NWciLCJleHAiOjE2MjQ4MDk1NDAsImlhdCI6MTYxOTE2NzYwMH0.KKgQUyalZ8oZwrspElgKBlXYUHw32Vc26pnZOrSfVGk";
+		$access_token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6Ikw4NWFOandIUkhtVkJZaU55VTh4NWciLCJleHAiOjE2MzMzMzE0MDAsImlhdCI6MTYyNjMyOTcwNn0.BC2a76bcYCFoMYt2y_aEV4Dszw_vIcmOZLXlALJpAXY";
 
 		$curl = curl_init();
 
@@ -230,7 +230,7 @@ class Agm_model extends CI_Model {
 
 		// Generate at: https://marketplace.zoom.us/develop/apps/hpkMCtQGQa2t0MAGvIutEA/credentials
 		// Token expired on 2021-06-27 23:59
-		$access_token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6Ikw4NWFOandIUkhtVkJZaU55VTh4NWciLCJleHAiOjE2MjQ4MDk1NDAsImlhdCI6MTYxOTE2NzYwMH0.KKgQUyalZ8oZwrspElgKBlXYUHw32Vc26pnZOrSfVGk";
+		$access_token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6Ikw4NWFOandIUkhtVkJZaU55VTh4NWciLCJleHAiOjE2MzMzMzE0MDAsImlhdCI6MTYyNjMyOTcwNn0.BC2a76bcYCFoMYt2y_aEV4Dszw_vIcmOZLXlALJpAXY";
 
 		$curl = curl_init();
 

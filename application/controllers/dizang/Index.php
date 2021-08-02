@@ -117,6 +117,9 @@ class Index extends CI_Controller {
         // Insert or Update
         $process = ($post['dizang_id']) ? "update_details" : "add_details";
 
+        // Empty Date set to 0001-01-01
+        if($post['date'] == '') $post['date'] = '0001-01-01';
+
         // Remove empty field
         foreach($post as $k => $v) if($v == "null" || $v == "") unset($post[$k]);
 

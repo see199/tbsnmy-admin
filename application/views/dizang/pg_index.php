@@ -88,6 +88,12 @@ function get_data(){
     $('#myDataTable_filter').children().children().after(" <span class=\"glyphicon glyphicon-search\" aria-hidden=\"true\"></span>");
 }
 
+function changeDate(){
+    $('#date_from').val('0001-01-01');
+    $('#date_to').val('0001-01-01');
+    get_data();
+}
+
 $(document).ready(function() {
 
     get_data();
@@ -120,6 +126,7 @@ $(document).ready(function() {
                 <form method="post" class="form-inline">
                     安奉日期：<input class='form-control' type="date" id="date_from" name="date_from" value="<?= $date_from; ?>"> 至
                     <input class='form-control' type="date" id="date_to" name="date_to"value="<?= $date_to; ?>">
+                    <a href="#" onclick="changeDate()">點擊這裡查詢沒有輸入【安奉日期】</a>
                 </form>
 
                 <form target="_print" class='form-inline' method="post" action="<?=base_url('dizang/index/print');?>">

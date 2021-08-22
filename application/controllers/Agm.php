@@ -262,9 +262,10 @@ class AGM extends CI_Controller {
             ));
 
             // If Zoom return empty
-            if(!isset($registrant['registrant_id']))$this->register('error',"暫時無法登記，ZOOM 暫無回應，請稍後再試。 Failed to register due to empty response from ZOOM! Please try again later. Error code: EMPTY_RESPONSE");
-
-            return ;
+            if(!isset($registrant['registrant_id'])){
+                $this->register('error',"暫時無法登記，ZOOM 暫無回應，請稍後再試。 Failed to register due to empty response from ZOOM! Please try again later. Error code: EMPTY_RESPONSE");
+                return ;
+            }
 
         }else{
             $registrant = array(

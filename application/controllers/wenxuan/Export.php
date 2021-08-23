@@ -67,6 +67,26 @@ class Export extends CI_Controller {
 		$this->print_csv($export_list,"Personal");
 	}
 
+	public function contact_email(){
+		$data = $this->data;
+
+		$export_list = array();
+
+		$list = $this->wenxuan_model->get_list_contact();
+		foreach($list as $k => $v){
+			if($v['wenxuan_email'] && filter_var($v['wenxuan_email'], FILTER_VALIDATE_EMAIL))
+				$export_list[$v['wenxuan_email']] = array(
+					$v['wenxuan_name'],
+					$v['wenxuan_email'],
+				);
+		}
+
+		$data['list']  = $export_list;
+		//echo "<pre>";print_r($export_list);
+		$this->print_csv($export_list,"Personal_Email");
+
+	}
+
 	private function print_csv($data,$filename){
 
 		header("Content-type: application/csv");

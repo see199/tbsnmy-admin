@@ -134,6 +134,8 @@ function delete_data(){
             <div class="col-lg-10 col-lg-offset-1">
                 <a class="btn btn-info" href="<?= base_url('wenxuan/export/contact'); ?>"><i class="fa fa-floppy-o" aria-hidden="true"></i> Export CSV</a>
 
+                <a class="btn btn-info" href="<?= base_url('wenxuan/export/contact_email'); ?>"><i class="fa fa-floppy-o" aria-hidden="true"></i> Export Email in CSV</a>
+
                 <button type="button" id="btn_modal_add_new" class="btn btn-info" onclick="load_box('new');" data-toggle="modal" data-target="#myModal"><i class="fa fa-plus-square fa-fw" aria-hidden="true"></i> 添加新個人檔案</button>
                 <br /><br />
             </div>

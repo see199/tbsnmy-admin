@@ -45,6 +45,18 @@
 		display: inline-table;
 	}
 
+	.content>div.single-4-char{
+		font-size: 18pt;
+		width: 22pt;
+		display: inline-table;
+	}
+
+	.content>div.single-5-char{
+		font-size: 14pt;
+		width: 22pt;
+		display: inline-table;
+	}
+
 	.content>div.single>small{
 		font-size: 8pt;
 		width: 22pt;
@@ -106,7 +118,7 @@
 
 			<!-- 單人(陽上) & 其他 -->
 			<?php else: ?>
-			<div class='single'><?=$i['applicant_name'];?></div>
+			<div class='single <?= (mb_strlen($i['deceased_name']) > 3) ? 'single-'.mb_strlen($i['deceased_name']).'-char' : ''; ?>'><?=$i['applicant_name'];?></div>
 
 			<?php endif; ?>
 

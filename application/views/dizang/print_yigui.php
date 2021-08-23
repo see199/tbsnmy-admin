@@ -30,7 +30,7 @@
 		<?php     if($i['deceased_type'] == '亡'): ?>
 			<?=$i['deceased_name'] . ' '. $i['deceased_name_2'] ;?>
 		<?php elseif($i['deceased_type'] == '祖'): ?>
-			<?=$i['deceased_name']?>門堂上歷代祖先
+			<?=$i['deceased_name']?>堂上歷代祖先
 		<?php elseif($i['deceased_type'] == '壽'): ?>
 		<?php elseif($i['deceased_type'] == '冤'): ?>
 			自身之冤親債主及纏身靈

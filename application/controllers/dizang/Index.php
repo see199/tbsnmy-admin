@@ -61,7 +61,7 @@ class Index extends CI_Controller {
                 foreach($rows as &$r) {
                     /*$html = $CI->load->view('manage/plants_status_index_link_view', $r, TRUE);*/
 
-                    $r['deceased_type'] = $this->data['deceased_type'][$r['deceased_type']];
+                    $r['deceased_type'] = isset($this->data['deceased_type'][$r['deceased_type']]) ? $this->data['deceased_type'][$r['deceased_type']] : "<font color=red>".$r['deceased_type']."<font>";
 
                     $r['$']['viewmodal'] = '<input type="checkbox" name="print['.$r['dizang_id'].']"> | <a href="javascript:void(0)" onclick="load_box('.$r['dizang_id'].')" data-toggle="modal" data-target="#myModal">詳情</a>';
                 }

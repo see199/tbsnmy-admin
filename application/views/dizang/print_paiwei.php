@@ -94,14 +94,23 @@
 	<div class="tbl tbl-<?=$i['deceased_type'];?>">
 		<div class='content'>
 
-			<!-- 單人亡者/壽 -->
+			<!-- 單人亡者 -->
 			<?php if($i['deceased_type'] == '亡' &&!$i['deceased_name_2']): ?>
 			<div class='single'><?=preg_replace("/蓮花/","<small>蓮花</small>",$i['deceased_name']);?></div>
 
-			<!-- 雙人亡者/壽 -->
+			<!-- 雙人亡者 -->
 			<?php elseif($i['deceased_type'] == '亡' && $i['deceased_name_2']): ?>
 			<div class='double'><?=$i['deceased_name'];?></div>
 			<div class='double'><?=$i['deceased_name_2'];?></div>
+
+			<!-- 單人水子靈 -->
+			<?php elseif($i['deceased_type'] == '水' &&!$i['deceased_name_2']): ?>
+			<div class='single'><?=preg_replace("/蓮花/","<small>蓮花</small>",$i['deceased_name']);?></div>
+
+			<!-- 雙人水子靈 -->
+			<?php elseif($i['deceased_type'] == '水' && $i['deceased_name_2']): ?>
+			<div class='double'><?=$i['deceased_name'];?></div>
+			<div class='double '><?=$i['deceased_name_2'];?></div>
 
 			<!-- 壽 -->
 			<?php elseif($i['deceased_type'] == '壽'): ?>

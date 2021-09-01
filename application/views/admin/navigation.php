@@ -183,6 +183,9 @@
                     <li>
                         <a href="<?= base_url(); ?>admin/tbnews"><i class="fa fa-newspaper-o fa-fw"></i> <?= lang('glb_nav_tbnews'); ?></a>
                     </li>
+                    <li>
+                        <a href="<?= base_url(); ?>admin/game"><i class="fa fa-gamepad "></i> Games</a>
+                    </li>
                     <?php endif; ?>
                     
                     <?php if($chapter_allowed[0] == 'all'): ?>

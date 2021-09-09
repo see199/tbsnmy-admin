@@ -251,6 +251,8 @@ class Api extends CI_Controller {
 			'og:description' => sprintf(lang('viewtbsnews_fb_like_description'),$issue,$issue,$date,$issue),
 			//'og:image'       => file_exists($file_location.'/WTBN'.$issue.'.jpg') ? $url_location.'/WTBN'.$issue.'.jpg' : lang('viewtbsnews_fb_like_image'),
 			'og:image'       => @file_get_contents($meta_image_url) ? $meta_image_url : lang('viewtbsnews_fb_like_image'),
+			'og:image:width'  => '1080',
+			'og:image:height' => '567',
 		);
 
 		$this->load->view('api/viewtbsnews',$data);

@@ -86,6 +86,17 @@
                         <img src="https://storage.googleapis.com/stateless-info-tbsn-my-2/2021/02/91c74a77-logo.png" width="100%" />
                         <h2 class='text-center' style='color:#600'>第8屆<?= date('Y'); ?>年度<br />常年會員代表大會<br />登入處</h2>
                         <?php if(@$error == 'user_not_found'): ?><div class='alert alert-danger'>您並未申請登記。請先註冊登記！</div><?php endif; ?>
+                        
+                        <center><table style='font-size: 16px;'>
+                            <tr>
+                                <td>日期：</td>
+                                <td>2021年10月3日</td>
+                            </tr>
+                            <tr>
+                                <td>時間：</td>
+                                <td>1:00 PM</td>
+                            </tr>
+                        </table></center>
                     </div>
 
                     <form class='form-horizontal' id="upload_form" method="post" action="<?= base_url('agm/zoom_login');?>">
@@ -95,14 +106,14 @@
                         <div class='row row-data col-xs-10 col-xs-offset-1'>
                             <div class='col-xs-3 strong_txt'>身份證號碼 IC No:</div>
                                 <div class='col-xs-9'>
-                                    <div class='form form-group'><input type='text' class='form-control col-xs-8' name='nric' id='nric' maxlength="14" /></div>
+                                    <div class='form form-group'><input type='text' class='form-control col-xs-8' name='nric' id='nric' maxlength="14" placeholder="身份證號碼 IC No" /></div>
                                 </div>
                             </div>
 
 
                             <div class='row row-data col-xs-10 col-xs-offset-1'>
                                 <div class='col-xs-2 col-xs-offset-1'></div>
-                                <div class='col-xs-9'>
+                                <div class='col-xs-12'>
                                     <div class='form form-group text-right'>
                                         <button id="btn-check" class="btn btn-success">
                                             登入 Login

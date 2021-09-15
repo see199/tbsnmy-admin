@@ -146,6 +146,17 @@ $(document).ready(function(){
                     <div class='col-md-12' style='padding:30px;'>
                         <img src="https://storage.googleapis.com/stateless-info-tbsn-my-2/2021/02/91c74a77-logo.png" width="100%" />
                         <h2 class='text-center' style='color:#600'>第8屆<?= date('Y'); ?>年度<br />常年會員代表大會<br />登記表 (團體)</h2>
+                        
+                        <center><table style='font-size: 16px;'>
+                            <tr>
+                                <td>日期：</td>
+                                <td>2021年10月3日</td>
+                            </tr>
+                            <tr>
+                                <td>時間：</td>
+                                <td>1:00 PM</td>
+                            </tr>
+                        </table></center>
 
                         <?php if($msg_code == 'success_reg'): ?>
                             <div class='alert alert-success'><?= $msg; ?></div>

@@ -183,6 +183,9 @@
                     <li>
                         <a href="<?= base_url(); ?>admin/tbnews"><i class="fa fa-newspaper-o fa-fw"></i> <?= lang('glb_nav_tbnews'); ?></a>
                     </li>
+                    <li>
+                        <a href="<?= base_url(); ?>admin/game"><i class="fa fa-gamepad "></i> Games</a>
+                    </li>
                     <?php endif; ?>
                     
                     <?php if($chapter_allowed[0] == 'all'): ?>
@@ -276,6 +279,16 @@
                         <a href="<?= base_url(); ?>admin/chapter/list_contact"><i class="fa fa-phone"></i> Phone - Chapters</a>
                     </li>
 
+                  </ul>
+                </li>
+
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">其他系統 <span class="caret"></span></a>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="<?= base_url(); ?>/dizang/login" target="_blank"><i class="fa fa-user-md"></i> 地藏殿系統</a></li>
+                    <li><a href="<?= base_url(); ?>/wenxuan/login" target="_blank"><i class="fa fa-book"></i> 文宣處系統</a></li>
+                    <li><a href="<?= base_url(); ?>/"></a></li>
+                    <li><a href="<?= base_url(); ?>/"></a></li>
                   </ul>
                 </li>
                 

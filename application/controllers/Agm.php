@@ -261,7 +261,6 @@ class AGM extends CI_Controller {
                 "last_name"  => $post['name_chinese'],
             ));
 
-
             // If Zoom return empty
             if(!isset($registrant['registrant_id'])){
                 $err_code = "TB01";
@@ -343,6 +342,16 @@ class AGM extends CI_Controller {
                 "first_name" => $post['first_name'],
                 "last_name"  => $post['name_chinese'],
             ));
+
+            // If Zoom return empty
+            if(!isset($registrant['registrant_id'])){
+                $err_code = "TB01";
+                $err_msg  = "EMPTY_RESPONSE";
+                if($registrant['code']) $err_code = $registrant['code'];
+                if($registrant['message']) $err_msg = $registrant['message'];
+                $this->register('error',"暫時無法登記，ZOOM 暫無回應，請稍後再試。 Failed to register due to empty response from ZOOM! Please try again later. Error code: $err_code : $err_msg");
+                return ;
+            }
         }else{
             $registrant = array(
                 'registrant_id' => '',

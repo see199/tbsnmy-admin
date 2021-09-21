@@ -154,6 +154,46 @@ class Agm extends CI_Controller {
 		
 	}
 
+	public function list_analyse(){
+		$list = $this->agm_model->list_zoom_registrant();
+
+		$members = array(
+			'G' => array(
+				'chapter' => array(),
+				'liexi' => array(),
+				'chuxi' => array(),
+				'total' => array('chuxi' => 0,'liexi' => 0)),
+			'P' => array(),
+		);
+
+		foreach($list as $k => $v){
+			
+			if($v['membership_id'] < 2000){
+				@$members['P'][] = $v;
+			}else{
+				$members['G']['chapter'][$v['chapter_id']] = $v['chapter_id'];
+				if($v['membership_id'] == '列席'){
+					@$members['G']['liexi'][$v['chapter_id']][] = $v;
+					@$members['G']['total']['liexi']++;
+				}else{
+					@$members['G']['chuxi'][$v['chapter_id']][] = $v;
+					@$members['G']['total']['chuxi']++;
+				}
+			}
+		}
+
+		ksort($members['G']['chuxi']);
+		ksort($members['G']['liexi']);
+		
+		$data = $this->data;
+		$data['members'] = $members;
+
+		$this->load->view('admin/header', $data);
+		$this->load->view('admin/navigation', $data);
+		$this->load->view('admin/agm/list_analyse_view',$data);
+		$this->load->view('admin/footer');
+	}
+
 	public function list_zoom_registrant(){
 
 		$registrant_by_chapter = array();

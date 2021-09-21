@@ -78,7 +78,7 @@ class Contact_model extends CI_Model {
 	public function get_contact_by_nric($nric = ''){
 		$this->db = $this->load->database('local', TRUE);
 
-		$this->db->select('c.name_chinese, c.name_malay, c.nric, c.email, c.contact_id, m.position')
+		$this->db->select('c.name_chinese, c.name_malay, c.nric, c.email, c.contact_id, m.position, c.name_dharma, c.phone_mobile')
 				->where('c.nric',$nric)
 				->where('m.chapter_id <>','1') // 不顯示馬密總
 				->where('m.position <> ','會員') // 不顯示會員

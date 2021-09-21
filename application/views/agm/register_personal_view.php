@@ -68,7 +68,7 @@ function check_empty(){
         alert("請選擇通過 ZOOM 出席或現場出席！Please choose within attendance via ZOOM or on site!");
         return false;
     }
-    if(!$('#name_chinese').val() || !$('#name_malay').val() || !$('#email').val()){
+    if(!$('#name_chinese').val() || !$('#name_malay').val() || !$('#email').val() || !$('#phone_mobile').val()){
         alert("請填寫所有資料！Please fill in all information!");
         return false;
     }
@@ -106,11 +106,12 @@ $(document).ready(function(){
             success: function( data, textStatus, jQxhr ){
                 me = JSON.parse(data);
                 console.log(me);
-                $('#name_chinese').val(me.name_chinese);
+                $('#name_chinese').val(me.name_dharma);
                 $('#name_malay').val(me.name_malay);
                 $('#email').val(me.email);
                 $('#online').val(me.online);
                 $('#contact_id').val(me.contact_id);
+                $('#phone_mobile').val(me.phone_mobile);
                 $('#page-check').hide();
             }
         });
@@ -203,6 +204,13 @@ $(document).ready(function(){
                                 <div class='col-md-3 strong_txt'>電郵 Email:</div>
                                 <div class='col-md-9'>
                                     <div class='form form-group'><input type='text' class='form-control col-xs-8' name='email' id='email' /></div>
+                                </div>
+                            </div>
+
+                            <div class='row row-data col-xs-10 col-xs-offset-1'>
+                                <div class='col-md-3 strong_txt'>電話 Phone No:</div>
+                                <div class='col-md-9'>
+                                    <div class='form form-group'><input type='text' class='form-control col-xs-8' name='phone_mobile' id='phone_mobile' /></div>
                                 </div>
                             </div>
 

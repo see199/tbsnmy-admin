@@ -101,7 +101,7 @@ $(document).ready(function(){
         $('#page-check').show();
 
         $.ajax({
-            url: '<?= base_url('agm/get_contact_by_nric'); ?>/'+$('#nric').val(),
+            url: '<?= base_url('agm/get_contact_by_nric_agm_personal'); ?>/'+$('#nric').val(),
             type: 'get',
             success: function( data, textStatus, jQxhr ){
                 me = JSON.parse(data);

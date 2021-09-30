@@ -90,6 +90,18 @@ class Contact_model extends CI_Model {
 		else return array();
 	}
 
+	public function get_contact_by_nric_agm_personal($nric = ''){
+		$this->db = $this->load->database('local', TRUE);
+
+		$this->db->select('c.name_chinese, c.name_malay, c.nric, c.email, c.contact_id, c.name_dharma, c.phone_mobile')
+				->where('c.nric',$nric)
+				->from('tbs_contact c');
+		$res = $this->db->get();
+
+		if($res->result_array()) return $res->result_array()[0];
+		else return array();
+	}
+
 	public function get_contact_details($id = ''){
 		$this->db = $this->load->database('local', TRUE);
 

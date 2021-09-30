@@ -168,7 +168,7 @@ class Agm extends CI_Controller {
 
 		foreach($list as $k => $v){
 			
-			if($v['membership_id'] < 2000){
+			if($v['membership_id'] < 2000 && $v['membership_id'] != '列席'){
 				@$members['P'][] = $v;
 			}else{
 				$members['G']['chapter'][$v['chapter_id']] = $v['chapter_id'];

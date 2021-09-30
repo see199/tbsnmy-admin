@@ -198,6 +198,19 @@ class AGM extends CI_Controller {
         $this->load->model('contact_model');
         $contact = $this->contact_model->get_contact_by_nric($nric);
 
+        //Only show 1 email
+        @$contact['email'] = explode(",",$contact['email'])[0];
+
+        echo json_encode($contact);
+    }
+
+    public function get_contact_by_nric_agm_personal($nric){
+        $this->load->model('contact_model');
+        $contact = $this->contact_model->get_contact_by_nric_agm_personal($nric);
+
+        //Only show 1 email
+        @$contact['email'] = explode(",",$contact['email'])[0];
+
         echo json_encode($contact);
     }
 
@@ -332,6 +345,14 @@ class AGM extends CI_Controller {
             }
         }
 
+        // 非個人會員
+        if(!isset($contact['membership_id'])){
+
+            $this->register_personal('error',"無法登記！請確保您是個人會員（弘法人員或連續2屆的中央理事）。 Failed to register! Please make sure you are Personal Membership (Dharma Personal or AJK for 2 session. <br /><a href='".base_url('agm/register')."'>點擊登記道場代表 Click to Register as Group</a>");
+
+            return ;
+        }
+
         // Submit to Zoom API
         $post['first_name'] = $contact['membership_id'] .'-';
 
@@ -348,8 +369,8 @@ class AGM extends CI_Controller {
             if(!isset($registrant['registrant_id'])){
                 $err_code = "TB01";
                 $err_msg  = "EMPTY_RESPONSE";
-                if($registrant['code']) $err_code = $registrant['code'];
-                if($registrant['message']) $err_msg = $registrant['message'];
+                if(isset($registrant['code'])) $err_code = $registrant['code'];
+                if(isset($registrant['message'])) $err_msg = $registrant['message'];
                 $this->register('error',"暫時無法登記，ZOOM 暫無回應，請稍後再試。 Failed to register due to empty response from ZOOM! Please try again later. Error code: $err_code : $err_msg");
                 return ;
             }

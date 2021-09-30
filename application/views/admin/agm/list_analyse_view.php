@@ -35,9 +35,9 @@
                     </table>
                     <br />列席<table id="example" class="display table table-striped table-bordered" cellspacing="0" width="100%">
                         <thead><tr class='info'><td>道場</td><td>代表</td><td>職位</td><td>NRIC</td><td>聯絡號碼</td><td>登記日期</td></tr></thead>
-                        <tbody><?php foreach($members['G']['liexi'] as $r): ?>
+                        <tbody><?php foreach($members['G']['liexi'] as $chapter_id => $list):foreach($list as $r): ?>
                         <tr><td><?= $r['first_name']; ?></td><td><?= $r['last_name']; ?></td><td><?= $r['position']; ?></td><td><?= $r['nric']; ?></td><td><?= $r['phone_mobile']; ?></td><td><?= $r['reg_date']; ?></td></tr>
-                        <?php endforeach; ?></tbody>
+                        <?php endforeach;endforeach; ?></tbody>
                     </table></td>
                 </tr></table>
             </div>

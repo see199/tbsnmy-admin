@@ -18,7 +18,7 @@
                 'name_chinese': $('#name_chinese_'+form_id).val(),
                 'name_malay': $('#name_malay_'+form_id).val(),
                 'position': $('#position_'+form_id).val(),
-                'membership_id': '列席',
+                'membership_id': $('#membership_id_'+form_id).val(),
             },
             success: function( data, textStatus, jQxhr ){
                 me = JSON.parse(data);
@@ -87,7 +87,7 @@
                 <br />
                 <table id="example" class="display table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead><tr class="info">
-                        <td><b>列席者資料</b></td>
+                        <td><b>列席者資料</b><small>列席者的會員編號為“列席”，若寫道場編號則變為出席</small></td>
                         <td><b>Zoom 資料</b></td>
                         <td></td>
                     </tr></thead>
@@ -95,11 +95,12 @@
                             $form_id = $r['nric'];?><tr>
                         <td>
                             <table class='table table-striped table-bordered table-hover'>
-                                <tr><td>姓名</td><td>英文姓名</td><td>NRIC</td><td>備註</td></tr>
+                                <tr><td>姓名</td><td>英文姓名</td><td>NRIC</td><td>會員編號</td><td>備註</td></tr>
                                 <tr>
                                     <td><input type='text' class='form-control' name='name_chinese' id='name_chinese_<?=$form_id;?>' value='<?=$r['name_chinese'];?>'></td>
                                     <td><input type='text' class='form-control' name='name_malay' id='name_malay_<?=$form_id;?>' value='<?=$r['name_malay'];?>'></td>
                                     <td><input type='text' class='form-control' name='nric' id='nric_<?=$form_id;?>' value='<?=$r['nric'];?>'></td>
+                                    <td><input type='text' class='form-control' name='membership_id' id='membership_id_<?=$form_id;?>' value='<?=$r['membership_id'];?>'></td>
                                     <td><input type='text' class='form-control' name='position' id='position_<?=$form_id;?>' value='<?=$r['position'];?>'></td>
                                 </tr>
                             </table>
@@ -133,11 +134,12 @@
                     <tfoot><tr class='success'>
                         <td>
                             <table class='table table-striped table-bordered table-hover'>
-                                <tr><td>姓名</td><td>英文姓名</td><td>NRIC</td><td>備註</td></tr>
+                                <tr><td>姓名</td><td>英文姓名</td><td>NRIC</td><td>會員編號</td><td>備註</td></tr>
                                 <tr>
                                     <td><input type='text' class='form-control' name='name_chinese' id='name_chinese_new'></td>
                                     <td><input type='text' class='form-control' name='name_malay' id='name_malay_new'></td>
                                     <td><input type='text' class='form-control' name='nric' id='nric_new'></td>
+                                    <td><input type='text' class='form-control' name='membership_id' id='membership_id_new' value='列席'></td>
                                     <td><input type='text' class='form-control' name='position' id='position_new'></td>
                                 </tr>
                             </table>

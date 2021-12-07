@@ -49,6 +49,7 @@ class AGM extends CI_Controller {
         }
 
         // Zoom 登入
+        $this->update_online_attendance();
         $data_online = $this->read_attendance($this->config->item('file_attendance_online'));
         $online_chapter = $online_chapter_member = $online_member = 0;
         foreach($data_online as $type => $v){
@@ -65,6 +66,7 @@ class AGM extends CI_Controller {
                         // 如果現場 + Zoom >= 3人，Zoom 人數 = 3 - 現場人數
                         // 如果不是的話， Zoom 人數直接加上去
                         // Cater for: 現場沒人 / 現場全部出席 / 部分現場 + 部分Zoom
+                        if(!isset($data['chapter'][$id])) $data['chapter'][$id] = 0;
                         $to_add = (($data['chapter'][$id] + $total) >= 3) ? 3-$data['chapter'][$id] : $total;
                         $online_chapter_member += $to_add;
 

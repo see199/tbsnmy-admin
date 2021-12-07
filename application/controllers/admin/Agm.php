@@ -169,19 +169,20 @@ class Agm extends CI_Controller {
 		foreach($list as $k => $v){
 			
 			if($v['membership_id'] < 2000 && $v['membership_id'] != '列席'){
-				@$members['P'][] = $v;
+				@$members['P'][$v['membership_id']] = $v;
 			}else{
 				$members['G']['chapter'][$v['chapter_id']] = $v['chapter_id'];
 				if($v['membership_id'] == '列席'){
-					@$members['G']['liexi'][$v['chapter_id']][] = $v;
+					@$members['G']['liexi'][$v['membership_id']][] = $v;
 					@$members['G']['total']['liexi']++;
 				}else{
-					@$members['G']['chuxi'][$v['chapter_id']][] = $v;
+					@$members['G']['chuxi'][$v['membership_id']][] = $v;
 					@$members['G']['total']['chuxi']++;
 				}
 			}
 		}
 
+		ksort($members['P']);
 		ksort($members['G']['chuxi']);
 		ksort($members['G']['liexi']);
 		
@@ -191,6 +192,52 @@ class Agm extends CI_Controller {
 		$this->load->view('admin/header', $data);
 		$this->load->view('admin/navigation', $data);
 		$this->load->view('admin/agm/list_analyse_view',$data);
+		$this->load->view('admin/footer');
+	}
+
+	public function list_login_zoom(){
+		/*echo '<pre>';
+		$list = $this->agm_model->list_login_zoom_registrant();
+		print_r($list);exit;*/
+		$list = $this->agm_model->list_login_zoom_registrant_all();
+
+		$members = array(
+			'G' => array(
+				'chapter' => array(),
+				'liexi' => array(),
+				'chuxi' => array(),
+				'total' => array('chuxi' => 0,'liexi' => 0)),
+			'P' => array(),
+		);
+
+		foreach($list as $k => $v){
+			
+			if($v['membership_id'] < 2000 && $v['membership_id'] != '列席'){
+				@$members['P'][$v['membership_id']] = $v;
+			}else{
+				$members['G']['chapter'][$v['chapter_id']] = $v['chapter_id'];
+				if($v['membership_id'] == '列席'){
+					@$members['G']['liexi'][$v['membership_id']][] = $v;
+					@$members['G']['total']['liexi']++;
+				}else{
+					@$members['G']['chuxi'][$v['membership_id']][] = $v;
+					@$members['G']['total']['chuxi']++;
+				}
+			}
+		}
+
+		ksort($members['P']);
+		ksort($members['G']['chuxi']);
+		ksort($members['G']['liexi']);
+
+		//echo "<pre>";print_r($members['G']['chuxi']);
+		
+		$data = $this->data;
+		$data['members'] = $members;
+
+		$this->load->view('admin/header', $data);
+		$this->load->view('admin/navigation', $data);
+		$this->load->view('admin/agm/list_login_zoom_view',$data);
 		$this->load->view('admin/footer');
 	}
 
@@ -310,7 +357,7 @@ class Agm extends CI_Controller {
         $post = $this->input->post();
 
         // Submit to Zoom API
-        $registrant = $this->agm_model->api_add_zoom_registrant("89065666966",array(
+        /*$registrant = $this->agm_model->api_add_zoom_registrant("89065666966",array(
             "email"      => $post['email'],
             "first_name" => $post['first_name'],
             "last_name"  => $post['last_name'],
@@ -323,7 +370,7 @@ class Agm extends CI_Controller {
         		'msg'     => "Error ".$registrant['code'].":".$registrant['message'],
         	));
             return ;
-        }
+        }*/
 
 
         $registrant_primary = array(
@@ -332,8 +379,8 @@ class Agm extends CI_Controller {
         $registrant_value = array(
             'first_name'   => $post['first_name'],
             'last_name'    => $post['last_name'],
-            'registrant_id'=> $registrant['registrant_id'],
-            'zoom_link'    => $registrant['join_url'],
+            //'registrant_id'=> $registrant['registrant_id'],
+            //'zoom_link'    => $registrant['join_url'],
         );
         $this->agm_model->add_registrant($registrant_primary,$registrant_value);
 
@@ -350,7 +397,7 @@ class Agm extends CI_Controller {
         $post = $this->input->post();
 
         // Submit to Zoom API
-        $registrant = $this->agm_model->api_add_zoom_registrant("89065666966",array(
+        /*$registrant = $this->agm_model->api_add_zoom_registrant("89065666966",array(
             "email"      => $post['email'],
             "first_name" => $post['first_name'],
             "last_name"  => $post['last_name'],
@@ -363,7 +410,7 @@ class Agm extends CI_Controller {
         		'msg'     => "Error ".$registrant['code'].":".$registrant['message'],
         	));
             return ;
-        }
+        }*/
 
 
         $registrant_primary = array(
@@ -372,8 +419,8 @@ class Agm extends CI_Controller {
         $registrant_value = array(
             'first_name'   => $post['first_name'],
             'last_name'    => $post['last_name'],
-            'registrant_id'=> $registrant['registrant_id'],
-            'zoom_link'    => $registrant['join_url'],
+            //'registrant_id'=> $registrant['registrant_id'],
+            //'zoom_link'    => $registrant['join_url'],
             'nric'         => $post['nric'],
             'contact_id'   => $post['contact_id'],
             'name_chinese' => $post['name_chinese'],

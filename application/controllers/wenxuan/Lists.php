@@ -71,20 +71,25 @@ class Lists extends CI_Controller {
 		if(!$year) $year = date('Y');
 
 		$data = $this->data;
-		$gift_sent = 0;
+		$gift_sent = $payment_done = 0;
+		$total = array();
 
 		$list = $this->wenxuan_model->get_subscriber_list($year);
 		//echo'<pre>';print_r($list);
 		foreach($list as $wenxuan_id => $subscriber){
 			@$total[$subscriber['package'][$year]['package_id']] += 1;
 			$gift_sent += $subscriber['package'][$year]['gift_taken'];
+			$payment_done_temp = ($subscriber['package'][$year]['status'] + $subscriber['package'][$year]['fullpayment'] > 0) ? 1 : 0;
+			$payment_done += $payment_done_temp;
+			$list[$wenxuan_id]['package'][$year]['payment_done'] = $payment_done_temp;
 		}
 		$data['list']  = $list;
 		$data['total'] = $total;
 		$data['year']  = $year;
-		$data['gift_sent'] = $gift_sent;
-		$data['package']   = $this->wenxuan_model->get_package();
-		$data['form_url']  = $this->config->item('url_wenxuan_form').'/viewform/';
+		$data['gift_sent']    = $gift_sent;
+		$data['payment_done'] = $payment_done;
+		$data['package']      = $this->wenxuan_model->get_package();
+		$data['form_url']     = $this->config->item('url_wenxuan_form').'/viewform/';
 
 		$this->load->view('wenxuan/header', $data);
 		$this->load->view('wenxuan/navigation', $data);

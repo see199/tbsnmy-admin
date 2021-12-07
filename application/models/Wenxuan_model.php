@@ -94,6 +94,7 @@ class Wenxuan_model extends CI_Model {
 			->where('p.year =',$year)
 			->where('s.type','contact');
 		$i = $this->db->get();
+		$res = array();
 		foreach($i->result_array() as $r){
 			$res[$r['wenxuan_id']] = $res2[$r['wenxuan_id']];
 			$res[$r['wenxuan_id']]['package'][$r['year']] = $r;

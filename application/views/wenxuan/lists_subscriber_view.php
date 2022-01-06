@@ -38,6 +38,7 @@ function load_box(me){
 
         $('#wenxuan_id').val(subscriber.wenxuan_id);
         $('#wenxuan_name').val(subscriber.wenxuan_name);
+        $('#wenxuan_name_receiver').val(subscriber.wenxuan_name_receiver);
         $('#wenxuan_contact').val(subscriber.wenxuan_contact);
         $('#wenxuan_email').val(subscriber.wenxuan_email);
         $('#address1').val(subscriber.wenxuan_address1);
@@ -70,6 +71,7 @@ function post_data(refresh_page){
     var data = {
         wenxuan_id       : $('#wenxuan_id').val(),
         wenxuan_name     : $('#wenxuan_name').val(),
+        wenxuan_name_receiver : $('#wenxuan_name_receiver').val(),
         wenxuan_contact  : $('#wenxuan_contact').val(),
         wenxuan_email    : $('#wenxuan_email').val(),
         wenxuan_address1 : $('#address1').val(),
@@ -146,6 +148,7 @@ function delete_data(){
                             <td colspan=<?=sizeof($total);?>><b>功德主方案</b></td>
                             <td rowspan=2><b>已發贈品</b></td>
                             <td rowspan=2><b>完成付款</b></td>
+                            <td rowspan=3><b>一次/分期</b></td>
                             <td rowspan=3><b><?=$year;?>年<br />報名表格</b></td>
                         </tr>
                         <tr class="info">
@@ -173,6 +176,7 @@ function delete_data(){
                                 <?php endforeach;?>
                                 <td><b><?= $c['package'][$year]['gift_taken'] ? '<i class="fa fa-check" aria-hidden="true"></i>' : ""; ?></b></td>
                                 <td><b><?= $c['package'][$year]['payment_done'] ? '<i class="fa fa-check" aria-hidden="true"></i>' : "" ?></b></td>
+                                <td><b><?= $c['package'][$year]['fullpayment'] ? '一次付清' : "分期付款" ?></b></td>
                                 <td><?php foreach($c['package'] as $pyear => $p):?>
                                         <?php $form_full_url = ($pyear == $year ) ? $form_url.$p['md5_id'] : "" ?>
                                         <a href="<?= $form_full_url; ?>" target="_blank">view</a>
@@ -201,6 +205,7 @@ function delete_data(){
                 <div class="text-right"><small><b>Last update:</b> <span id="update_date"></span> by <span id="update_by"></span></small></div>
                 <table class="table display">
                     <tr><td>聯絡人</td><td><input class="form-control" id="wenxuan_name"/></td></tr>
+                    <tr><td>英文名字</td><td><input class="form-control" id="wenxuan_name_receiver"/></td></tr>
                     <tr><td>聯絡號碼</td><td><input class="form-control" id="wenxuan_contact"/></td></tr>
                     <tr><td>電郵</td><td><input class="form-control" id="wenxuan_email"/></td></tr>
                     <tr><td>地址</td><td>

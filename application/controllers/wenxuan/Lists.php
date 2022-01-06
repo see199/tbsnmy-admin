@@ -79,10 +79,12 @@ class Lists extends CI_Controller {
 		foreach($list as $wenxuan_id => $subscriber){
 			@$total[$subscriber['package'][$year]['package_id']] += 1;
 			$gift_sent += $subscriber['package'][$year]['gift_taken'];
-			$payment_done_temp = ($subscriber['package'][$year]['status'] + $subscriber['package'][$year]['fullpayment'] > 0) ? 1 : 0;
+			//$payment_done_temp = ($subscriber['package'][$year]['status'] + $subscriber['package'][$year]['fullpayment'] > 0) ? 1 : 0;
+			$payment_done_temp = $subscriber['package'][$year]['status'];
 			$payment_done += $payment_done_temp;
 			$list[$wenxuan_id]['package'][$year]['payment_done'] = $payment_done_temp;
 		}
+		ksort($total);
 		$data['list']  = $list;
 		$data['total'] = $total;
 		$data['year']  = $year;

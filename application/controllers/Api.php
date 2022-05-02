@@ -6,7 +6,7 @@ class Api extends CI_Controller {
 
 		parent::__construct();
 		$this->load->model('api_model');
-		$this->load->helper(array('url','language','file','common_helper'));
+		$this->load->helper(array('url','language','file','common_helper','form'));
 		$this->lang->load('api', 'english');
 		$this->config->load('siteinfo', TRUE);
 		$this->data['meta'] = array();
@@ -274,7 +274,7 @@ class Api extends CI_Controller {
 		$first_issue  = $this->cal_first_issue(); // server: 792910800; // local: 792892800;
 		$one_week_sec = 604800;
 		$data['year'] = $year = ($this->uri->segment(2)) ? $this->uri->segment(2) : date('Y');
-		$data['year'] = $year = ($this->uri->segment(3)) ? $this->uri->segment(3) : date('Y');
+		//$data['year'] = $year = ($this->uri->segment(3)) ? $this->uri->segment(3) : date('Y');
 
 		// File Location
 		$location = '/asset/img/tbsnews/'.$year;
@@ -417,6 +417,53 @@ class Api extends CI_Controller {
     	$data = $this->data;
         $data['chapter'] = $this->api_model->get_member_meeting_list();
         $this->load->view('meeting_view',$data);
+    }
+
+    public function qnaEmail($email){
+
+    	$email = urldecode($email);
+
+    	$this->load->library('email');
+    	$this->email->from('info@tbsn.org','互動就是力量');
+
+    	$this->email->to($email);
+    	$this->email->subject('RE:互動就是力量');
+    	$this->email->message('阿彌陀佛，您的提問已收到，工作人員在處理中。');
+    	$this->email->send();
+    }
+
+    public function eventemail($email){
+
+    	$email = urldecode($email);
+
+    	$this->load->library('email');
+    	$this->email->from('wenxuan@tbsn.org','宗委會文宣處');
+
+    	$this->email->to($email);
+    	$this->email->subject('全球長壽三尊薈供法會-表格已收穫');
+    	$this->email->message('阿彌陀佛！
+Amituofo! 
+
+您的登記已通過，感恩您的參與！我們將會傳zoom密碼到此郵箱，法會及慶賀佛誕詳情將會在真佛宗全球資訊網(TBSN)公佈，請隨時關注網站。
+Pendaftaran Anda telah masuk, terima kasih atas partisipasi Anda! Kami akan membagikan kata sandi Zoom ke tautan ini, informasi terkait upacara dan Hari Jadi Guru Buddha akan diumumkan melalui situs resmi TBSN, mari terus simak kabar terbaru di TBSN. 
+
+宗委會文宣處合十
+Salam anjali,
+Divisi Publikasi True Buddha Foundation.');
+    	$this->email->send();
+    }
+
+    public function unicode(){
+
+    	$txt = $this->input->post('txt');
+    	$str = "";
+
+    	$list = mb_str_split($txt);
+    	foreach(mb_str_split($txt) as $chr){
+    		$str .= "{U+".dechex(mb_ord($chr, "UTF-8"))."}";
+    	}
+
+    	echo "<form action='unicode' method='post'><table><tr><td><textarea rows=5 cols=30 name=txt>{$txt}</textarea></td><td><textarea rows=5 cols=30>{$str}</textarea></td></tr><tr><td colspan=2><input type=submit></td></tr></table></form>";
     }
 
 }

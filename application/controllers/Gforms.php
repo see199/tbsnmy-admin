@@ -19,7 +19,7 @@ class Gforms extends CI_Controller {
 
         $client = new Google_Client();
         $client->setAuthConfig(APPPATH . '/config/google-webservice-credential.json');
-        $client->setRedirectUri('http://localhost/admin/gforms');
+        $client->setRedirectUri($this->config->item('redirect_uri_gforms'));
         $client->addScope("https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile");
 
 
@@ -31,7 +31,7 @@ class Gforms extends CI_Controller {
         if ($this->input->get('code')) {
             $client->authenticate($this->input->get('code'));
             $this->session->set_userdata('access_token', $client->getAccessToken());
-            header('Location: ' . filter_var('http://localhost/admin/gforms', FILTER_SANITIZE_URL));
+            header('Location: ' . filter_var($this->config->item('redirect_uri_gforms'), FILTER_SANITIZE_URL));
         }
 
         // Set Access Token to make Request

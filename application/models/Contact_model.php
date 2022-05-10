@@ -75,6 +75,22 @@ class Contact_model extends CI_Model {
 		return $result;
 	}
 
+	public function get_contact_by_email($email = ''){
+		$this->db = $this->load->database('local', TRUE);
+
+		$this->db->select('c.name_chinese, c.name_malay, c.nric, c.email, c.contact_id, m.position, c.name_dharma, c.phone_mobile, cp.name_chinese as chapter_name')
+				->where('c.email',$email)
+				->where('m.chapter_id <>','1') // 不顯示馬密總
+				->where('m.position <> ','會員') // 不顯示會員
+				->from('tbs_contact c')
+				->join('tbs_chapter_member m','c.contact_id = m.contact_id', 'left')
+				->join('tbs_chapter cp','cp.chapter_id = m.chapter_id', 'left');
+		$res = $this->db->get();
+
+		if($res->result_array()) return $res->result_array()[0];
+		else return array();
+	}
+
 	public function get_contact_by_nric($nric = ''){
 		$this->db = $this->load->database('local', TRUE);
 

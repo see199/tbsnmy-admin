@@ -442,12 +442,20 @@ class Api extends CI_Controller {
     	$this->email->to($email);
     	$this->email->subject('全球長壽三尊薈供法會-表格已收穫');
     	$this->email->message('阿彌陀佛！
-Amituofo! 
-
-您的登記已通過，感恩您的參與！我們將會傳zoom密碼到此郵箱，法會及慶賀佛誕詳情將會在真佛宗全球資訊網(TBSN)公佈，請隨時關注網站。
-Pendaftaran Anda telah masuk, terima kasih atas partisipasi Anda! Kami akan membagikan kata sandi Zoom ke tautan ini, informasi terkait upacara dan Hari Jadi Guru Buddha akan diumumkan melalui situs resmi TBSN, mari terus simak kabar terbaru di TBSN. 
-
+您的登記已通過，感恩您的參與！我們將會傳zoom密碼到此鏈接，法會及慶賀佛誕詳情將會在真佛宗全球資訊網(TBSN)公佈，請隨時關注網站。
 宗委會文宣處合十
+
+
+Amitofo!
+
+Your registration has been approved. Thank you for your support! Kindly note that the passcode to access the Zoom meeting will be provided via this link. Further details in connection with the ceremonies and Guru Buddha’s birthday will be announced on TBSN. Kindly follow TBSN for the latest updates.  
+ 
+Best regards,
+True Buddha Foundation Publication Department
+
+
+Amituofo! 
+Pendaftaran Anda telah masuk, terima kasih atas partisipasi Anda! Kami akan membagikan kata sandi Zoom ke tautan ini, informasi terkait upacara dan Hari Jadi Guru Buddha akan diumumkan melalui situs resmi TBSN, mari terus simak kabar terbaru di TBSN. 
 Salam anjali,
 Divisi Publikasi True Buddha Foundation.');
     	$this->email->send();

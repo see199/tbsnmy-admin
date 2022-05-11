@@ -30,13 +30,13 @@ class Gforms extends CI_Controller {
         // Add Access Token to Session
         if ($this->input->get('code')) {
             $client->authenticate($this->input->get('code'));
-            $this->session->set_userdata('access_token', $client->getAccessToken());
+            $this->session->set_userdata('access_token_gform', $client->getAccessToken());
             header('Location: ' . filter_var($this->config->item('redirect_uri_gforms'), FILTER_SANITIZE_URL));
         }
 
         // Set Access Token to make Request
-        if ($this->session->userdata('access_token')) {
-            $client->setAccessToken($this->session->userdata('access_token'));
+        if ($this->session->userdata('access_token_gform')) {
+            $client->setAccessToken($this->session->userdata('access_token_gform'));
         }else {
             $authUrl = $client->createAuthUrl();
         }
@@ -52,7 +52,7 @@ class Gforms extends CI_Controller {
 
             $userData = $objOAuthService->userinfo->get();
             $data['userData'] = $userData;
-            $this->session->set_userdata('access_token', $client->getAccessToken());
+            $this->session->set_userdata('access_token_gform', $client->getAccessToken());
 
             // Query Database for existing users
             $res = $this->contact_model->get_contact_by_email($userData->email);
@@ -98,9 +98,9 @@ class Gforms extends CI_Controller {
 
     // Unset session and logout
     public function logout() {
-        $this->session->unset_userdata('access_token');
+        $this->session->unset_userdata('access_token_gform');
         $this->session->sess_destroy();
-        redirect(base_url().'gforms');
+        //redirect(base_url().'gforms');
     }
 
 	

@@ -502,6 +502,16 @@ class Agm extends CI_Controller {
         return;
     }
 
+    public function ajax_reset_login_date(){
+    	
+        $this->agm_model->reset_login_date();
+        echo json_encode(array(
+        	'success' => 1,
+        	'msg'     => 'Data Cleared',
+        ));
+        return;
+    }
+
 	
 }
 

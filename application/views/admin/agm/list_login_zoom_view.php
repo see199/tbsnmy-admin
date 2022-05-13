@@ -3,7 +3,7 @@
     <div class="row">
         <div class="box">
             <div class="col-lg-8 col-lg-offset-2 text-center form-inline">
-                <h1>會員大會 ZOOM 登記記錄<br />統計</h1>
+                <h1>會員大會 ZOOM Login 記錄<br />統計</h1>
             </div>
         </div>
     </div>

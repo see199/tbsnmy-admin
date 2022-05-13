@@ -225,6 +225,9 @@
                         <a href="<?= base_url(); ?>admin/agm/list_analyse"><i class="fa fa-briefcase"></i> <?= date('Y');?> AGM Zoom</a>
                     </li>
                     <li>
+                        <a href="<?= base_url(); ?>admin/agm/list_login_zoom"><i class="fa fa-briefcase"></i> <?= date('Y');?> AGM Zoom Login</a>
+                    </li>
+                    <li>
                         <a href="<?= base_url(); ?>admin/agm/list_zoom_registrant"><i class="fa fa-briefcase"></i> AGM Zoom 團體</a>
                     </li>
                     <li>

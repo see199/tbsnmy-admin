@@ -107,6 +107,14 @@ class Agm_model extends CI_Model {
 		$this->db->truncate('tbs_agm_zoom_reg');
 	}
 
+	public function reset_login_date(){
+		$this->db = $this->load->database('local', TRUE);
+
+		$this->db->update('tbs_agm_zoom_reg',array(
+			'login_time' => "0000-00-00 00:00:00"
+		));
+	}
+
 	public function login_zoom($nric){
 		$this->db = $this->load->database('local', TRUE);
 

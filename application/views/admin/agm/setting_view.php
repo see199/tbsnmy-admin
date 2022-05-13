@@ -11,6 +11,19 @@
             }
         });
     }
+
+    function reset_login_date(){
+        $.ajax({
+            url: '<?= base_url('admin/agm/ajax_reset_login_date'); ?>',
+            type: 'post',
+            success: function( data, textStatus, jQxhr ){
+                me = JSON.parse(data);
+                if(me.success){
+                    alert(me.msg);
+                }
+            }
+        });
+    }
 </script>
 
 <div id="page-wrapper">
@@ -41,6 +54,9 @@
                         </button>
                         <button type="button" onclick="delete_all_registrant()" class="btn btn-danger">
                             <i class="fa fa-times"></i> Reset Pass Years' Attendance
+                        </button>
+                        <button type="button" onclick="reset_login_date()" class="btn btn-danger">
+                            <i class="fa fa-times"></i> Reset Zoom Login Date
                         </button>
                     </td></tr>
                 </table>

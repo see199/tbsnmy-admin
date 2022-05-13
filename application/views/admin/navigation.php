@@ -222,7 +222,7 @@
                         <a href="<?= base_url(); ?>admin/agm/"><i class="fa fa-briefcase"></i> 會員大會</a>
                     </li>
                     <li>
-                        <a href="<?= base_url(); ?>admin/agm/list_analyse"><i class="fa fa-briefcase"></i> 2021 AGM Zoom</a>
+                        <a href="<?= base_url(); ?>admin/agm/list_analyse"><i class="fa fa-briefcase"></i> <?= date('Y');?> AGM Zoom</a>
                     </li>
                     <li>
                         <a href="<?= base_url(); ?>admin/agm/list_zoom_registrant"><i class="fa fa-briefcase"></i> AGM Zoom 團體</a>
@@ -232,6 +232,9 @@
                     </li>
                     <li>
                         <a href="<?= base_url(); ?>admin/agm/list_zoom_registrant_nonvote"><i class="fa fa-briefcase"></i> AGM Zoom 列席</a>
+                    </li>
+                    <li>
+                        <a href="<?= base_url(); ?>admin/agm/setting"><i class="fa fa-cog"></i> AGM Setting</a>
                     </li>
 
                   </ul>

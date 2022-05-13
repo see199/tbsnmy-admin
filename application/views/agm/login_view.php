@@ -84,17 +84,17 @@
                 <div class='row text-center'>
                     <div class='col-md-12' style='padding:30px;'>
                         <img src="https://storage.googleapis.com/stateless-info-tbsn-my-2/2021/02/91c74a77-logo.png" width="100%" />
-                        <h2 class='text-center' style='color:#600'>第8屆<?= date('Y'); ?>年度<br />常年會員代表大會<br />登入處</h2>
+                        <h2 class='text-center' style='color:#600'>第<?= $setting['session']; ?>屆<?= $setting['year']; ?>年度<br />常年會員代表大會<br />登入處</h2>
                         <?php if(@$error == 'user_not_found'): ?><div class='alert alert-danger'>您並未申請登記。請先註冊登記！</div><?php endif; ?>
                         
                         <center><table style='font-size: 16px;'>
                             <tr>
                                 <td>日期：</td>
-                                <td>2021年10月3日</td>
+                                <td><?= $setting['date']; ?></td>
                             </tr>
                             <tr>
                                 <td>時間：</td>
-                                <td>1:00 PM</td>
+                                <td><?= $setting['time']; ?></td>
                             </tr>
                         </table></center>
                     </div>

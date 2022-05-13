@@ -102,6 +102,11 @@ class Agm_model extends CI_Model {
 		$this->db->delete('tbs_agm_zoom_reg', array('email' => $email));
 	}
 
+	public function del_all_registrant(){
+		$this->db = $this->load->database('local', TRUE);
+		$this->db->truncate('tbs_agm_zoom_reg');
+	}
+
 	public function login_zoom($nric){
 		$this->db = $this->load->database('local', TRUE);
 
@@ -166,11 +171,11 @@ class Agm_model extends CI_Model {
 		return $res->result_array();
 	}
 
-	public function api_add_zoom_registrant($meeting_id,$user){
+	public function api_add_zoom_registrant($meeting_id,$user,$access_token){
 
 		// Generate at: https://marketplace.zoom.us/develop/apps/hpkMCtQGQa2t0MAGvIutEA/credentials
 		// Token expired on 2021-06-27 23:59
-		$access_token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6Ikw4NWFOandIUkhtVkJZaU55VTh4NWciLCJleHAiOjE2MzMzMzE0MDAsImlhdCI6MTYyNjMyOTcwNn0.BC2a76bcYCFoMYt2y_aEV4Dszw_vIcmOZLXlALJpAXY";
+		//$access_token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6Ikw4NWFOandIUkhtVkJZaU55VTh4NWciLCJleHAiOjE2MzMzMzE0MDAsImlhdCI6MTYyNjMyOTcwNn0.BC2a76bcYCFoMYt2y_aEV4Dszw_vIcmOZLXlALJpAXY";
 
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
@@ -200,11 +205,11 @@ class Agm_model extends CI_Model {
 
 	}
 
-	public function api_del_zoom_registrant($meeting_id,$registrant_id){
+	public function api_del_zoom_registrant($meeting_id,$registrant_id,$access_token){
 
 		// Generate at: https://marketplace.zoom.us/develop/apps/hpkMCtQGQa2t0MAGvIutEA/credentials
 		// Token expired on 2021-06-27 23:59
-		$access_token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6Ikw4NWFOandIUkhtVkJZaU55VTh4NWciLCJleHAiOjE2MzMzMzE0MDAsImlhdCI6MTYyNjMyOTcwNn0.BC2a76bcYCFoMYt2y_aEV4Dszw_vIcmOZLXlALJpAXY";
+		//$access_token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6Ikw4NWFOandIUkhtVkJZaU55VTh4NWciLCJleHAiOjE2MzMzMzE0MDAsImlhdCI6MTYyNjMyOTcwNn0.BC2a76bcYCFoMYt2y_aEV4Dszw_vIcmOZLXlALJpAXY";
 
 		$curl = curl_init();
 

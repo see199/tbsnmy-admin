@@ -183,6 +183,7 @@ class AGM extends CI_Controller {
             'states'           => $states,
             'msg_code'         => $msg_code,
             'msg'              => $msg,
+            'setting'          => json_decode(read_file('application/logs/agm_setting.txt'),1),
         ));
     }
 
@@ -193,6 +194,7 @@ class AGM extends CI_Controller {
         $this->load->view('agm/register_personal_view',array(
             'msg_code'         => $msg_code,
             'msg'              => $msg,
+            'setting'          => json_decode(read_file('application/logs/agm_setting.txt'),1),
         ));
     }
 
@@ -227,11 +229,11 @@ class AGM extends CI_Controller {
                 header('Location: '.$res['zoom_link']);
             }
             else{
-                $this->load->view('agm/login_view',array('error' => 'user_not_found'));
+                $this->load->view('agm/login_view',array('error' => 'user_not_found','setting' => json_decode(read_file('application/logs/agm_setting.txt'),1),));
             }
 
         }else{
-            $this->load->view('agm/login_view',array());
+            $this->load->view('agm/login_view',array('setting' => json_decode(read_file('application/logs/agm_setting.txt'),1),));
         }
 
         
@@ -270,11 +272,12 @@ class AGM extends CI_Controller {
         // If choose ZOOM only call ZOOM API
         
         if($post['online']){
-            $registrant = $this->agm_model->api_add_zoom_registrant("89065666966",array(
+            $setting = json_decode(read_file('application/logs/agm_setting.txt'),1);
+            $registrant = $this->agm_model->api_add_zoom_registrant($setting['zoom_id'],array(
                 "email"      => $post['email'],
                 "first_name" => $post['first_name'],
                 "last_name"  => $post['name_chinese'],
-            ));
+            ),$setting['access_token']);
 
             // If Zoom return empty
             if(!isset($registrant['registrant_id'])){
@@ -361,11 +364,12 @@ class AGM extends CI_Controller {
         // If choose ZOOM only call ZOOM API
         
         if($post['online']){
-            $registrant = $this->agm_model->api_add_zoom_registrant("89065666966",array(
+            $setting = json_decode(read_file('application/logs/agm_setting.txt'),1);
+            $registrant = $this->agm_model->api_add_zoom_registrant($setting['zoom_id'],array(
                 "email"      => $post['email'],
                 "first_name" => $post['first_name'],
                 "last_name"  => $post['name_chinese'],
-            ));
+            ),$setting['access_token']);
 
             // If Zoom return empty
             if(!isset($registrant['registrant_id'])){

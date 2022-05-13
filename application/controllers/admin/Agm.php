@@ -357,11 +357,12 @@ class Agm extends CI_Controller {
         $post = $this->input->post();
 
         // Submit to Zoom API
-        /*$registrant = $this->agm_model->api_add_zoom_registrant("89065666966",array(
+        $setting = json_decode(read_file('application/logs/agm_setting.txt'),1);
+        $registrant = $this->agm_model->api_add_zoom_registrant($setting['zoom_id'],array(
             "email"      => $post['email'],
             "first_name" => $post['first_name'],
             "last_name"  => $post['last_name'],
-        ));
+        ),$setting['access_token']);
 
         // if Error, Display ERROR to contact admin
         if(isset($registrant['code'])){
@@ -370,7 +371,7 @@ class Agm extends CI_Controller {
         		'msg'     => "Error ".$registrant['code'].":".$registrant['message'],
         	));
             return ;
-        }*/
+        }
 
 
         $registrant_primary = array(
@@ -379,8 +380,8 @@ class Agm extends CI_Controller {
         $registrant_value = array(
             'first_name'   => $post['first_name'],
             'last_name'    => $post['last_name'],
-            //'registrant_id'=> $registrant['registrant_id'],
-            //'zoom_link'    => $registrant['join_url'],
+            'registrant_id'=> $registrant['registrant_id'],
+            'zoom_link'    => $registrant['join_url'],
         );
         $this->agm_model->add_registrant($registrant_primary,$registrant_value);
 
@@ -397,11 +398,12 @@ class Agm extends CI_Controller {
         $post = $this->input->post();
 
         // Submit to Zoom API
-        /*$registrant = $this->agm_model->api_add_zoom_registrant("89065666966",array(
+        $setting = json_decode(read_file('application/logs/agm_setting.txt'),1);
+        $registrant = $this->agm_model->api_add_zoom_registrant($setting['zoom_id'],array(
             "email"      => $post['email'],
             "first_name" => $post['first_name'],
             "last_name"  => $post['last_name'],
-        ));
+        ),$setting['access_token']);
 
         // if Error, Display ERROR to contact admin
         if(isset($registrant['code'])){
@@ -410,7 +412,7 @@ class Agm extends CI_Controller {
         		'msg'     => "Error ".$registrant['code'].":".$registrant['message'],
         	));
             return ;
-        }*/
+        }
 
 
         $registrant_primary = array(
@@ -419,8 +421,8 @@ class Agm extends CI_Controller {
         $registrant_value = array(
             'first_name'   => $post['first_name'],
             'last_name'    => $post['last_name'],
-            //'registrant_id'=> $registrant['registrant_id'],
-            //'zoom_link'    => $registrant['join_url'],
+            'registrant_id'=> $registrant['registrant_id'],
+            'zoom_link'    => $registrant['join_url'],
             'nric'         => $post['nric'],
             'contact_id'   => $post['contact_id'],
             'name_chinese' => $post['name_chinese'],
@@ -441,9 +443,10 @@ class Agm extends CI_Controller {
     public function ajax_del_registrant(){
 
         $post = $this->input->post();
+        $setting = json_decode(read_file('application/logs/agm_setting.txt'),1);
 
         // Submit to Zoom API
-        $registrant = $this->agm_model->api_del_zoom_registrant("89065666966",$post['registrant_id']);
+        $registrant = $this->agm_model->api_del_zoom_registrant($setting['zoom_id'],$post['registrant_id'],$setting['access_token']);
 
         // if Error, Display ERROR to contact admin
         if(isset($registrant['code'])){
@@ -458,6 +461,43 @@ class Agm extends CI_Controller {
         echo json_encode(array(
         	'success' => 1,
         	'msg'     => 'Contact deleted! Refresh to reflect.',
+        ));
+        return;
+    }
+
+    public function setting(){
+
+    	$setting_file = 'application/logs/agm_setting.txt';
+    	$setting = json_decode(read_file($setting_file),1);
+
+    	if($this->input->post('session')){
+    		$setting = array(
+    			'session' => $this->input->post('session'),
+    			'year'    => $this->input->post('year'),
+    			'date'    => $this->input->post('date'),
+    			'time'    => $this->input->post('time'),
+    			'zoom_id' => $this->input->post('zoom_id'),
+    			'access_token' => $this->input->post('access_token'),
+    			'token_expiry' => $this->input->post('token_expiry'),
+    		);
+    		write_file($setting_file,json_encode($setting));
+    	}
+
+		$data = $this->data;
+		$data['setting'] = $setting;
+
+		$this->load->view('admin/header', $data);
+		$this->load->view('admin/navigation', $data);
+		$this->load->view('admin/agm/setting_view',$data);
+		$this->load->view('admin/footer');
+    }
+
+    public function ajax_del_all_reg(){
+    	
+        $this->agm_model->del_all_registrant();
+        echo json_encode(array(
+        	'success' => 1,
+        	'msg'     => 'Data Cleared',
         ));
         return;
     }

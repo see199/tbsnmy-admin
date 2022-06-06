@@ -108,6 +108,7 @@ class AGM extends CI_Controller {
     }
 
     private function read_attendance($file){
+        $attendance = array();
     	$data = explode("\n",read_file($file));
     	foreach($data as $v){
     		if($v){

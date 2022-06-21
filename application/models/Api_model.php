@@ -113,4 +113,36 @@ class api_model extends CI_Model {
         return ($i->num_rows() > 0) ? $i->result_array() : array();
 	}
 
+	public function check_verified_user($email){
+		$this->db = $this->load->database('local', TRUE);
+
+		$this->db->where('email',$email);
+		$res = $this->db->get('verified_users');
+		return $res->result_array();
+	}
+
+	public function update_verified_user($user){
+		$this->db = $this->load->database('local', TRUE);
+
+		$this->db->where('email',$user['email']);
+		$this->db->update('verified_users',$user);
+		
+	}
+
+	public function insert_verified_user($users){
+		$this->db = $this->load->database('local', TRUE);
+		$this->db->truncate('verified_users');
+		$this->db->insert_batch('verified_users',$users);
+		
+	}
+
+	public function get_all_verified_user(){
+		$this->db = $this->load->database('local', TRUE);
+
+		$this->db->from('verified_users')
+				->order_by('verified_date');
+		$res = $this->db->get();
+		return $res->result_array();
+	}
+
 }

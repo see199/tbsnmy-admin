@@ -474,6 +474,67 @@ Divisi Publikasi True Buddha Foundation.');
     	echo "<form action='unicode' method='post'><table><tr><td><textarea rows=5 cols=30 name=txt>{$txt}</textarea></td><td><textarea rows=5 cols=30>{$str}</textarea></td></tr><tr><td colspan=2><input type=submit></td></tr></table></form>";
     }
 
+    private function pppp($postdata){
+
+    	$ch =  curl_init();
+    	curl_setopt( $ch, CURLOPT_URL, 'https://ch.tbsn.org/control/vote_item/add_post' );
+    	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+    	curl_setopt( $ch, CURLOPT_POSTFIELDS, $postdata);
+    	curl_setopt( $ch, CURLOPT_COOKIE,  '_ga=GA1.2.877555084.1626956499; _fbp=fb.1.1626956499275.2053884064; __stripe_mid=09837832-b112-445d-9bd4-dda9932bb2d32ccd03; _fbc=fb.1.1645275145279.IwAR1y7eJ-tXwfwqFRKsBHWLBrnsQXFnMtOTozA-8cW3EiAIIZ4f__nnzkQGk; _gid=GA1.2.710024376.1655192308; ci_session=f35f131885d4a3dd92442f3320176db730ac4b5b');
+
+    	$result = curl_exec( $ch );
+    	curl_close( $ch );
+
+    	//print_r($result);
+    }
+
+    private function hitme(){
+    	$me = array(
+    		array("096-新加坡獅城雷藏寺"	,"新加坡 <a href='https://ch.tbsn.org/page/index.html?id=121' target='_d'> 更多圖片及影片</a>","新加坡獅城雷藏寺","34197"),
+    		array("099-印尼本願雷藏寺"	,"印尼 <a href='https://ch.tbsn.org/page/index.html?id=122' target='_d'> 更多圖片及影片</a>","印尼本願雷藏寺","34202"),
+    	);
+
+    	foreach($me as $list => $data){
+    		$hitdata = array(
+    			'vote_id' => '2',
+    			'title' => $data[0],
+    			'active' => '1',
+    			'place' => $data[1],
+    			'memo' => $data[2],
+    			'nums' => '',
+    			'youtube' => '',
+    			'img_id' => $data[3],
+    		);
+    		echo "\r\nPosting ".$data[0];
+    		$this->pppp($hitdata);
+
+    	}
+    }
+
+    public function verify(){
+    	$data = $this->data;
+    	$data['updated'] = false;
+
+    	$post_data = $this->input->post();
+
+    	// Check if email exists
+    	$exists = false;
+    	if(isset($post_data['email']))
+    		$exists = $this->api_model->check_verified_user($post_data['email']);
+
+    	if($exists){
+    		$post_data['verified_date'] = date('Y-m-d H:i:s');
+    		$this->api_model->update_verified_user($post_data);
+    		$data['updated'] = true;
+    	}
+
+    	$this->load->view('api/base_header', $data);
+		$this->load->view('api/verify_view', $data);
+		$this->load->view('api/base_footer');
+    }
+
+
+
 }
 
 

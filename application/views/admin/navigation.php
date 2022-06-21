@@ -296,7 +296,7 @@
                   <ul class="dropdown-menu" role="menu">
                     <li><a href="<?= base_url(); ?>/dizang/login" target="_blank"><i class="fa fa-user-md"></i> 地藏殿系統</a></li>
                     <li><a href="<?= base_url(); ?>/wenxuan/login" target="_blank"><i class="fa fa-book"></i> 文宣處系統</a></li>
-                    <li><a href="<?= base_url(); ?>/"></a></li>
+                    <li><a href="<?= base_url(); ?>admin/api/verify_list/">Verify List</a></li>
                     <li><a href="<?= base_url(); ?>/"></a></li>
                   </ul>
                 </li>

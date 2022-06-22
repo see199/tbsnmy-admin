@@ -43,9 +43,11 @@ class Api extends CI_Controller {
 		if(isset($email_list)){
 			$email_list = array_unique(explode("\r\n",$this->input->post('list')));
 
-			foreach($email_list as $k => $email){
+			foreach($email_list as $k => $list){
+				list($email,$name) = explode(",",$list);
 				$users[] = array(
 					'email'    => $email,
+					'name'     => $name,
 					'lucky_no' => str_pad($k+1000, 4, "0", STR_PAD_LEFT),
 				);
 			}

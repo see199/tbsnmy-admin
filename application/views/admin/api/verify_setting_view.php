@@ -41,7 +41,11 @@
             <div class="col-lg-6 col-lg-offset-3">
                 <form class='form-horizontal' method="post" action="<?= base_url('admin/api/verify_setting');?>">
                 <table id="example" class="display table table-striped table-bordered" cellspacing="0" width="100%">
-                    <tr><td>List：</td><td><textarea rows=20 name='list' class='form-control'></textarea></td></tr>
+                    <tr><td width=30%>
+                        List：<br />Each data = 1 row
+                        <br />Format: Email,Name (without space)
+                    </td>
+                    <td><textarea rows=20 name='list' class='form-control'></textarea></td></tr>
                    <tr><td colspan=2 align='right'>
                         <button type="submit" class="btn btn-success">
                             <i class="fa fa-floppy-o"></i> Save

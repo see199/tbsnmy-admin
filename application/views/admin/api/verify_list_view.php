@@ -60,6 +60,7 @@
                             <thead>
                                 <tr class="info">
                                     <td><b>No</b></td>
+                                    <td><b>姓名</b></td>
                                     <td><b>電郵</b></td>
                                     <td><b>Lucky No</b></td>
                                 </tr>
@@ -68,6 +69,7 @@
                                 <?php foreach($users['non'] as $k => $u): ?>
                                     <tr>
                                         <td><?= $k+1;?></td>
+                                        <td><?= $u['name'];?></td>
                                         <td><?= $u['email'];?></td>
                                         <td><?= $u['lucky_no'];?></td>
                                     </tr>

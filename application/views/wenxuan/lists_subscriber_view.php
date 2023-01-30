@@ -144,6 +144,7 @@ function delete_data(){
                     <thead>
                         <tr class="info">
                             <td rowspan=2><b>名字<br /><small>** 點擊可查看 / 更新資料 **</small></b></td>
+                            <td rowspan=2><b>登記日期</b></td>
                             <td rowspan=2><b>聯絡</b></td>
                             <td colspan=<?=sizeof($total);?>><b>功德主方案</b></td>
                             <td rowspan=2><b>已發贈品</b></td>
@@ -157,7 +158,7 @@ function delete_data(){
                             <?php endforeach;?>
                         </tr>
                         <tr class="success">
-                            <td colspan=2><b>總數</b></td>
+                            <td colspan=3><b>總數</b></td>
                             <?php foreach($total as $package_id => $t):?>
                             <td><b><?= $t; ?></b></td>
                             <?php endforeach;?>
@@ -170,6 +171,7 @@ function delete_data(){
                             <tr>
                                 <td><textarea style="display:none;"><?= json_encode($c); ?></textarea>
                                     <a href='javascript:void(0)' onclick="load_box($(this).prev().val())" data-toggle="modal" data-target="#myModal"><?= $c['wenxuan_name']; ?></a></td>
+                                <td><?= $c['package'][$year]['create_date']; ?></td>
                                 <td><?= $c['wenxuan_contact']; ?></td>
                                 <?php foreach($total as $package_id => $t):?>
                                 <td><b><?= ($package_id == $c['package'][$year]['package_id']) ? '<i class="fa fa-check" aria-hidden="true"></i>' : ""; ?></b></td>

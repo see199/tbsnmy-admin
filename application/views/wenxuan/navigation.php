@@ -30,6 +30,8 @@
                     <?php if(date('m') > 10):?><li><a href="<?= base_url(); ?>wenxuan/lists/subscriber/<?=date('Y') +1;?>"><i class="fa fa-users fa-fw"></i> 功德主 (<?= date('Y') +1; ?>)</a></li><?php endif; ?>
                     <li><a href="<?= base_url(); ?>wenxuan/lists/subscriber/<?=date('Y');?>"><i class="fa fa-users fa-fw"></i> 功德主 (<?= date('Y'); ?>)</a></li>
                     <li><a href="<?= base_url(); ?>wenxuan/lists/subscriber/<?=date('Y') -1;?>"><i class="fa fa-users fa-fw"></i> 功德主 (<?= date('Y') -1; ?>)</a></li>
+                    <li><a href="<?= base_url(); ?>wenxuan/lists/subscriber/<?=date('Y') -2;?>"><i class="fa fa-users fa-fw"></i> 功德主 (<?= date('Y') -2; ?>)</a></li>
+                    <li><a href="<?= base_url(); ?>wenxuan/lists/subscriber/<?=date('Y') -3;?>"><i class="fa fa-users fa-fw"></i> 功德主 (<?= date('Y') -3; ?>)</a></li>
                   </ul>
                 </li>
 

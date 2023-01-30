@@ -432,7 +432,15 @@ class Api extends CI_Controller {
     	$this->email->send();
     }
 
-    public function eventemail($email){
+    public function sendList(){
+
+    	$array = array(
+    	);
+
+    	foreach($array as $lucky_no => $email) $this->eventemail($email,$lucky_no);
+    }
+
+    public function eventemail($email,$lucky_no){
 
     	$email = urldecode($email);
 
@@ -440,25 +448,29 @@ class Api extends CI_Controller {
     	$this->email->from('wenxuan@tbsn.org','宗委會文宣處');
 
     	$this->email->to($email);
-    	$this->email->subject('全球長壽三尊薈供法會-表格已收穫');
-    	$this->email->message('阿彌陀佛！
-您的登記已通過，感恩您的參與！我們將會傳zoom密碼到此鏈接，法會及慶賀佛誕詳情將會在真佛宗全球資訊網(TBSN)公佈，請隨時關注網站。
+    	$this->email->subject('【2022年真佛宗全球道場薈供主題壇城佈置比賽Zoom頒獎禮】邀請函');
+    	$this->email->message('阿彌陀佛，
+
+感謝您參與【2022年真佛宗全球道場薈供主題壇城佈置比賽】的投票！宗委會文宣處至誠邀請您來參與台灣時間2022年6月25日晚上8點【Zoom頒獎禮】，我們將在當晚揭曉得獎者，同時也會進行TBSN投票會員抽獎哦！
+
+歡迎您出席，可先在這鏈接 https://bit.ly/3tVaOnX 註冊，然後您的郵箱將會收到Zoom鏈接，到時候可以直接登錄！同時也歡迎將這鏈接分享給其他想出席的同門。
+
+為了方便抽獎，您的抽獎號碼為 【 '.$lucky_no.' 】號，您可先記住這些號碼，然後在頒獎禮上期待中獎！21份【大吉祥天女普及版宣影布畫作】將在當晚抽獎。
+
+期待您的出席！
+
+感恩
 宗委會文宣處合十
 
+Amitabha,
 
-Amitofo!
+You are cordially invited to join the Awards and Lucky Draw Ceremony for the Feast Offering Themed Shrine Decoration Contest via Zoom on 2022-6-25 8pm (Taiwan Time).
 
-Your registration has been approved. Thank you for your support! Kindly note that the passcode to access the Zoom meeting will be provided via this link. Further details in connection with the ceremonies and Guru Buddha’s birthday will be announced on TBSN. Kindly follow TBSN for the latest updates.  
- 
-Best regards,
-True Buddha Foundation Publication Department
+Kindly register at https://bit.ly/3tVaOnX  to obtain the zoom link for the ceremony, you are welcome to share the link to other True Buddha Disciples who are interested in joining the event.
 
-
-Amituofo! 
-Pendaftaran Anda telah masuk, terima kasih atas partisipasi Anda! Kami akan membagikan kata sandi Zoom ke tautan ini, informasi terkait upacara dan Hari Jadi Guru Buddha akan diumumkan melalui situs resmi TBSN, mari terus simak kabar terbaru di TBSN. 
-Salam anjali,
-Divisi Publikasi True Buddha Foundation.');
+Your lucky number for the Lucky Draw Ceremony is [ '.$lucky_no.'  ] .');
     	$this->email->send();
+    	echo "\r\nSent: $email";
     }
 
     public function unicode(){

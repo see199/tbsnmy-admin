@@ -72,7 +72,7 @@ class Lists extends CI_Controller {
 
 		$data = $this->data;
 		$gift_sent = $payment_done = 0;
-		$total = array();
+		$total = $sorted_list = $sorting = array();
 
 		$list = $this->wenxuan_model->get_subscriber_list($year);
 		//echo'<pre>';print_r($list);
@@ -83,9 +83,19 @@ class Lists extends CI_Controller {
 			$payment_done_temp = $subscriber['package'][$year]['status'];
 			$payment_done += $payment_done_temp;
 			$list[$wenxuan_id]['package'][$year]['payment_done'] = $payment_done_temp;
+			$sorting[$subscriber['package'][$year]['create_date']][$wenxuan_id] = $wenxuan_id;
 		}
 		ksort($total);
-		$data['list']  = $list;
+		ksort($sorting);
+
+		//Sort Users based on package create date instead of user create date
+		foreach($sorting as $create_date => $subscribers){
+			foreach($subscribers as $wenxuan_id => $s){
+				$sorted_list[$wenxuan_id] = $list[$wenxuan_id];
+			}
+		}
+
+		$data['list']  = $sorted_list;//$list;
 		$data['total'] = $total;
 		$data['year']  = $year;
 		$data['gift_sent']    = $gift_sent;

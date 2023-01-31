@@ -100,6 +100,7 @@ class Lists extends CI_Controller {
 			foreach($stats['packages'] as $package_id)
 				@$stats['package_id'][$package_id][] = ($package[$package_id]) ? $package[$package_id] : 0;
 		}
+		ksort($stats['package_id']);
 		//print_pre($stats);
 		//print_pre($list);
 

@@ -144,13 +144,13 @@ function delete_data(){
             type: 'bar',
             data: {
               labels: <?= json_encode($stats['date']); ?>,
-              datasets: [<?php foreach($stats['package_id'] as $package_id => $package_total): ?>
+              datasets: [<?php $k=0;foreach($stats['package_id'] as $package_id => $package_total): ?>
               {
                 label: '<?= $package[$package_id]['package_name'].' (RM '.$package[$package_id]['package_amount'].')'; ?>',
                 data: <?= json_encode($package_total); ?>,
-                backgroundColor: bgcolor[<?= $package_id%3; ?>]
+                backgroundColor: bgcolor[<?= $k%3; ?>]
               },
-              <?php endforeach; ?>]
+              <?php $k++;endforeach; ?>]
             },
             options:{
                 plugins:{title:{

@@ -126,6 +126,47 @@ function delete_data(){
 
 <div id="page-wrapper">
 
+    <!-- Statistic Chart -->
+    <div class="row">
+        <div class="box">
+            <div class="col-lg-8 col-lg-offset-2 text-center">
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+        <!-- Statistic Library at https://www.chartjs.org/ -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+          const ctx = document.getElementById('myChart');
+
+          var bgcolor = ["#B30000","#1A53FF","#5AD45A"];
+
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: <?= json_encode($stats['date']); ?>,
+              datasets: [<?php foreach($stats['package_id'] as $package_id => $package_total): ?>
+              {
+                label: '<?= $package[$package_id]['package_name'].' (RM '.$package[$package_id]['package_amount'].')'; ?>',
+                data: <?= json_encode($package_total); ?>,
+                backgroundColor: bgcolor[<?= $package_id%3; ?>]
+              },
+              <?php endforeach; ?>]
+            },
+            options:{
+                plugins:{title:{
+                    display: true,
+                    text: "功德主統計"
+                }},
+                scales:{
+                    x:{stacked: true},
+                    y:{stacked: true}
+                }
+            }
+          });
+        </script>
+    </div>
+
+
     <div class="row">
         <div class="box">
             <div class="col-lg-8 col-lg-offset-2 text-center">

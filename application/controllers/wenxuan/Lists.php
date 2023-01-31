@@ -72,21 +72,37 @@ class Lists extends CI_Controller {
 
 		$data = $this->data;
 		$gift_sent = $payment_done = 0;
-		$total = $sorted_list = $sorting = array();
+		$total = $sorted_list = $sorting = $stats = array();
 
 		$list = $this->wenxuan_model->get_subscriber_list($year);
 		//echo'<pre>';print_r($list);
 		foreach($list as $wenxuan_id => $subscriber){
-			@$total[$subscriber['package'][$year]['package_id']] += 1;
+			$package_id   = $subscriber['package'][$year]['package_id'];
+			$package_date = $subscriber['package'][$year]['create_date'];
+			@$total[$package_id] += 1;
 			$gift_sent += $subscriber['package'][$year]['gift_taken'];
 			//$payment_done_temp = ($subscriber['package'][$year]['status'] + $subscriber['package'][$year]['fullpayment'] > 0) ? 1 : 0;
 			$payment_done_temp = $subscriber['package'][$year]['status'];
 			$payment_done += $payment_done_temp;
 			$list[$wenxuan_id]['package'][$year]['payment_done'] = $payment_done_temp;
-			$sorting[$subscriber['package'][$year]['create_date']][$wenxuan_id] = $wenxuan_id;
+			$sorting[$package_date][$wenxuan_id] = $wenxuan_id;
+
+			@$stats['raw_data'][substr($package_date, 0, 7)][$package_id] += 1;
+			@$stats['packages'][$package_id] = $package_id;
 		}
 		ksort($total);
 		ksort($sorting);
+
+		// Statistic Sorting
+		ksort($stats['raw_data']);
+		foreach($stats['raw_data'] as $date => $package){
+			@$stats['date'][] = $date;
+			foreach($stats['packages'] as $package_id)
+				@$stats['package_id'][$package_id][] = ($package[$package_id]) ? $package[$package_id] : 0;
+		}
+		//print_pre($stats);
+		//print_pre($list);
+
 
 		//Sort Users based on package create date instead of user create date
 		foreach($sorting as $create_date => $subscribers){
@@ -98,6 +114,7 @@ class Lists extends CI_Controller {
 		$data['list']  = $sorted_list;//$list;
 		$data['total'] = $total;
 		$data['year']  = $year;
+		$data['stats'] = $stats;
 		$data['gift_sent']    = $gift_sent;
 		$data['payment_done'] = $payment_done;
 		$data['package']      = $this->wenxuan_model->get_package();

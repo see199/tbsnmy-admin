@@ -1,3 +1,17 @@
+<script type="text/javascript">
+$(document).ready(function() {
+  $('#snap').click(function() {
+    $.ajax({
+      url: '<?= base_url(); ?>wenxuan/lists/snapshot_list',
+      type: 'GET',
+      success: function(result) {
+        location.reload();
+      }
+    });
+  });
+});
+</script>
+
 <div id="page-wrapper">
     <div class="row">&nbsp;</div>
 
@@ -68,7 +82,7 @@
 
                 <table class="table table-bordered table-striped">
                   <thead>
-                    <tr class='warning'><td colspan=3><b>功德主統計</b></td></tr>
+                    <tr class='warning'><td colspan=3><b>功德主統計</b> <button id="snap" class="btn btn-success"><i class="fa fa-refresh"></i> Refresh</button></td></tr>
                     <tr class="info">
                         <td><b>年份</b></td>
                         <td><b>詳情</b></td>

@@ -26,9 +26,9 @@
         <![endif]-->
 
         <style>
-            html {
-                height: 100%;
-            }
+        	html {
+        		height: 100%;
+        	}
             body {
                 background-color: #E6E6E6;
                 background-image: url(<?php echo base_url(); ?>asset/img/lotus-2528454_1920.jpg);
@@ -78,31 +78,21 @@
         </script>
     </head>
 
-<body>
+<body><div class="container">
 
-    <div class="col-xs-12 col-sm-8 col-md-4 col-lg-4 col-sm-offset-2 col-md-offset-4 col-lg-offset-4">
+    <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8 col-sm-offset-2 col-md-offset-2 col-lg-offset-2">
         <br />
         <div class="panel panel-default drop-shadow">
             <div class="panel-body">
                 <div class='row text-center'>
                     <div class='col-md-12' style='padding:30px;'>
-                        <img src="https://storage.googleapis.com/stateless-info-tbsn-my-2/2021/02/91c74a77-logo.png" width="100%" />
-                        <h2 class='text-center' style='color:#600'>第<?= $setting['session']; ?>屆<?= $setting['year']; ?>年度<br />常年會員代表大會<br />登入處</h2>
-                        <?php if(@$error == 'user_not_found'): ?><div class='alert alert-danger'>您並未申請登記。請先註冊登記！</div><?php endif; ?>
-                        
-                        <center><table style='font-size: 16px;'>
-                            <tr>
-                                <td>日期：</td>
-                                <td><?= $setting['date']; ?></td>
-                            </tr>
-                            <tr>
-                                <td>時間：</td>
-                                <td><?= $setting['time']; ?></td>
-                            </tr>
-                        </table></center>
+                        <img src="https://storage.googleapis.com/stateless-info-tbsn-my-2/2021/02/91c74a77-logo.png" style="max-width: 100%;"  />
+                        <h2 class='text-center' style='color:#600'>第<?= $setting['session']; ?>屆<?= $setting['year']; ?>年度<br />常年會員代表大會</h2>
+                        <?php if (isset($error)): ?><div class='alert alert-danger'><?=$error;?></div><?php endif; ?>
                     </div>
 
-                    <form class='form-horizontal' id="upload_form" method="post" action="<?= base_url('agm/zoom_login');?>">
+                    <?php if (!isset($google_form_url)): ?>
+                    <form class='form-horizontal' id="upload_form" method="post" action="<?= base_url('agm/vote');?>">
 
                         <div class='row'>&nbsp;</div>
 
@@ -119,21 +109,23 @@
                                 <div class='col-xs-12'>
                                     <div class='form form-group text-right'>
                                         <button id="btn-check" class="btn btn-success">
-                                            登入 Login
+                                            登入投票 Login to Vote
                                         </button>
-                                        <br /><br />
-                                        <a href="<?= base_url('agm/register'); ?>" class="btn btn-warning">
-                                            註冊登記 Register (團體 | Group)
-                                        </a><br /><br />
-                                        <a href="<?= base_url('agm/register_personal'); ?>" class="btn btn-warning">
-                                            註冊登記 Register (個人 | Personal)
-                                        </a>
                                     </div>
                                 </div>
                             </div>
 
                     </form>
+                    <?php endif;?>
                 </div>
+
+                <div class="mt-5">
+	                <!-- Load Google Form -->
+					<?php if (isset($google_form_url)): ?>
+						<iframe src="<?php echo $google_form_url; ?>" width="100%" height="600px" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+					<?php endif; ?>
+				</div>
+
             </div>
         </div>
     </div>
@@ -141,5 +133,5 @@
 
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="<?php echo base_url(); ?>assets/js/bootstrap.min.js"></script>
-</body>
+</div></body>
 </html>

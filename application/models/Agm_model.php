@@ -124,6 +124,15 @@ class Agm_model extends CI_Model {
 		));
 	}
 
+	public function update_voted($nric){
+		$this->db = $this->load->database('local', TRUE);
+
+		$this->db->where('nric',$nric);
+		$this->db->update('tbs_agm_zoom_reg',array(
+			'voted' => 1
+		));
+	}
+
 	public function check_duplicate_email_registrant($email){
 		$this->db = $this->load->database('local', TRUE);
 
@@ -138,6 +147,13 @@ class Agm_model extends CI_Model {
 		$this->db->where('chapter_id',$chapter_id);
 		$res = $this->db->get('tbs_agm_zoom_reg');
 		return $res->result_array();
+	}
+
+	public function get_registrant($nric){
+		$this->db = $this->load->database('local', TRUE);
+		$result = $this->db->get_where('tbs_agm_zoom_reg', array('nric' => $nric))->row_array();
+
+		return $result;
 	}
 
 	public function get_registrant_link($nric){

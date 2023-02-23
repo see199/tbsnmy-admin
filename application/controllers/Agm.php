@@ -420,6 +420,54 @@ class AGM extends CI_Controller {
         return;
     }
 
+    public function vote() {
+        // Load form helper to set form validation rules
+        $this->load->library('form_validation');
+        $this->load->model('agm_model');
+        
+        // Load AGM Settings
+        $data['setting'] = json_decode(read_file('application/logs/agm_setting.txt'),1);
+        $data['setting']['gform'] = '1FAIpQLSdj9KEURkmamwtFYT6Kn9CJZStVNbR8MKRmlDLKW6NVD405AA';
+
+        // Check if form has been submitted
+        if(count($this->input->post())){
+
+            // Set form validation rules
+            $this->form_validation->set_rules('nric', 'NRIC', 'required');
+
+            // Check if form validation passed
+            if ($this->form_validation->run() == FALSE) {
+                // If form validation failed, reload the view with error message
+                $data['error'] = 'Please enter your NRIC.';
+                $this->load->view('agm/vote_form', $data);
+            } else {
+                // If form validation passed, check if NRIC exists in database
+                $nric = $this->input->post('nric');
+                $result = $this->agm_model->get_registrant($nric);
+
+                if (empty($result)) {
+                    // If NRIC is not found, reload the view with error message
+                    $data['error'] = 'Sorry, you are not allowed to vote.';
+                } elseif ($result['voted'] == 1) {
+                    // If user has already voted, reload the view with error message
+                    $data['error'] = 'Sorry, you have already voted.';
+                } else {
+                    // If NRIC is found and user has not voted, load Google form
+                    $google_form_url = 'https://docs.google.com/forms/d/e/'.$data['setting']['gform'].'/viewform';
+                    $data['google_form_url'] = $google_form_url;
+
+                    // Update voted field in database
+                    //$this->agm_model->update_voted($nric);
+
+                }
+            }
+        } 
+
+        $this->load->view('agm/vote_form', $data);
+
+        
+    }
+
 }
 
 

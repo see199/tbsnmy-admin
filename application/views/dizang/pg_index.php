@@ -185,11 +185,11 @@ $(document).ready(function() {
                     </td></tr>
                 </table>
             </div>
-            <!-- Testing remove update button
+            
             <div class="modal-footer">
                 <button type="button" id="btn_modal_update" class="btn btn-success" onclick="post_data(0);" data-dismiss="modal"><i class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></i> Update</button>
                 <button type="button" id="btn_modal_cancel" class="btn btn-warning" data-dismiss="modal"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Cancel</button>
-            </div -->
+            </div>
         </div>
     </div>
 </div>

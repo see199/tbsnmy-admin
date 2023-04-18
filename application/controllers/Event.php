@@ -57,26 +57,47 @@ class Event extends CI_Controller {
         echo json_encode($options);
     }
 
+    public function ajax_get_chapter_by_country(){
+        $country = $this->input->post('country');
+
+        // Get Master by Country
+        $this->db = $this->load->database('local', TRUE);
+        $list = $this->db
+                ->where('country', $country)
+                ->from('zwh_chapter')
+                ->get()
+                ->result_array();
+
+        $options = array(array('value' => '', 'text' => ''));
+        foreach($list as $chapter){
+            $options[] = array('value' => $chapter['chapter_id'], 'text' => $chapter['name']);
+        }
+        echo json_encode($options);
+    }
+
     public function register($id=0){
 
         $event_reg = $this->input->post();
 
-        $event_reg['master_position'] = ($event_reg['master_name']) ? mb_substr($event_reg['master_name'],-2) : "";
+        // Rename Master Position by substr() and Rename 教授師
+        @$event_reg['master_position'] = ($event_reg['master_name']) ? mb_substr($event_reg['master_name'],-2) : "";
         if($event_reg['master_position'] == '授師') $event_reg['master_position'] = '教授師';
 
+        //Unique Key Checking
+        $unique = array('event_id','master_id','chapter_id','event_type','event_date');
+        foreach($unique as $u)
+            if(@!isset($event_reg[$u])) $event_reg[$u] = '0';
+
+        // Check duplicates for Unique
         $this->db = $this->load->database('local', TRUE);
+        $q = $this->db;
+        foreach($unique as $u) $q->where($u,$event_reg[$u]);
+        $res = $q->get('zwh_event_reg');
 
-        // Check duplicates
-        $query = $this->db
-            ->where('event_id',   $event_reg['event_id'])
-            ->where('master_id',  @$event_reg['master_id'])
-            ->where('chapter_id', @$event_reg['chapter_id'])
-            ->where('event_type', @$event_reg['event_type'])
-            ->where('event_date', @$event_reg['event_date'])
-            ->get('zwh_event_reg');
+        //print_pre($event_reg);
 
-        if ($query->num_rows() == 0) {
-            print_pre($query);exit;
+        // Insert DB if no duplicates
+        if ($res->num_rows() == 0) {
             // Insert the record
             $this->db->insert('zwh_event_reg',$event_reg);
             $reg_id = $this->db->insert_id();
@@ -85,8 +106,7 @@ class Event extends CI_Controller {
             $this->msg = "Error: 無法重複輸入！";
         }
         
-
-        
+        // Load Index View
         $this->index($id);
 
     }

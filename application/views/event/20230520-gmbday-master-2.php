@@ -102,8 +102,24 @@
         this._on( this.input, {
           autocompleteselect: function( event, ui ) {
             ui.item.option.selected = true;
-            if(ui.item.option.parentElement.name == 'master_country')
-            window.document.location.href='<?=base_url('admin/index/update_default_chapter/');?>'+ui.item.option.attributes[0].nodeValue;
+            if(ui.item.option.parentElement.name == 'chapter_country'){
+                $.ajax({
+                    url: '<?= base_url();?>event/ajax_get_chapter_by_country',
+                    type: 'post',
+                    data: {country: ui.item.option.attributes[0].nodeValue},
+                    success: function(data) {
+                        res = JSON.parse(data);
+                        var options = '';
+                        for (var i = 0; i < res.length; i++) {
+                            options += '<option value="' + res[i].value + '">' + res[i].text + '</option>';
+                        }
+                        $('#chapter_id').html(options);
+                        $("#chapter_id" ).combobox();
+                    }
+                });
+            }else if(ui.item.option.parentElement.name == 'chapter_id'){
+                $('#chapter_name').val(ui.item.value);
+            }
             this._trigger( "select", event, {
               item: ui.item.option
             });
@@ -111,6 +127,7 @@
  
           autocompletechange: "_removeIfInvalid"
         });
+ 
       },
  
       _createShowAllButton: function() {
@@ -185,7 +202,7 @@
         // Remove invalid value
         this.input
           .val( "" )
-          .attr( "title", value + " didn't match any item" )
+          .attr( "title", "輸入：'" + value + "'無效，請點擊選擇。" )
           .tooltip( "open" );
         this.element.val( "" );
         this._delay(function() {
@@ -202,53 +219,92 @@
   })( jQuery );
  
   $(function() {
-    $( "#select_chapters" ).combobox();
+    $( "#chapter_country" ).combobox();
   });
   </script>
   <!-- Combo box JavaScript End -->
 
-        <script>
 
-            $(document).ready(function(){
 
-            });
-        </script>
     </head>
-    <body>
-<!-- Navigation -->
-            
 
-            
-            <!-- /.navbar-top-links -->
-              
+<body>
+
+    <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6 col-sm-offset-2 col-md-offset-3 col-lg-offset-3">
+        <br />
+        <div class="panel panel-default drop-shadow">
+            <div class="panel-body">
+                <div class='row text-center'>
+                    <div class='col-md-12' style='padding:30px;'>
+                        <h2 class='text-center' style='color:#600'><?=str_replace("\r\n", "<br>", $event['title']);?></h2>
+                        <div class='text-justify'><?= str_replace("\r\n", "<br>", $event['description']);?></div>
+                    </div>
+
+                    <?php if (isset($msg)): ?>
+                        <div class="alert alert-success"><?php echo $msg; ?></div>
+                    <?php endif;?>
+
+                    <form class='form-horizontal' method="post" action="<?= base_url('event/register/'.$event['event_id']);?>">
+                        <input type='hidden' name='event_id' value='<?=$event['event_id'];?>' />
+                        <input type='hidden' id='chapter_name' name='chapter_name' />
+
+                        <div class='row'>&nbsp;</div>
+
+                        <div class='row row-data col-xs-12'>
+                            <div class='col-xs-3 strong_txt text-right'><font color='red'>*</font>國家:</div>
+                            <div class='col-xs-9 text-left'>
+                                <div class='form form-group'>
+                                    <select required class='form-control' id='chapter_country' name='chapter_country'><?php foreach ($chapter_country as $c): ?>
+                                    <option value="<?php echo $c; ?>"><?php echo $c; ?></option>
+                                    <?php endforeach; ?></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='row row-data col-xs-12'>
+                            <div class='col-xs-3 strong_txt text-right'><font color='red'>*</font>道場:</div>
+                            <div class='col-xs-9 text-left'>
+                                <div class='form form-group'>
+                                    <select required class='custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left ui-autocomplete-input' id='chapter_id' name='chapter_id'></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='row row-data col-xs-12'>
+                            <div class='col-xs-3 strong_txt text-right'><font color='red'>*</font>日期:</div>
+                            <div class='col-xs-9 text-left'>
+                                <div class='form form-group'>
+                                    <input type='date' name='event_date' class='form-control' required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='row row-data col-xs-12'>
+                            <div class='col-xs-3 strong_txt text-right'><font color='red'>*</font>壇數:</div>
+                            <div class='col-xs-9 text-left'>
+                                <div class='form form-group'>
+                                    <input type='number' name='event_counter' class='form-control' required>
+                                </div>
+                            </div>
+                        </div>
 
 
-                  <select id="select_chapters" class="form-control">
-<option value="boyeh" selected="selected">真佛宗般若雷藏寺</option>
-<option value="faxian">真佛宗亞羅士打法顯堂</option>
-<option value="jiayi">真佛宗嘉益堂</option>
-<option value="yaluoshida">真佛宗亞羅士打同修會</option>
-<option value="changju">真佛宗居林常居堂</option>
-<option value="dengdi">真佛宗峨崙登地同修會</option>
-<option value="huhong">真佛宗檳城護弘堂</option>
-<option value="tianxian">真佛宗大山腳天仙雷藏寺</option>
-<option value="huxing">真佛宗話望生護行堂</option>
-<option value="gedabalu">真佛宗哥打峇魯同修會</option>
-<option value="fande">真佛宗梵德同修會</option>
-<option value="xiangming">真佛宗登嘉樓香明堂</option>
-<option value="longyun">真佛宗龍運同修會</option>
-<option value="jingfa">真佛宗森美蘭芙蓉敬法堂</option>
-<option value="dashan">真佛宗馬六甲大善堂</option>
-<option value="neimingmiyuan">真佛宗馬六甲內明密苑同修會</option>
-<option value="baoxiang">真佛宗巴也明光寶相同修會</option>
-<option value="huayan">真佛宗華嚴雷藏寺</option>
-<option value="jishan">真佛宗永平濟善雷藏寺</option>
-<option value="lianhu">真佛宗蓮湖雷藏寺</option>
-<option value="shaba">真佛宗沙巴雷藏寺</option>
-<option value="benjue">真佛宗亞庇本覺雷藏寺</option>
-</select>
+                        <div class='row row-data col-xs-10 col-xs-offset-1'>
+                            <div class='col-xs-2 col-xs-offset-1'></div>
+                            <div class='col-xs-12'>
+                                <div class='form form-group text-right'>
+                                    <button id="btn-check" class="btn btn-success">
+                                        登記
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
-
 </html>

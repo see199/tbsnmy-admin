@@ -1,3 +1,17 @@
+<?php
+
+// Stats Calculation
+$stats_by_master = array();
+$master_joined = array();
+$total_event = 0;
+foreach($stats as $k => $v){
+    $stats_by_master[$v['master_country']][$v['master_name']][] = $v['event_date']." (".$v['event_counter'].")";
+    $master_joined[$v['master_name']] = $v['master_name'];
+    $total_event += $v['event_counter'];
+}
+// Calculation Ends
+?>
+
 <!DOCTYPE html>
 <html lang="zh-tw">
 
@@ -56,7 +70,8 @@
                         <hr />
 
                         <div class='row'>
-                            登記總數：<?= count($stats);?>
+                            登記上師總數：<?= count($master_joined);?>
+                            <br />登記總壇數：<?= $total_event;?>
                         </div>
                         <div class='row'>&nbsp;</div>
 
@@ -68,15 +83,23 @@
                                         <td><b>No</b></td>
                                         <td><b>上師法號</b></td>
                                         <td><b>國家</b></td>
+                                        <td><b>日期(次數)</b></td>
                                     </tr>
                                 </thead>
-                                <tbody><?php foreach($stats as $k => $m): ?>
+                                <tbody>
+                                    <?php $k=0;?>
+                                    <?php foreach($stats_by_master as $country => $v): ?>
+                                    <?php foreach($v as $master_name => $events): $k++;?>
                                     <tr>
-                                        <td><?= $k+1;?></td>
-                                        <td><?= $m['master_name'];?></td>
-                                        <td><?= $m['master_country'];?></td>
+                                        <td><?= $k;?></td>
+                                        <td><?= $master_name;?></td>
+                                        <td><?= $country;?></td>
+                                        <td><?= implode(", ", $events);?></td>
                                     </tr>
-                                <?php endforeach;?></tbody>
+                                    <?php endforeach;?>
+                                    <?php endforeach;?>
+
+                                </tbody>
                             </table>
                         </div>
                     </div>

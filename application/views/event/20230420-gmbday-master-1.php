@@ -118,9 +118,7 @@
                     }
                 });
             }else if(ui.item.option.parentElement.name == 'master_id'){
-                console.log(ui.item); // How to get the value?
-                //$('#mySelect option:selected').text();
-                $('#master_name').val();
+                $('#master_name').val(ui.item.value);
             }
             this._trigger( "select", event, {
               item: ui.item.option
@@ -248,12 +246,12 @@
 
                     <form class='form-horizontal' method="post" action="<?= base_url('event/register/'.$event['event_id']);?>">
                         <input type='hidden' name='event_id' value='<?=$event['event_id'];?>' />
-                        <input type='hidden' name='master_name' />
+                        <input type='hidden' id='master_name' name='master_name' />
 
                         <div class='row'>&nbsp;</div>
 
                         <div class='row row-data col-xs-12'>
-                            <div class='col-xs-3 strong_txt text-right'>國家:</div>
+                            <div class='col-xs-3 strong_txt text-right'><font color='red'>*</font>國家:</div>
                             <div class='col-xs-9 text-left'>
                                 <div class='form form-group'>
                                     <select required class='form-control' id='master_country' name='master_country'><?php foreach ($master_country as $c): ?>
@@ -264,7 +262,7 @@
                         </div>
 
                         <div class='row row-data col-xs-12'>
-                            <div class='col-xs-3 strong_txt text-right'>法號:</div>
+                            <div class='col-xs-3 strong_txt text-right'><font color='red'>*</font>法號:</div>
                             <div class='col-xs-9 text-left'>
                                 <div class='form form-group'>
                                     <select required class='custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left ui-autocomplete-input' id='master_id' name='master_id'></select>
@@ -273,7 +271,7 @@
                         </div>
 
                         <div class='row row-data col-xs-12'>
-                            <div class='col-xs-3 strong_txt text-right'>日期:</div>
+                            <div class='col-xs-3 strong_txt text-right'><font color='red'>*</font>日期:</div>
                             <div class='col-xs-9 text-left'>
                                 <div class='form form-group'>
                                     <input type='date' name='event_date' class='form-control' required>
@@ -282,14 +280,10 @@
                         </div>
 
                         <div class='row row-data col-xs-12'>
-                            <div class='col-xs-3 strong_txt text-right'>法會:</div>
+                            <div class='col-xs-3 strong_txt text-right'><font color='red'>*</font>壇數:</div>
                             <div class='col-xs-9 text-left'>
                                 <div class='form form-group'>
-                                    <select required class='form-control' id='event_type' name='event_type'>
-                                    <option value="火供">護摩火供</option>
-                                    <option value="水供">水供</option>
-                                    <option value="薈供">薈供</option>
-                                    </select>
+                                    <input type='number' name='event_counter' class='form-control' required>
                                 </div>
                             </div>
                         </div>
@@ -298,7 +292,7 @@
                             <div class='col-xs-3 strong_txt text-right'>道場:</div>
                             <div class='col-xs-9 text-left'>
                                 <div class='form form-group'>
-                                    <input type='text' name='chapter_name' class='form-control'>
+                                    <input type='text' name='master_chapter' class='form-control'>
                                 </div>
                             </div>
                         </div>

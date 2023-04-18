@@ -50,7 +50,7 @@ class Event extends CI_Controller {
                 ->get()
                 ->result_array();
 
-        $options = array();
+        $options = array(array('value' => '', 'text' => ''));
         foreach($list as $master){
             $options[] = array('value' => $master['master_id'], 'text' => $master['name'].$master['position']);
         }
@@ -59,13 +59,34 @@ class Event extends CI_Controller {
 
     public function register($id=0){
 
-        print_pre($this->input->post());
+        $event_reg = $this->input->post();
 
-        //$this->db = $this->load->database('local', TRUE);
-        //$this->db->insert('zwh_event_reg',$dizang);
-        //return array("status" => "success", "reg_id" => $this->db->reg_id());
+        $event_reg['master_position'] = ($event_reg['master_name']) ? mb_substr($event_reg['master_name'],-2) : "";
+        if($event_reg['master_position'] == '授師') $event_reg['master_position'] = '教授師';
 
-        $this->msg = "Success!";
+        $this->db = $this->load->database('local', TRUE);
+
+        // Check duplicates
+        $query = $this->db
+            ->where('event_id',   $event_reg['event_id'])
+            ->where('master_id',  @$event_reg['master_id'])
+            ->where('chapter_id', @$event_reg['chapter_id'])
+            ->where('event_type', @$event_reg['event_type'])
+            ->where('event_date', @$event_reg['event_date'])
+            ->get('zwh_event_reg');
+
+        if ($query->num_rows() == 0) {
+            print_pre($query);exit;
+            // Insert the record
+            $this->db->insert('zwh_event_reg',$event_reg);
+            $reg_id = $this->db->insert_id();
+            $this->msg = "Success!";
+        }else{
+            $this->msg = "Error: 無法重複輸入！";
+        }
+        
+
+        
         $this->index($id);
 
     }
@@ -73,6 +94,7 @@ class Event extends CI_Controller {
     private function master_country(){
 
         return array(
+            '',
             '澳洲',
             '巴西',
             '加拿大',
@@ -91,6 +113,7 @@ class Event extends CI_Controller {
     private function chapter_country(){
 
         return array(
+            '',
             '澳洲',
             '巴西',
             '汶萊',

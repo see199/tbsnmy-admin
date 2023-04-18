@@ -103,21 +103,24 @@
           autocompleteselect: function( event, ui ) {
             ui.item.option.selected = true;
             if(ui.item.option.parentElement.name == 'master_country'){
-                console.log("HERE"+ui.item.option.attributes[0].nodeValue);
-                var selectedValue = ui.item.option.attributes[0].nodeValue;
                 $.ajax({
-                    url: '/admin/event/ajax_get_master_by_country',
-                    data: {selectedValue: selectedValue},
+                    url: '<?= base_url();?>event/ajax_get_master_by_country',
+                    type: 'post',
+                    data: {country: ui.item.option.attributes[0].nodeValue},
                     success: function(data) {
                         res = JSON.parse(data);
                         var options = '';
                         for (var i = 0; i < res.length; i++) {
                             options += '<option value="' + res[i].value + '">' + res[i].text + '</option>';
                         }
-                        $('#second-dropdown').html(options);
+                        $('#master_id').html(options);
+                        $("#master_id" ).combobox();
                     }
                 });
-                //window.document.location.href='<?=base_url('admin/index/update_default_chapter/');?>'+ui.item.option.attributes[0].nodeValue;
+            }else if(ui.item.option.parentElement.name == 'master_id'){
+                console.log(ui.item); // How to get the value?
+                //$('#mySelect option:selected').text();
+                $('#master_name').val();
             }
             this._trigger( "select", event, {
               item: ui.item.option
@@ -223,27 +226,6 @@
   </script>
   <!-- Combo box JavaScript End -->
 
-        <script>
-
-            $(document).ready(function(){
-                $('#master_country').on('change', function() {
-                    console.log("CHANGE");
-                    console.log($(this).val());
-                    var selectedValue = $(this).val();
-                    $.ajax({
-                        url: '/event/ajax_get_master_by_country',
-                        data: {selectedValue: selectedValue},
-                        success: function(data) {
-                            var options = '';
-                            for (var i = 0; i < data.length; i++) {
-                                options += '<option value="' + data[i].value + '">' + data[i].text + '</option>';
-                            }
-                            $('#second-dropdown').html(options);
-                        }
-                    });
-                });
-            });
-        </script>
 
 
     </head>
@@ -260,35 +242,78 @@
                         <div class='text-justify'><?= str_replace("\r\n", "<br>", $event['description']);?></div>
                     </div>
 
-                    <form class='form-horizontal' id="upload_form" method="post" action="<?= base_url('event/register');?>">
+                    <?php if (isset($msg)): ?>
+                        <div class="alert alert-success"><?php echo $msg; ?></div>
+                    <?php endif;?>
+
+                    <form class='form-horizontal' method="post" action="<?= base_url('event/register/'.$event['event_id']);?>">
+                        <input type='hidden' name='event_id' value='<?=$event['event_id'];?>' />
+                        <input type='hidden' name='master_name' />
 
                         <div class='row'>&nbsp;</div>
 
                         <div class='row row-data col-xs-12'>
                             <div class='col-xs-3 strong_txt text-right'>國家:</div>
-                                <div class='col-xs-9 text-left'>
-                                    <div class='form form-group'>
-                                        <select class='form-control' id='master_country' name='master_country'><?php foreach ($master_country as $c): ?>
-                                        <option value="<?php echo $c; ?>"><?php echo $c; ?></option>
-                                        <?php endforeach; ?></select>
-                                    </div>
-                                    <select class='form-control' id='second-dropdown' name='master_country'>
+                            <div class='col-xs-9 text-left'>
+                                <div class='form form-group'>
+                                    <select required class='form-control' id='master_country' name='master_country'><?php foreach ($master_country as $c): ?>
+                                    <option value="<?php echo $c; ?>"><?php echo $c; ?></option>
+                                    <?php endforeach; ?></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='row row-data col-xs-12'>
+                            <div class='col-xs-3 strong_txt text-right'>法號:</div>
+                            <div class='col-xs-9 text-left'>
+                                <div class='form form-group'>
+                                    <select required class='custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left ui-autocomplete-input' id='master_id' name='master_id'></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='row row-data col-xs-12'>
+                            <div class='col-xs-3 strong_txt text-right'>日期:</div>
+                            <div class='col-xs-9 text-left'>
+                                <div class='form form-group'>
+                                    <input type='date' name='event_date' class='form-control' required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='row row-data col-xs-12'>
+                            <div class='col-xs-3 strong_txt text-right'>法會:</div>
+                            <div class='col-xs-9 text-left'>
+                                <div class='form form-group'>
+                                    <select required class='form-control' id='event_type' name='event_type'>
+                                    <option value="火供">護摩火供</option>
+                                    <option value="水供">水供</option>
+                                    <option value="薈供">薈供</option>
                                     </select>
                                 </div>
                             </div>
+                        </div>
 
-
-                            <div class='row row-data col-xs-10 col-xs-offset-1'>
-                                <div class='col-xs-2 col-xs-offset-1'></div>
-                                <div class='col-xs-12'>
-                                    <div class='form form-group text-right'>
-                                        <button id="btn-check" class="btn btn-success">
-                                            登記
-                                        </button>
-                                        </a>
-                                    </div>
+                        <div class='row row-data col-xs-12'>
+                            <div class='col-xs-3 strong_txt text-right'>道場:</div>
+                            <div class='col-xs-9 text-left'>
+                                <div class='form form-group'>
+                                    <input type='text' name='chapter_name' class='form-control'>
                                 </div>
                             </div>
+                        </div>
+
+
+                        <div class='row row-data col-xs-10 col-xs-offset-1'>
+                            <div class='col-xs-2 col-xs-offset-1'></div>
+                            <div class='col-xs-12'>
+                                <div class='form form-group text-right'>
+                                    <button id="btn-check" class="btn btn-success">
+                                        登記
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
                     </form>
                 </div>

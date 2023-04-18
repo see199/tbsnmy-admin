@@ -12,6 +12,8 @@ class Event extends CI_Controller {
 
 	public function index($id=0){
         
+        @$this->msg = ($this->msg) ? $this->msg : "";
+
         // Show error if no ID is entered
         if(!$id){
             echo "Error ID";
@@ -32,24 +34,40 @@ class Event extends CI_Controller {
             'event' => $event,
             'chapter_country' => $this->chapter_country(),
             'master_country'  => $this->master_country(),
+            'msg' => $this->msg,
         ));
 	}
 
+
     public function ajax_get_master_by_country(){
-        $selectedValue = $_GET['selectedValue'];
+        $country = $this->input->post('country');
+
+        // Get Master by Country
+        $this->db = $this->load->database('local', TRUE);
+        $list = $this->db
+                ->where('country', $country)
+                ->from('zwh_master')
+                ->get()
+                ->result_array();
+
         $options = array();
-        if ($selectedValue === '加拿大') {
-            $options = array(
-                array('value' => 'a', 'text' => 'A'),
-                array('value' => 'b', 'text' => 'B')
-            );
-        } else{
-            $options = array(
-                array('value' => 'x', 'text' => 'X'),
-                array('value' => 'y', 'text' => 'Y')
-            );
+        foreach($list as $master){
+            $options[] = array('value' => $master['master_id'], 'text' => $master['name'].$master['position']);
         }
-    echo json_encode($options);
+        echo json_encode($options);
+    }
+
+    public function register($id=0){
+
+        print_pre($this->input->post());
+
+        //$this->db = $this->load->database('local', TRUE);
+        //$this->db->insert('zwh_event_reg',$dizang);
+        //return array("status" => "success", "reg_id" => $this->db->reg_id());
+
+        $this->msg = "Success!";
+        $this->index($id);
+
     }
 
     private function master_country(){
@@ -284,45 +302,7 @@ CREATE TABLE `zwh_event_reg` (
     }
 
 
-    // Registration for Zoom
-    public function register($msg_code='',$msg=''){
-
-        // Sorting by state
-        $chapter_by_state = array();
-        $states = array(
-            "" => " - 請選擇 | Please select - ",
-            '1' => 'Johor',
-            '2' => 'Kedah',
-            '3' => 'Kelantan',
-            '4' => 'Melaka',
-            '5' => 'Negeri Sembilan',
-            '6' => 'Pahang',
-            '7' => 'Penang',
-            '8' => 'Perak',
-            '9' => 'Perlis',
-            '10' => 'Sabah',
-            '11' => 'Sarawak',
-            '12' => 'Selangor',
-            '13' => 'Terengganu',
-            '14' => 'W.Persekutan',
-        );
-        foreach($states as $k => $v){
-            $chapter_by_state[$k][""] = " - 請選擇 | Please select - ";
-        }
-
-        foreach($this->api_model->get_chapter_meeting_list() as $chapter){
-            $chapter_by_state[array_keys($states,$chapter['state'])[0]][$chapter['chapter_id']] = $chapter['name_chinese'];
-            //$states[$chapter['state']] = $chapter['state'];
-        }
-
-        $this->load->view('agm/register_view',array(
-            'chapter_by_state' => $chapter_by_state,
-            'states'           => $states,
-            'msg_code'         => $msg_code,
-            'msg'              => $msg,
-            'setting'          => json_decode(read_file('application/logs/agm_setting.txt'),1),
-        ));
-    }
+   
 
     // Registration for Zoom
     public function register2(){ $this->register_personal();}

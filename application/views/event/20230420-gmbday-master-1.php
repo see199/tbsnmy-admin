@@ -37,6 +37,11 @@
         <style>
             body {
                 background-color: #FAE3E1;
+                font-size: large;
+            }
+            h2 {
+                color: #700;
+                font-weight:bold;
             }
             .drop-shadow {
                 -webkit-box-shadow: 0 0 5px 2px rgba(0, 0, 0, .5);
@@ -62,6 +67,7 @@
             .custom-combobox-input {
                 margin: 0;
                 padding: 5px 10px;
+                width: 95%;
             }
             /* Combo Box End */
         </style>
@@ -235,24 +241,34 @@
         <div class="panel panel-default drop-shadow">
             <div class="panel-body">
                 <div class='row text-center'>
-                    <div class='col-md-12' style='padding:30px;'>
-                        <h2 class='text-center' style='color:#600'><?=str_replace("\r\n", "<br>", $event['title']);?></h2>
-                        <div class='text-justify'><?= str_replace("\r\n", "<br>", $event['description']);?></div>
+                    <div class='col-lg-10 col-lg-offset-1 col-xs-10 col-xs-offset-1'>
+
+                        <div class='row'>
+                            <h2 class='text-center'><?=str_replace("\r\n", "<br>", $event['title']);?></h2>
+                            <div class='text-justify'><?= str_replace("\r\n", "<br>", $event['description']);?></div>
+                            <br /><img style='width: 100%' src='<?=$event['banner_url'];?>' />
+                        </div>
+
+
+                        <?php if (isset($msg) && $msg != ""): ?>
+                        <div class='row'>
+                            <div class="alert alert-success" role="alert"><?php echo $msg; ?></div>
+                        </div>
+                        <?php endif;?>
+
+                        <hr />
                     </div>
 
-                    <?php if (isset($msg)): ?>
-                        <div class="alert alert-success"><?php echo $msg; ?></div>
-                    <?php endif;?>
-
+                    <div class='col-xs-11'>
                     <form class='form-horizontal' method="post" action="<?= base_url('event/register/'.$event['event_id']);?>">
                         <input type='hidden' name='event_id' value='<?=$event['event_id'];?>' />
                         <input type='hidden' id='master_name' name='master_name' />
 
                         <div class='row'>&nbsp;</div>
 
-                        <div class='row row-data col-xs-12'>
-                            <div class='col-xs-3 strong_txt text-right'><font color='red'>*</font>國家:</div>
-                            <div class='col-xs-9 text-left'>
+                        <div class='row row-data'>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>國家:</div>
+                            <div class='col-xs-9 col-lg-6 text-left'>
                                 <div class='form form-group'>
                                     <select required class='form-control' id='master_country' name='master_country'><?php foreach ($master_country as $c): ?>
                                     <option value="<?php echo $c; ?>"><?php echo $c; ?></option>
@@ -261,36 +277,36 @@
                             </div>
                         </div>
 
-                        <div class='row row-data col-xs-12'>
-                            <div class='col-xs-3 strong_txt text-right'><font color='red'>*</font>法號:</div>
-                            <div class='col-xs-9 text-left'>
+                        <div class='row row-data'>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>法號:</div>
+                            <div class='col-xs-9 col-lg-6 text-left'>
                                 <div class='form form-group'>
                                     <select required class='custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left ui-autocomplete-input' id='master_id' name='master_id'></select>
                                 </div>
                             </div>
                         </div>
 
-                        <div class='row row-data col-xs-12'>
-                            <div class='col-xs-3 strong_txt text-right'><font color='red'>*</font>日期:</div>
-                            <div class='col-xs-9 text-left'>
+                        <div class='row row-data'>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>日期:</div>
+                            <div class='col-xs-9 col-lg-6 text-left'>
                                 <div class='form form-group'>
                                     <input type='date' name='event_date' class='form-control' required>
                                 </div>
                             </div>
                         </div>
 
-                        <div class='row row-data col-xs-12'>
-                            <div class='col-xs-3 strong_txt text-right'><font color='red'>*</font>壇數:</div>
-                            <div class='col-xs-9 text-left'>
+                        <div class='row row-data'>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>壇數:</div>
+                            <div class='col-xs-9 col-lg-6 text-left'>
                                 <div class='form form-group'>
                                     <input type='number' name='event_counter' class='form-control' required>
                                 </div>
                             </div>
                         </div>
 
-                        <div class='row row-data col-xs-12'>
-                            <div class='col-xs-3 strong_txt text-right'>道場:</div>
-                            <div class='col-xs-9 text-left'>
+                        <div class='row row-data'>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>道場:</div>
+                            <div class='col-xs-9 col-lg-6 text-left'>
                                 <div class='form form-group'>
                                     <input type='text' name='master_chapter' class='form-control'>
                                 </div>
@@ -298,9 +314,8 @@
                         </div>
 
 
-                        <div class='row row-data col-xs-10 col-xs-offset-1'>
-                            <div class='col-xs-2 col-xs-offset-1'></div>
-                            <div class='col-xs-12'>
+                        <div class='row row-data'>
+                            <div class='col-xs-12 col-lg-10'>
                                 <div class='form form-group text-right'>
                                     <button id="btn-check" class="btn btn-success">
                                         登記

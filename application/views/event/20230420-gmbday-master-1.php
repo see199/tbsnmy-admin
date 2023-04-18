@@ -36,20 +36,12 @@
 
         <style>
             body {
-                background-color: #FAE3E1;
+                background-color: #FFF;
                 font-size: large;
             }
             h2 {
                 color: #700;
                 font-weight:bold;
-            }
-            .drop-shadow {
-                -webkit-box-shadow: 0 0 5px 2px rgba(0, 0, 0, .5);
-                box-shadow: 0 0 8px 3px rgba(0, 0, 0, .5);
-            }
-            .panel.drop-shadow {
-                padding-left:0;
-                padding-right:0;
             }
 
             /* Combo Box */
@@ -142,7 +134,6 @@
  
         $( "<a>" )
           .attr( "tabIndex", -1 )
-          .attr( "title", "Show All Items" )
           .tooltip()
           .appendTo( this.wrapper )
           .button({
@@ -238,8 +229,6 @@
 
     <div class="col-xs-12 col-sm-8 col-md-6 col-lg-6 col-sm-offset-2 col-md-offset-3 col-lg-offset-3">
         <br />
-        <div class="panel panel-default drop-shadow">
-            <div class="panel-body">
                 <div class='row text-center'>
                     <div class='col-lg-10 col-lg-offset-1 col-xs-10 col-xs-offset-1'>
 
@@ -326,8 +315,6 @@
 
                     </form>
                 </div>
-            </div>
-        </div>
     </div>
 
 </body>

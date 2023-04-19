@@ -5,7 +5,7 @@ $stats_by_country = array();
 $chapter_joined = array();
 $total_event = 0;
 foreach($stats as $k => $v){
-    $stats_by_country[$v['chapter_country']][$v['chapter_name']][] = $v['event_date']." (".$v['event_counter'].")";
+    $stats_by_country[$v['chapter_country']][$v['chapter_name']][] = $v['event_date'].": ".$v['master_name'];
     $chapter_joined[$v['chapter_name']] = $v['chapter_name'];
     $total_event += $v['event_counter'];
 }
@@ -105,7 +105,7 @@ foreach($stats as $k => $v){
                                         <td><b>No</b></td>
                                         <td><b>國家</b></td>
                                         <td><b>道場</b></td>
-                                        <td><b>日期(次數)</b></td>
+                                        <td><b>日期:帶領人員</b></td>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -116,7 +116,7 @@ foreach($stats as $k => $v){
                                         <td><?= $k;?></td>
                                         <td><?= $country;?></td>
                                         <td><?= $chapter_name;?></td>
-                                        <td><?= implode(", ", $events);?></td>
+                                        <td><?= implode("<br />", $events);?></td>
                                     </tr>
                                     <?php endforeach;?>
                                     <?php endforeach;?>

@@ -234,8 +234,8 @@
 
                         <div class='row'>
                             <h2 class='text-center'><?=str_replace("\r\n", "<br>", $event['title']);?></h2>
-                            <div class='text-justify'><?= str_replace("\r\n", "<br>", $event['description']);?></div>
                             <br /><img style='width: 100%' src='<?=$event['banner_url'];?>' />
+                            <br /><br /><div class='text-justify'><?= str_replace("\r\n", "<br>", $event['description']);?></div>
                         </div>
 
 
@@ -257,7 +257,7 @@
 
                         <div class='row row-data'>
                             <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>國家:</div>
-                            <div class='col-xs-9 col-lg-6 text-left'>
+                            <div class='col-xs-9 col-lg-6 text-left form-row'>
                                 <div class='form form-group'>
                                     <select required class='form-control' id='chapter_country' name='chapter_country'><?php foreach ($chapter_country as $c): ?>
                                     <option value="<?php echo $c; ?>"><?php echo $c; ?></option>
@@ -268,7 +268,7 @@
 
                         <div class='row row-data'>
                             <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>道場:</div>
-                            <div class='col-xs-9 col-lg-6 text-left'>
+                            <div class='col-xs-9 col-lg-6 text-left form-row'>
                                 <div class='form form-group'>
                                     <select required class='custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left ui-autocomplete-input' id='chapter_id' name='chapter_id'></select>
                                 </div>
@@ -276,23 +276,109 @@
                         </div>
 
                         <div class='row row-data'>
-                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>日期:</div>
-                            <div class='col-xs-9 col-lg-6 text-left'>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>日期 1:</div>
+                            <div class='col-xs-9 col-lg-6 text-left form-row'>
                                 <div class='form form-group'>
-                                    <input type='date' name='event_date' class='form-control' required>
+                                    <input type='date' name='event_date[1]' class='form-control' required>
                                 </div>
                             </div>
                         </div>
 
                         <div class='row row-data'>
-                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>壇數:</div>
-                            <div class='col-xs-9 col-lg-6 text-left'>
-                                <div class='form form-group'>
-                                    <input type='number' name='event_counter' class='form-control' required>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>帶領人員 1:</div>
+                            <div class='col-xs-9 col-lg-6 text-left form-row'>
+                                <div class='form form-group col-lg-6'>
+                                    <input type='text' name='master_name[1]' class='form-control' placeholder="姓名/法號" required>
+                                  </div>
+                                  <div class='form form-group col-lg-6'>
+                                    <input type='text' name='master_position[1]' class='form-control' placeholder="職級：法師/講師/助教/道場法務人員" required>
                                 </div>
                             </div>
                         </div>
 
+                        <div class='row row-data'>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>日期 2:</div>
+                            <div class='col-xs-9 col-lg-6 text-left form-row'>
+                                <div class='form form-group'>
+                                    <input type='date' name='event_date[2]' class='form-control'>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='row row-data'>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>帶領人員 2:</div>
+                            <div class='col-xs-9 col-lg-6 text-left form-row'>
+                                <div class='form form-group col-lg-6'>
+                                    <input type='text' name='master_name[2]' class='form-control' placeholder="姓名/法號" >
+                                  </div>
+                                  <div class='form form-group col-lg-6'>
+                                    <input type='text' name='master_position[2]' class='form-control' placeholder="職級：法師/講師/助教/道場法務人員" >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='row row-data'>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>日期 3:</div>
+                            <div class='col-xs-9 col-lg-6 text-left form-row'>
+                                <div class='form form-group'>
+                                    <input type='date' name='event_date[3]' class='form-control' >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='row row-data'>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>帶領人員 3:</div>
+                            <div class='col-xs-9 col-lg-6 text-left form-row'>
+                                <div class='form form-group col-lg-6'>
+                                    <input type='text' name='master_name[3]' class='form-control' placeholder="姓名/法號" >
+                                  </div>
+                                  <div class='form form-group col-lg-6'>
+                                    <input type='text' name='master_position[3]' class='form-control' placeholder="職級：法師/講師/助教/道場法務人員" >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='row row-data'>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>日期 4:</div>
+                            <div class='col-xs-9 col-lg-6 text-left form-row'>
+                                <div class='form form-group'>
+                                    <input type='date' name='event_date[4]' class='form-control' >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='row row-data'>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>帶領人員 4:</div>
+                            <div class='col-xs-9 col-lg-6 text-left form-row'>
+                                <div class='form form-group col-lg-6'>
+                                    <input type='text' name='master_name[4]' class='form-control' placeholder="姓名/法號" >
+                                  </div>
+                                  <div class='form form-group col-lg-6'>
+                                    <input type='text' name='master_position[4]' class='form-control' placeholder="職級：法師/講師/助教/道場法務人員" >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='row row-data'>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>日期 5:</div>
+                            <div class='col-xs-9 col-lg-6 text-left form-row'>
+                                <div class='form form-group'>
+                                    <input type='date' name='event_date[5]' class='form-control' >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='row row-data'>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>帶領人員 5:</div>
+                            <div class='col-xs-9 col-lg-6 text-left form-row'>
+                                <div class='form form-group col-lg-6'>
+                                    <input type='text' name='master_name[5]' class='form-control' placeholder="姓名/法號" >
+                                  </div>
+                                  <div class='form form-group col-lg-6'>
+                                    <input type='text' name='master_position[5]' class='form-control' placeholder="職級：法師/講師/助教/道場法務人員" >
+                                </div>
+                            </div>
+                        </div>
 
                         <div class='row row-data'>
                             <div class='col-xs-12 col-lg-10'>

@@ -234,8 +234,8 @@
 
                         <div class='row'>
                             <h2 class='text-center'><?=str_replace("\r\n", "<br>", $event['title']);?></h2>
-                            <div class='text-justify'><?= str_replace("\r\n", "<br>", $event['description']);?></div>
                             <br /><img style='width: 100%' src='<?=$event['banner_url'];?>' />
+                            <br /><br /><div class='text-justify'><?= str_replace("\r\n", "<br>", $event['description']);?></div>
                         </div>
 
 
@@ -276,16 +276,52 @@
                         </div>
 
                         <div class='row row-data'>
-                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>日期:</div>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>日期 1:</div>
                             <div class='col-xs-9 col-lg-6 text-left'>
                                 <div class='form form-group'>
-                                    <input type='date' name='event_date' class='form-control' required>
+                                    <input type='date' name='event_date_multiple[1]' class='form-control' required>
                                 </div>
                             </div>
                         </div>
 
                         <div class='row row-data'>
-                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>壇數:</div>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>日期 2:</div>
+                            <div class='col-xs-9 col-lg-6 text-left'>
+                                <div class='form form-group'>
+                                    <input type='date' name='event_date_multiple[2]' class='form-control'>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='row row-data'>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>日期 3:</div>
+                            <div class='col-xs-9 col-lg-6 text-left'>
+                                <div class='form form-group'>
+                                    <input type='date' name='event_date_multiple[3]' class='form-control'>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='row row-data'>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>日期 4:</div>
+                            <div class='col-xs-9 col-lg-6 text-left'>
+                                <div class='form form-group'>
+                                    <input type='date' name='event_date_multiple[4]' class='form-control'>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='row row-data'>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>日期 5:</div>
+                            <div class='col-xs-9 col-lg-6 text-left'>
+                                <div class='form form-group'>
+                                    <input type='date' name='event_date_multiple[5]' class='form-control'>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='row row-data'>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>總壇數:</div>
                             <div class='col-xs-9 col-lg-6 text-left'>
                                 <div class='form form-group'>
                                     <input type='number' name='event_counter' class='form-control' required>

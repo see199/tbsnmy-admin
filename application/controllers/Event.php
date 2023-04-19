@@ -78,13 +78,40 @@ class Event extends CI_Controller {
     public function register($id=0){
 
         $event_reg = $this->input->post();
+        @$this->msg = ($this->msg) ? $this->msg : "";
+
+        if(is_array($event_reg['master_name'])){
+            foreach(array_filter($event_reg['master_name']) as $i => $name){
+                $new_event_reg = $event_reg;
+                $new_event_reg['event_counter'] = 1;
+                $new_event_reg['event_date'] = $event_reg['event_date'][$i];
+                $new_event_reg['master_position'] = $event_reg['master_position'][$i];
+                $new_event_reg['master_name'] = $event_reg['master_name'][$i]."(".$new_event_reg['master_position'].")";
+                $this->msg .= '<br />'.$new_event_reg['master_name'].'('.$new_event_reg['event_date'].'): '.$this->insert_event_reg($new_event_reg);
+
+            }
+        }else
+            $this->msg = $this->insert_event_reg($event_reg);
+        
+        // Load Index View
+        $this->index($id);
+
+    }
+
+    private function insert_event_reg($event_reg){
 
         // Rename Master Position by substr() and Rename 教授師
-        @$event_reg['master_position'] = ($event_reg['master_name']) ? mb_substr($event_reg['master_name'],-2) : "";
-        if($event_reg['master_position'] == '授師') $event_reg['master_position'] = '教授師';
+        if(!isset($event_reg['master_position'])){
+            $event_reg['master_position'] = mb_substr($event_reg['master_name'],-2);
+            if($event_reg['master_position'] == '授師') $event_reg['master_position'] = '教授師';
+        }
+
+        // Set multiple_event_date to json format
+        if(@$event_reg['event_date_multiple'])
+            @$event_reg['event_date_multiple'] = json_encode($event_reg['event_date_multiple']);
 
         //Unique Key Checking
-        $unique = array('event_id','master_id','chapter_id','event_type','event_date');
+        $unique = array('event_id','master_id','master_name','chapter_id','event_type','event_date','event_date_multiple');
         foreach($unique as $u)
             if(@!isset($event_reg[$u])) $event_reg[$u] = '0';
 
@@ -101,13 +128,10 @@ class Event extends CI_Controller {
             // Insert the record
             $this->db->insert('zwh_event_reg',$event_reg);
             $reg_id = $this->db->insert_id();
-            $this->msg = "成功登入!";
+            return "成功登入!";
         }else{
-            $this->msg = "Error: 無法重複輸入！";
+            return "Error: 無法重複輸入！";
         }
-        
-        // Load Index View
-        $this->index($id);
 
     }
 

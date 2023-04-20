@@ -287,10 +287,10 @@
                         <div class='row row-data'>
                             <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>帶領人員 1:</div>
                             <div class='col-xs-9 col-lg-6 text-left form-row'>
-                                <div class='form form-group col-lg-6'>
+                                <div class='form form-group col-md-6'>
                                     <input type='text' name='master_name[1]' class='form-control' placeholder="姓名/法號" required>
                                   </div>
-                                  <div class='form form-group col-lg-6'>
+                                  <div class='form form-group col-md-6'>
                                     <input type='text' name='master_position[1]' class='form-control' placeholder="職級：法師/講師/助教/道場法務人員" required>
                                 </div>
                             </div>
@@ -308,10 +308,10 @@
                         <div class='row row-data'>
                             <div class='col-xs-3 col-lg-4 strong_txt text-right'>帶領人員 2:</div>
                             <div class='col-xs-9 col-lg-6 text-left form-row'>
-                                <div class='form form-group col-lg-6'>
+                                <div class='form form-group col-md-6'>
                                     <input type='text' name='master_name[2]' class='form-control' placeholder="姓名/法號" >
                                   </div>
-                                  <div class='form form-group col-lg-6'>
+                                  <div class='form form-group col-md-6'>
                                     <input type='text' name='master_position[2]' class='form-control' placeholder="職級：法師/講師/助教/道場法務人員" >
                                 </div>
                             </div>
@@ -329,10 +329,10 @@
                         <div class='row row-data'>
                             <div class='col-xs-3 col-lg-4 strong_txt text-right'>帶領人員 3:</div>
                             <div class='col-xs-9 col-lg-6 text-left form-row'>
-                                <div class='form form-group col-lg-6'>
+                                <div class='form form-group col-md-6'>
                                     <input type='text' name='master_name[3]' class='form-control' placeholder="姓名/法號" >
                                   </div>
-                                  <div class='form form-group col-lg-6'>
+                                  <div class='form form-group col-md-6'>
                                     <input type='text' name='master_position[3]' class='form-control' placeholder="職級：法師/講師/助教/道場法務人員" >
                                 </div>
                             </div>
@@ -350,10 +350,10 @@
                         <div class='row row-data'>
                             <div class='col-xs-3 col-lg-4 strong_txt text-right'>帶領人員 4:</div>
                             <div class='col-xs-9 col-lg-6 text-left form-row'>
-                                <div class='form form-group col-lg-6'>
+                                <div class='form form-group col-md-6'>
                                     <input type='text' name='master_name[4]' class='form-control' placeholder="姓名/法號" >
                                   </div>
-                                  <div class='form form-group col-lg-6'>
+                                  <div class='form form-group col-md-6'>
                                     <input type='text' name='master_position[4]' class='form-control' placeholder="職級：法師/講師/助教/道場法務人員" >
                                 </div>
                             </div>
@@ -371,10 +371,10 @@
                         <div class='row row-data'>
                             <div class='col-xs-3 col-lg-4 strong_txt text-right'>帶領人員 5:</div>
                             <div class='col-xs-9 col-lg-6 text-left form-row'>
-                                <div class='form form-group col-lg-6'>
+                                <div class='form form-group col-md-6'>
                                     <input type='text' name='master_name[5]' class='form-control' placeholder="姓名/法號" >
                                   </div>
-                                  <div class='form form-group col-lg-6'>
+                                  <div class='form form-group col-md-6'>
                                     <input type='text' name='master_position[5]' class='form-control' placeholder="職級：法師/講師/助教/道場法務人員" >
                                 </div>
                             </div>

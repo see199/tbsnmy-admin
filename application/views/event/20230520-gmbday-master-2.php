@@ -101,6 +101,12 @@
           autocompleteselect: function( event, ui ) {
             ui.item.option.selected = true;
             if(ui.item.option.parentElement.name == 'chapter_country'){
+
+              if(ui.item.option.attributes[0].nodeValue == '不在名單內'){
+                $('#chapter_name_other').attr('style','display:block');
+                $('#chapter_id').attr('style','display:none');
+
+              }else{
                 $.ajax({
                     url: '<?= base_url();?>event/ajax_get_chapter_by_country',
                     type: 'post',
@@ -115,6 +121,7 @@
                         $("#chapter_id" ).combobox();
                     }
                 });
+              }
             }else if(ui.item.option.parentElement.name == 'chapter_id'){
                 $('#chapter_name').val(ui.item.value);
             }
@@ -270,7 +277,8 @@
                             <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>道場:</div>
                             <div class='col-xs-9 col-lg-6 text-left form-row'>
                                 <div class='form form-group'>
-                                    <select required class='custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left ui-autocomplete-input' id='chapter_id' name='chapter_id'></select>
+                                    <select class='custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left ui-autocomplete-input' id='chapter_id' name='chapter_id'></select>
+                                    <input type='text' class='form-control' id='chapter_name_other' name='chapter_name_other' style='display:none' placeholder="請填寫道場及國家" />
                                 </div>
                             </div>
                         </div>

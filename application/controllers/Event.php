@@ -80,6 +80,13 @@ class Event extends CI_Controller {
         $event_reg = $this->input->post();
         @$this->msg = ($this->msg) ? $this->msg : "";
 
+        if($event_reg['chapter_country'] == '不在名單內'){
+            $event_reg['chapter_name'] = $event_reg['chapter_name_other'];
+            $event_reg['chapter_country'] = '道場不在名單內';
+        }
+        unset($event_reg['chapter_name_other']);
+
+
         if(is_array($event_reg['master_name'])){
             foreach(array_filter($event_reg['master_name']) as $i => $name){
                 $new_event_reg = $event_reg;
@@ -151,6 +158,7 @@ class Event extends CI_Controller {
             '台灣',
             '英國',
             '美國',
+            '其他',
         );
     }
 
@@ -171,6 +179,7 @@ class Event extends CI_Controller {
             '日本',
             '馬來西亞',
             '荷蘭',
+            '紐西蘭',
             '巴拿馬',
             '波多黎各',
             '新加坡',
@@ -181,6 +190,7 @@ class Event extends CI_Controller {
             '英國',
             '美國',
             '越南',
+            '不在名單內',
         );
     }
 

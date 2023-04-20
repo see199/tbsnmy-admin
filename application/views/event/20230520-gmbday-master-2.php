@@ -105,6 +105,9 @@
               if(ui.item.option.attributes[0].nodeValue == '不在名單內'){
                 $('#chapter_name_other').attr('style','display:block');
                 $('#chapter_id').attr('style','display:none');
+                $('#chapter_id').html("");
+                $("#chapter_id" ).combobox();
+                $('#chapter_id').siblings().first().hide()
 
               }else{
                 $.ajax({

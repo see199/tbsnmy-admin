@@ -6,7 +6,7 @@ $master_joined = array();
 $total_event = 0;
 foreach($stats as $k => $v){
     $stats_by_master[$v['master_country']][$v['master_name']]['events'][] = implode(", ",array_filter(json_decode($v['event_date_multiple'],1)))." (".$v['event_counter'].")";
-    $stats_by_master[$v['master_country']][$v['master_name']]['join_personnel'] = $v['join_personnel'];
+    $stats_by_master[$v['master_country']][$v['master_name']]['join_personnel'][] = $v['join_personnel'];
     $master_joined[$v['master_name']] = $v['master_name'];
     $total_event += $v['event_counter'];
 }
@@ -97,7 +97,7 @@ foreach($stats as $k => $v){
                                         <td nowrap><?= $master_name;?></td>
                                         <td nowrap><?= $country;?></td>
                                         <td nowrap><?= implode("<br />", $data['events']);?></td>
-                                        <td><?= $data['join_personnel'];?></td>
+                                        <td><?= implode("<br />", $data['join_personnel']);?></td>
                                     </tr>
                                     <?php endforeach;?>
                                     <?php endforeach;?>

@@ -330,6 +330,15 @@
                         </div>
 
                         <div class='row row-data'>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>護壇弘法人員</div>
+                            <div class='col-xs-9 col-lg-6 text-left'>
+                                <div class='form form-group'>
+                                    <input type='text' name='join_personnel' class='form-control' placeholder="可添多位。例：釋蓮A教授師, 蓮花BB助教">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='row row-data'>
                             <div class='col-xs-3 col-lg-4 strong_txt text-right'>道場:</div>
                             <div class='col-xs-9 col-lg-6 text-left'>
                                 <div class='form form-group'>

@@ -80,7 +80,7 @@ class Event extends CI_Controller {
         $event_reg = $this->input->post();
         @$this->msg = ($this->msg) ? $this->msg : "";
 
-        if($event_reg['chapter_country'] == '不在名單內'){
+        if(@$event_reg['chapter_country'] == '不在名單內'){
             $event_reg['chapter_name'] = $event_reg['chapter_name_other'];
             $event_reg['chapter_country'] = '道場不在名單內';
         }

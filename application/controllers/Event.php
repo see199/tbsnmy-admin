@@ -149,6 +149,7 @@ class Event extends CI_Controller {
             '澳洲',
             '巴西',
             '加拿大',
+            '柬埔寨',
             '香港',
             '印尼',
             '日本',

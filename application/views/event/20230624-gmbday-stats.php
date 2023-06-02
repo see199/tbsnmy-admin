@@ -1,14 +1,15 @@
 <?php
 
 // Stats Calculation
-$stats_by_country = array();
+$stats_by_master = array();
 $chapter_joined = array();
 $total_event = 0;
+$event_counter = array(0,0,0,0);
 //print_pre($stats);
 foreach($stats as $k => $v){
-    $stats_by_country[$v['chapter_country']][$v['chapter_name']][] = $v['event_date'].": ".$v['master_name']."  <small>(登記：".$v['create_date']."</small>)";
+    $stats_sorted[$v['chapter_country']][$v['chapter_name']][$v['event_type']] = $v;
     $chapter_joined[$v['chapter_name']] = $v['chapter_name'];
-    $total_event += $v['event_counter'];
+    @$event_counter[$v['event_type']] += 1; 
 }
 // Calculation Ends
 ?>
@@ -72,28 +73,6 @@ foreach($stats as $k => $v){
 
                         <div class='row'>
                             登記道場總數：<?= count($chapter_joined);?>
-                            <br />活動登記次數：<?= $total_event;?>
-                        </div>
-                        <div class='row'>&nbsp;</div>
-
-                        <div class='row text-left'>
-                            <table id="example" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
-                                <thead>
-                                    <tr class="warning text-center"><td colspan=4><b>國家道場統計</b></td></tr>
-                                    <tr class="warning">
-                                        <td><b>國家</b></td>
-                                        <td><b>道場總數</b></td>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach($stats_by_country as $country => $v): ?>
-                                    <tr>
-                                        <td><?= $country;?></td>
-                                        <td><?= count($v);?></td>
-                                    </tr>
-                                    <?php endforeach;?>
-                                </tbody>
-                            </table>
                         </div>
                         <div class='row'>&nbsp;</div>
 
@@ -101,26 +80,74 @@ foreach($stats as $k => $v){
                         <div class='row text-left'>
                             <table id="example" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
                                 <thead>
-                                    <tr class="info text-center"><td colspan=4><b>道場登記列表</b></td></tr>
                                     <tr class="info">
                                         <td><b>No</b></td>
                                         <td><b>國家</b></td>
                                         <td><b>道場</b></td>
-                                        <td><b>日期:帶領人員</b></td>
+                                        <td align="center"><b>第1場</b><br/><small>大力金剛</small><br/>[<?=$event_counter['1'];?>]</td>
+                                        <td align="center"><b>第2場</b><br/><small>瑤池金母</small><br/>[<?=$event_counter['2'];?>]</td>
+                                        <td align="center"><b>第3場</b><br/><small>阿彌陀佛</small><br/>[<?=$event_counter['3'];?>]</td>
+                                        <td><b>主壇者</b></td>
+                                        <td><b>護壇者</b></td>
+                                        <td><b>登記日期</b></td>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php $k=0;?>
-                                    <?php foreach($stats_by_country as $country => $v): ?>
-                                    <?php foreach($v as $chapter_name => $events): $k++;?>
+                                    <?php foreach($stats_sorted as $country => $v): ?>
+                                    <?php foreach($v as $chapter_name => $v2): ?>
+                                    <?php foreach($v2 as $event_type => $data): $k++;?>
                                     <tr>
-                                        <td><?= $k;?></td>
-                                        <td><?= $country;?></td>
-                                        <td><?= $chapter_name;?></td>
-                                        <td><?= implode("<br />", $events);?></td>
+                                        <td nowrap><?= $k;?></td>
+                                        <td nowrap><?= $country;?></td>
+                                        <td nowrap><?= $chapter_name;?></td>
+                                        <td align="center" nowrap><?= ($event_type == 1)? "&#x2714;":""; ?></td>
+                                        <td align="center" nowrap><?= ($event_type == 2)? "&#x2714;":""; ?></td>
+                                        <td align="center" nowrap><?= ($event_type == 3)? "&#x2714;":""; ?></td>
+                                        <td nowrap><?= $data['master_name'];?></td>
+                                        <td><?= $data['join_personnel'];?></td>
+                                        <td nowrap><small><?= $data['create_date'];?></small></td>
                                     </tr>
                                     <?php endforeach;?>
                                     <?php endforeach;?>
+                                    <?php endforeach;?>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class='row'>&nbsp;</div>
+
+                        <hr />
+                        <h3>電郵列表</h3>
+
+
+                        <div class='row text-left'>
+                            <table id="example" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr class="info">
+                                        <td><b>No</b></td>
+                                        <td><b>登記日期</b></td>
+                                        <td><b>國家</b></td>
+                                        <td><b>道場</b></td>
+                                        <td><b>第X場</b></td>
+                                        <td><b>道場負責人</b></td>
+                                        <td><b>道場電郵</b></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach($stats as $k => $data): ?>
+                                    <tr>
+                                        <td nowrap><?= $k+1;?></td>
+                                        <td><?= $data['create_date'];?></td>
+                                        <td nowrap><?= $data['chapter_country'];?></td>
+                                        <td nowrap><?= $data['chapter_name'];?></td>
+                                        <td nowrap><?= $data['event_type']; ?></td>
+                                        <td nowrap><?= $data['chapter_pic'];?></td>
+                                        <td nowrap><?= $data['chapter_email'];?></td>
+                                    </tr>
+                                    <?php endforeach;?>
+
                                 </tbody>
                             </table>
                         </div>

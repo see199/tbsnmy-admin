@@ -75,6 +75,50 @@ class Event extends CI_Controller {
         echo json_encode($options);
     }
 
+    public function ajax_get_chapter_timezone(){
+
+        $chapter_id = $this->input->post('chapter_id');
+
+        /* -- 時區 與 國家 對比
+        ID  時區     國家
+        1   2       馬來西亞 / 新加坡 / 汶萊
+        2   2       台灣
+        3   2       香港
+        4   4       泰國 / 越南 / 柬埔寨
+        5   4       印尼（西部）
+        6   2       印尼（中部）
+        7   3       印尼（東部）
+        8   3       日本
+        9   5       關島
+        10  5       澳洲（東南部）
+        11  4       澳洲（聖誕島）
+        12  2       澳洲（西部）
+        13  6       紐西蘭
+        14  7       巴西（聖保羅）/（福塔雷薩）
+        15  8       美國（西岸)/加拿大（BC省）
+        16  9       美國（山地時區）/加拿大（AB省）
+        17  10      美國（中部時區）
+        18  11      美國（東岸時區）/加拿大（ON/QC省）/巴拿馬
+        19  11      波多黎各/多米尼加共和國
+        20  12      夏威夷
+        21  13      英國/葡萄牙
+        22  14      歐洲-1：瑞典/挪威/德國/瑞士/法國/西班牙/意大利
+        23  15      歐洲-2：芬蘭/希臘
+        24  14      南非
+        */
+
+        $this->db = $this->load->database('local', TRUE);
+        $timezone = $this->db
+                ->select('timezone')
+                ->where('chapter_id', $chapter_id)
+                ->from('zwh_chapter')
+                ->get()
+                ->result_array()[0]['timezone'];
+        echo $timezone;
+
+
+    }
+
     public function register($id=0){
 
         $event_reg = $this->input->post();
@@ -135,7 +179,16 @@ class Event extends CI_Controller {
             // Insert the record
             $this->db->insert('zwh_event_reg',$event_reg);
             $reg_id = $this->db->insert_id();
-            return "成功登入!";
+            if($event_reg['event_id'] == 3){
+                $this->sendmail(array(
+                    'email' => $event_reg['chapter_email'],
+                    'title' => '成功登記線上法會',
+                    'text'  => '您好，<br><br>您已成功登記線上法會，感恩護持！<br> 請注意收取zoom密碼。<br/><br/>文宣處合十',
+                ));
+                return "登記完成，感恩護持！";
+            }
+            else
+                return "成功登入!";
         }else{
             return "Error: 無法重複輸入！";
         }
@@ -229,6 +282,32 @@ class Event extends CI_Controller {
             'master_country'  => $this->master_country(),
         ));
 
+
+    }
+
+    public function test(){
+        $this->sendmail(array(
+            'email' => 'see199@gmail.com',
+            'title' => '成功登記線上法會',
+            'text'  => '您好，<br><br>您已成功登記線上法會，感恩護持！<br> 請注意收取zoom密碼。<br/><br/>文宣處合十',
+        ));
+    }
+
+    public function sendmail($data){
+        echo 1;
+        $this->load->library('email');
+        
+        $this->email->initialize(array(
+            'protocol' => 'mail',
+            'mailtype' => 'html',
+            'charset' => 'utf-8'
+        ));
+
+        $this->email->from('wenxuan@tbsn.org', '宗委會文宣處');
+        $this->email->to($data['email']);
+        $this->email->subject($data['title']);
+        $this->email->message($data['text']);
+        echo $this->email->send();
 
     }
 

@@ -10,7 +10,7 @@ class Event extends CI_Controller {
 		$this->config->load('siteinfo', TRUE);
 	}
 
-	public function index($id=0){
+	public function index($id=0,$lang=''){
         
         @$this->msg = ($this->msg) ? $this->msg : "";
 
@@ -30,10 +30,10 @@ class Event extends CI_Controller {
         //print_pre($event);
 
         // Load view
-        $this->load->view('event/'.$event['event_view'], array(
+        $this->load->view('event/'.$event['event_view'].$lang, array(
             'event' => $event,
-            'chapter_country' => $this->chapter_country(),
-            'master_country'  => $this->master_country(),
+            'chapter_country' => $this->chapter_country($lang),
+            'master_country'  => $this->master_country($lang),
             'msg' => $this->msg,
         ));
 	}
@@ -58,7 +58,9 @@ class Event extends CI_Controller {
     }
 
     public function ajax_get_chapter_by_country(){
-        $country = $this->input->post('country');
+        $country = $this->get_chinese_country($this->input->post('country'));
+
+
 
         // Get Master by Country
         $this->db = $this->load->database('local', TRUE);
@@ -119,7 +121,7 @@ class Event extends CI_Controller {
 
     }
 
-    public function register($id=0){
+    public function register($id=0,$lang=''){
 
         $event_reg = $this->input->post();
         @$this->msg = ($this->msg) ? $this->msg : "";
@@ -145,7 +147,7 @@ class Event extends CI_Controller {
             $this->msg = $this->insert_event_reg($event_reg);
         
         // Load Index View
-        $this->index($id);
+        $this->index($id,$lang);
 
     }
 
@@ -166,6 +168,9 @@ class Event extends CI_Controller {
         foreach($unique as $u)
             if(@!isset($event_reg[$u])) $event_reg[$u] = '0';
 
+        // Chapter's Country Multi-language
+        $event_reg['chapter_country'] = $this->get_chinese_country($event_reg['chapter_country']);
+
         // Check duplicates for Unique
         $this->db = $this->load->database('local', TRUE);
         $q = $this->db;
@@ -185,7 +190,7 @@ class Event extends CI_Controller {
                     'title' => '成功登記線上法會',
                     'text'  => '您好，<br><br>您已成功登記線上法會，感恩護持！<br> 請注意收取zoom密碼。<br/><br/>文宣處合十',
                 ));
-                return "登記完成，感恩護持！";
+                return "登記完成，感恩護持！ Success Registration!";
             }
             else
                 return "成功登入!";
@@ -195,7 +200,7 @@ class Event extends CI_Controller {
 
     }
 
-    private function master_country(){
+    private function master_country($lang){
 
         return array(
             '',
@@ -216,7 +221,94 @@ class Event extends CI_Controller {
         );
     }
 
-    private function chapter_country(){
+    private function get_chinese_country($country){
+        $countries = array(
+            '澳洲' => '澳洲',
+            '巴西' => '巴西',
+            '汶萊' => '汶萊',
+            '加拿大' => '加拿大',
+            '多明尼加共和國' => '多明尼加共和國',
+            '法國' => '法國',
+            '德國' => '德國',
+            '香港' => '香港',
+            '印尼' => '印尼',
+            '愛爾蘭' => '愛爾蘭',
+            '日本' => '日本',
+            '馬來西亞' => '馬來西亞',
+            '荷蘭' => '荷蘭',
+            '紐西蘭' => '紐西蘭',
+            '巴拿馬' => '巴拿馬',
+            '波多黎各' => '波多黎各',
+            '新加坡' => '新加坡',
+            '西班牙' => '西班牙',
+            '瑞典' => '瑞典',
+            '台灣' => '台灣',
+            '泰國' => '泰國',
+            '英國' => '英國',
+            '美國' => '美國',
+            '越南' => '越南',
+            '不在名單內' => '不在名單內',
+            'Australia' => '澳洲',
+            'Brazil' => '巴西',
+            'Brunei' => '汶萊',
+            'Canada' => '加拿大',
+            'Dominican Republic' => '多明尼加共和國',
+            'France' => '法國',
+            'German' => '德國',
+            'Hong Kong' => '香港',
+            'Indonesia' => '印尼',
+            'Ireland' => '愛爾蘭',
+            'Japan' => '日本',
+            'Malaysia' => '馬來西亞',
+            'Netherland' => '荷蘭',
+            'New Zealand' => '紐西蘭',
+            'Panama' => '巴拿馬',
+            'Puerto Rico' => '波多黎各',
+            'Singapura' => '新加坡',
+            'Spain' => '西班牙',
+            'Sweden' => '瑞典',
+            'Taiwan' => '台灣',
+            'Thailand' => '泰國',
+            'United Kingdom' => '英國',
+            'United States' => '美國',
+            'Vietnam' => '越南',
+            'Other' => '不在名單內',
+        );
+        return $countries[$country];
+    }
+
+    private function chapter_country($lang){
+
+        if($lang == 'en'){
+            return array(
+                '',
+                'Australia',
+                'Brazil',
+                'Brunei',
+                'Canada',
+                'Dominican Republic',
+                'France',
+                'German',
+                'Hong Kong',
+                'Indonesia',
+                'Ireland',
+                'Japan',
+                'Malaysia',
+                'Netherland',
+                'New Zealand',
+                'Panama',
+                'Puerto Rico',
+                'Singapura',
+                'Spain',
+                'Sweden',
+                'Taiwan',
+                'Thailand',
+                'United Kingdom',
+                'United States',
+                'Vietnam',
+                'Other'
+            );
+        }
 
         return array(
             '',
@@ -278,8 +370,8 @@ class Event extends CI_Controller {
         $this->load->view('event/'.$event['stats_view'], array(
             'event' => $event,
             'stats' => $stats,
-            'chapter_country' => $this->chapter_country(),
-            'master_country'  => $this->master_country(),
+            'chapter_country' => $this->chapter_country(''),
+            'master_country'  => $this->master_country(''),
         ));
 
 

@@ -169,7 +169,7 @@ class Event extends CI_Controller {
             if(@!isset($event_reg[$u])) $event_reg[$u] = '0';
 
         // Chapter's Country Multi-language
-        $event_reg['chapter_country'] = $this->get_chinese_country($event_reg['chapter_country']);
+        $event_reg['chapter_country'] = (isset($event_reg['chapter_country'])) ? $this->get_chinese_country($event_reg['chapter_country']) : "";
 
         // Check duplicates for Unique
         $this->db = $this->load->database('local', TRUE);

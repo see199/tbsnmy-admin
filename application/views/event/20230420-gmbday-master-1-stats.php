@@ -8,6 +8,7 @@ $total_event = 0;
 foreach($stats as $k => $v){
     $stats_by_master[$v['master_country']][$v['master_name']]['events'][] = implode(", ",array_filter(json_decode($v['event_date_multiple'],1)))." (".$v['event_counter'].") <small>(登記：".$v['create_date']."</small>)";
     $stats_by_master[$v['master_country']][$v['master_name']]['join_personnel'][] = $v['join_personnel'];
+    $stats_by_master[$v['master_country']][$v['master_name']]['master_chapter'] = $v['master_chapter'];
     $master_joined[$v['master_name']] = $v['master_name'];
     $total_event += $v['event_counter'];
 }
@@ -85,6 +86,7 @@ foreach($stats as $k => $v){
                                         <td><b>No</b></td>
                                         <td><b>上師法號</b></td>
                                         <td><b>國家</b></td>
+                                        <td><b>道場</b></td>
                                         <td><b>日期(次數)</b></td>
                                         <td><b>護壇弘法人員</b></td>
                                     </tr>
@@ -97,6 +99,7 @@ foreach($stats as $k => $v){
                                         <td nowrap><?= $k;?></td>
                                         <td nowrap><?= $master_name;?></td>
                                         <td nowrap><?= $country;?></td>
+                                        <td><?= $data['master_chapter'];?></td>
                                         <td nowrap><?= implode("<br />", $data['events']);?></td>
                                         <td><?= implode("<br />", $data['join_personnel']);?></td>
                                     </tr>

@@ -308,6 +308,11 @@ class Event extends CI_Controller {
                 'Vietnam',
                 'Other'
             );
+        } else if ($lang == 'id'){
+            return array(
+                '',
+                'Indonesia',
+            );
         }
 
         return array(

@@ -107,7 +107,7 @@
                 $('#chapter_id').attr('style','display:none');
                 $('#chapter_id').html("");
                 $("#chapter_id" ).combobox();
-                $('#chapter_id').siblings().first().hide()
+                $('#chapter_id').siblings().first().hide();
 
               }else{
                 $.ajax({

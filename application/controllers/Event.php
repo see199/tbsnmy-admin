@@ -165,8 +165,10 @@ class Event extends CI_Controller {
 
         //Unique Key Checking
         $unique = array('event_id','master_id','master_name','chapter_id','event_type','event_date','event_date_multiple');
-        foreach($unique as $u)
-            if(@!isset($event_reg[$u])) $event_reg[$u] = '0';
+        foreach($unique as $u){
+            if(@!isset($event_reg[$u]) && $u != 'event_date') $event_reg[$u] = '0';
+            if(@!isset($event_reg[$u]) && $u == 'event_date') $event_reg[$u] = '0000-00-00';
+        }
 
         // Chapter's Country Multi-language
         $event_reg['chapter_country'] = (isset($event_reg['chapter_country'])) ? $this->get_chinese_country($event_reg['chapter_country']) : "";

@@ -6,7 +6,8 @@ $chapter_joined = array();
 $total_event = 0;
 //print_pre($stats);
 foreach($stats as $k => $v){
-    $stats_by_country[$v['chapter_country']][$v['chapter_name']][] = $v['event_date'].": ".$v['master_name']."  <small>(登記：".$v['create_date']."</small>)";
+    $txt = ($v['event_date'] == '0000-00-00') ? '' : $v['event_date'];
+    $stats_by_country[$v['chapter_country']][$v['chapter_name']][] = $v['event_counter'].'壇 '.$txt.": ".$v['master_name']."  <small>(登記：".$v['create_date']."</small>)";
     $chapter_joined[$v['chapter_name']] = $v['chapter_name'];
     $total_event += $v['event_counter'];
 }

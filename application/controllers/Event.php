@@ -136,7 +136,7 @@ class Event extends CI_Controller {
         if(is_array($event_reg['master_name'])){
             foreach(array_filter($event_reg['master_name']) as $i => $name){
                 $new_event_reg = $event_reg;
-                $new_event_reg['event_counter'] = 1;
+                $new_event_reg['event_counter'] = ($event_reg['event_counter']) ? $event_reg['event_counter'] : 1;
                 $new_event_reg['event_date'] = $event_reg['event_date'][$i];
                 $new_event_reg['master_position'] = $event_reg['master_position'][$i];
                 $new_event_reg['master_name'] = $event_reg['master_name'][$i]."(".$new_event_reg['master_position'].")";

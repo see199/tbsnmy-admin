@@ -102,7 +102,7 @@
             ui.item.option.selected = true;
             if(ui.item.option.parentElement.name == 'chapter_country'){
 
-              if(ui.item.option.attributes[0].nodeValue == '不在名單內'){
+              if(ui.item.option.attributes[0].nodeValue == 'Not in list'){
                 $('#chapter_name_other').attr('style','display:block');
                 $('#chapter_id').attr('style','display:none');
                 $('#chapter_id').html("");
@@ -209,7 +209,7 @@
         // Remove invalid value
         this.input
           .val( "" )
-          .attr( "title", "輸入：'" + value + "'無效，請點擊選擇。" )
+          .attr( "title", "Enter：'" + value + "'invalid. Please select again." )
           .tooltip( "open" );
         this.element.val( "" );
         this._delay(function() {
@@ -243,9 +243,29 @@
                     <div class='col-lg-10 col-lg-offset-1 col-xs-10 col-xs-offset-1'>
 
                         <div class='row'>
-                            <h2 class='text-center'><?=str_replace("\r\n", "<br>", $event['title']);?></h2>
-                            <br /><img style='width: 100%' src='<?=$event['banner_url'];?>' />
-                            <br /><br /><div class='text-justify'><?= str_replace("\r\n", "<br>", $event['description']);?></div>
+                            <h2 class='text-center'>True Buddha Foundation (TBF) Menggelar Kegiatan Doa bagi Mahaguru</h2>
+                            <br /><img style='width: 100%' src='https://id.tbsn.org/images/2023_04_24/1682304115154.jpg' />
+                            <br /><br /><div class='text-justify'>20 April 2023 s.d. 20 Juni 2023, Segenap siswa Zhenfo Zong di seluruh dunia merapal Mantra Hati Vajra Mahabala (Dali Jin'gang/大力金剛) menyalurkan jasa Mahaguru sehat sentosa.
+<br />Memohon Vajra Mahabala dengan daya agung tanpa rintangan melindungi Mahaguru: "Dharmapala silsilah melindungi Zhenfo, Menampilkan wibawa menaklukkan Catur Mara,
+<br />Sehat sentosa penuh daya, Senantiasa leluasa, Senantiasa menetap di dunia, 
+<br />Senantiasa memutar Cakra Dharma, Arus silsilah Dharma tidak berkesudahan."
+<br />
+<br /><b>Kegiatan Gema Mantra Mahabala - Doa bagi Mahaguru Tahun 2023</b>
+<br />Mulai 20 April 2023 s.d. 20 Juni 2023
+<br />Tempat ibadah di seluruh dunia memandu Sadhana Vajra Mahabala, menyalurkan jasa bagi Mahaguru. (Apabila Tempat ibadah telah mengatur upacara atau pujabakti, dihimbau untuk menambahkan Mantra Hati Vajra Mahabala 108 kali dalam tata ritual.)
+<br />
+<br />Menurut Peraturan Acarya dalam AD/ART Zhenfo Zong, Sadhana Vajra Mahabala tergolong dalam Mahasadhana Vajra Avenika, setelah Mulacarya Liansheng mentransmisikan sadhana ini secara terbuka, hanya Acarya Zhenfo Zong yang telah menerima abhiseka sadhana ini baru bisa memimpin pujabakti, puja, homa dan upacara Vajra Mahabala. 
+<br />
+<br />Oleh karena itu, berkat permohonan khusus dari True Buddha Foundation (TBF), pada tanggal 18 April 2023, Mulacarya Liansheng telah menganugerahkan adhisthana bagi kegiatan kali ini, dan memberikan otorisasi istimewa kepada segenap Acarya Zhenfo Zong di seluruh dunia sehingga dapat memimpin Upacara Homa Vajra Mahabala, sedangkan bagi segenap Dharmaduta (semua level) dan pengurus tempat ibadah, mendapatkan otorisasi untuk memimpin pujabakti Sadhana Vajra Mahabala (Dali Jingang Niansongfa/大力金剛念誦法). 
+<br />
+<br />Ini merupakan anugerah yang sangat istimewa, demi menghormati Guru dan menghargai Dharma, TBF mengatur supaya tempat ibadah bisa mendaftarkan nama Dharmaduta (semua level) dan pengurus tempat ibadah yang memimpin puja dan penjapaan Vajra Mahabala, dan secara berkala memohon Mulacarya Liansheng untuk mengadhisthana menganugerahkan otoritas istimewa untuk memimpin puja dan penjapaan Vajra Mahabala.
+<br />
+<br />Mohon Tempat Ibadah dan Para Dharmaduta segera mendaftarkan tanggal dan nama pemandu kebaktian di link berikut ini:
+<br /><a href="https://ch.tbsn.org/page/index/全球道場同修迴向.html">https://ch.tbsn.org/page/index/全球道場同修迴向.html</a>
+<br />
+<br />Silahkan unduh tata ritual di link berikut ini:
+<br /><a href="https://ch.tbsn.org/uploads/rulelist/2023_04_23/大力金剛修法儀軌_20230420A.pdf">https://ch.tbsn.org/uploads/rulelist/2023_04_23/大力金剛修法儀軌_20230420A.pdf</a>
+</div>
                         </div>
 
 
@@ -259,7 +279,7 @@
                     </div>
 
                     <div class='col-xs-11'>
-                    <form class='form-horizontal' method="post" action="<?= base_url('event/register/'.$event['event_id']);?>">
+                    <form class='form-horizontal' method="post" action="<?= base_url('event/register/'.$event['event_id'].'/id');?>">
                         <input type='hidden' name='event_id' value='<?=$event['event_id'];?>' />
                         <input type='hidden' id='chapter_name' name='chapter_name' />
                         <input type='hidden' name='event_date[1]' value='0000-00-00' class='form-control' >
@@ -267,7 +287,7 @@
                         <div class='row'>&nbsp;</div>
 
                         <div class='row row-data'>
-                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>國家:</div>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>Negara:</div>
                             <div class='col-xs-9 col-lg-6 text-left form-row'>
                                 <div class='form form-group'>
                                     <select required class='form-control' id='chapter_country' name='chapter_country'><?php foreach ($chapter_country as $c): ?>
@@ -278,7 +298,7 @@
                         </div>
 
                         <div class='row row-data'>
-                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>道場:</div>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>Tempat Ibadah:</div>
                             <div class='col-xs-9 col-lg-6 text-left form-row'>
                                 <div class='form form-group'>
                                     <select class='custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left ui-autocomplete-input' id='chapter_id' name='chapter_id'></select>
@@ -288,10 +308,10 @@
                         </div>
 
                         <div class='row row-data'>
-                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>帶領人員 1:</div>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>Pemimpin Puja:</div>
                             <div class='col-xs-9 col-lg-6 text-left form-row'>
                                 <div class='form form-group col-md-6'>
-                                    <input type='text' name='master_name[1]' class='form-control' placeholder="姓名/法號" required>
+                                    <input type='text' name='master_name[1]' class='form-control' placeholder="Pemimpin Puja" required>
                                   </div>
                                   <div class='form form-group col-md-6'>
                                     <input type='text' name='master_position[1]' class='form-control' placeholder="職級：法師/講師/助教/道場法務人員" required>
@@ -300,7 +320,7 @@
                         </div>
 
                         <div class='row row-data'>
-                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>總壇數:</div>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>Jumlah Pujabakti:</div>
                             <div class='col-xs-9 col-lg-6 text-left'>
                                 <div class='form form-group'>
                                     <input type='number' name='event_counter' class='form-control' required>
@@ -312,7 +332,7 @@
                             <div class='col-xs-12 col-lg-10'>
                                 <div class='form form-group text-right'>
                                     <button id="btn-check" class="btn btn-success">
-                                        登記
+                                        Daftarkan
                                     </button>
                                 </div>
                             </div>

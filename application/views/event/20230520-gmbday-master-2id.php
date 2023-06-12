@@ -314,7 +314,7 @@
                                     <input type='text' name='master_name[1]' class='form-control' placeholder="Pemimpin Puja" required>
                                   </div>
                                   <div class='form form-group col-md-6'>
-                                    <input type='text' name='master_position[1]' class='form-control' placeholder="職級：法師/講師/助教/道場法務人員" required>
+                                    <input type='text' name='master_position[1]' class='form-control' placeholder="Jabatan: Biksu/Biksuni/Pandita Dharmaduta/Pandita Lokapalasraya/Anggota Dharmabakti Tempat Ibadah" required>
                                 </div>
                             </div>
                         </div>

@@ -271,10 +271,8 @@
 <br />
 <br />We are asking cultivation venue Dharma propagating personnel and officials to register group practice leaders and practice dates as soon as possible.
 <br />
-<br /><a href="https://en.tbsn.org/page/index/全球道場同修迴向.html">https://en.tbsn.org/page/index/全球道場同修迴向.html</a>
-<br />
 <br />Link to download sadhana: 
-<br /><a href="https://en.tbsn.org/master/rulelist/2">https://en.tbsn.org/master/rulelist/2</a>
+<br /><a href="https://en.tbsn.org/uploads/rulelist/2020_10_17/fd2093c4d30fbdee050642a8439b5b4e1.pdf">https://en.tbsn.org/uploads/rulelist/2020_10_17/fd2093c4d30fbdee050642a8439b5b4e1.pdf</a>
 </div>
                         </div>
 
@@ -330,7 +328,7 @@
                         </div>
 
                         <div class='row row-data'>
-                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>Total Session:</div>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>Total Sessions:</div>
                             <div class='col-xs-9 col-lg-6 text-left'>
                                 <div class='form form-group'>
                                     <input type='number' name='event_counter' class='form-control' required>

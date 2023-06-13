@@ -260,8 +260,7 @@
 <br />
 <br />Ini merupakan anugerah yang sangat istimewa, demi menghormati Guru dan menghargai Dharma, TBF mengatur supaya tempat ibadah bisa mendaftarkan nama Dharmaduta (semua level) dan pengurus tempat ibadah yang memimpin puja dan penjapaan Vajra Mahabala, dan secara berkala memohon Mulacarya Liansheng untuk mengadhisthana menganugerahkan otoritas istimewa untuk memimpin puja dan penjapaan Vajra Mahabala.
 <br />
-<br />Mohon Tempat Ibadah dan Para Dharmaduta segera mendaftarkan tanggal dan nama pemandu kebaktian di link berikut ini:
-<br /><a href="https://ch.tbsn.org/page/index/全球道場同修迴向.html">https://ch.tbsn.org/page/index/全球道場同修迴向.html</a>
+<br />Harap perwakilan tempat ibadah segera mendaftarkan nama pemandu puja dan jumlah pujabakti melalui formulir di bawah in.
 <br />
 <br />Silahkan unduh tata ritual di link berikut ini:
 <br /><a href="https://ch.tbsn.org/uploads/rulelist/2023_04_23/大力金剛修法儀軌_20230420A.pdf">https://ch.tbsn.org/uploads/rulelist/2023_04_23/大力金剛修法儀軌_20230420A.pdf</a>

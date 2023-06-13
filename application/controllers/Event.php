@@ -164,11 +164,11 @@ class Event extends CI_Controller {
             @$event_reg['event_date_multiple'] = json_encode($event_reg['event_date_multiple']);
 
         //Unique Key Checking
-        $unique = array('event_id','master_id','master_name','chapter_id','event_type','event_date','event_date_multiple');
+        /*$unique = array('event_id','master_id','master_name','chapter_id','event_type','event_date','event_date_multiple');
         foreach($unique as $u){
             if(@!isset($event_reg[$u]) && $u != 'event_date') $event_reg[$u] = '0';
             if(@!isset($event_reg[$u]) && $u == 'event_date') $event_reg[$u] = '0000-00-00';
-        }
+        }*/
 
         // Chapter's Country Multi-language
         $event_reg['chapter_country'] = (isset($event_reg['chapter_country'])) ? $this->get_chinese_country($event_reg['chapter_country']) : "";
@@ -176,13 +176,13 @@ class Event extends CI_Controller {
         // Check duplicates for Unique
         $this->db = $this->load->database('local', TRUE);
         $q = $this->db;
-        foreach($unique as $u) $q->where($u,$event_reg[$u]);
-        $res = $q->get('zwh_event_reg');
+        /*foreach($unique as $u) $q->where($u,$event_reg[$u]);
+        $res = $q->get('zwh_event_reg');*/
 
         //print_pre($event_reg);
 
         // Insert DB if no duplicates
-        if ($res->num_rows() == 0) {
+        if (/*$res->num_rows() == 0*/1) {
             // Insert the record
             $this->db->insert('zwh_event_reg',$event_reg);
             $reg_id = $this->db->insert_id();

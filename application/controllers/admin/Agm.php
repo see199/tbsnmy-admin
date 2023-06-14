@@ -162,14 +162,16 @@ class Agm extends CI_Controller {
 				'chapter' => array(),
 				'liexi' => array(),
 				'chuxi' => array(),
-				'total' => array('chuxi' => 0,'liexi' => 0)),
+				'total' => array('chuxi' => 0,'liexi' => 0, 'xianchang' => 0)),
 			'P' => array(),
 		);
 
 		foreach($list as $k => $v){
 			
 			if($v['membership_id'] < 2000 && $v['membership_id'] != '列席'){
-				@$members['P'][$v['membership_id']] = $v;
+				@$members['P']['chuxi'][$v['membership_id']] = $v;
+
+				if($v['zoom_link'] == '現場出席') @$members['P']['total']['xianchang']++;
 			}else{
 				$members['G']['chapter'][$v['chapter_id']] = $v['chapter_id'];
 				if($v['membership_id'] == '列席'){
@@ -178,11 +180,14 @@ class Agm extends CI_Controller {
 				}else{
 					@$members['G']['chuxi'][$v['membership_id']][] = $v;
 					@$members['G']['total']['chuxi']++;
+					
+					if($v['zoom_link'] == '現場出席') @$members['G']['total']['xianchang']++;
+						
 				}
 			}
 		}
 
-		ksort($members['P']);
+		ksort($members['P']['chuxi']);
 		ksort($members['G']['chuxi']);
 		ksort($members['G']['liexi']);
 		

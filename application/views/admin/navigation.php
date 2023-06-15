@@ -217,6 +217,41 @@
                     <li>
                         <a href="<?= base_url(); ?>admin/event/detail"><i class="fa fa-plus-square fa-fw"></i> <?= lang('glb_nav_event_add'); ?></a>
                     </li>
+
+                  </ul>
+                </li>
+
+                <?php if($chapter_allowed[0] == 'all'): ?>
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?= lang('glb_nav_dharma'); ?><span class="caret"></span></a>
+                  <ul class="dropdown-menu" role="menu">
+                    <?php foreach($this->config->item('tbs')['dharma_staff'] as $k => $v): ?>
+                    <li>
+                        <a href="<?= base_url(); ?>admin/contact/dharma/<?= strtolower($k); ?>"><i class="fa fa-user fa-fw"></i> <?= $v; ?></a>
+                    </li>
+                    <?php endforeach;?>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="<?= base_url(); ?>admin/insurance/"><i class="fa fa-user fa-fw"></i> <?= lang('glb_nav_insurance'); ?></a>
+                    </li>
+
+
+                  </ul>
+                </li>
+
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">馬密總會員<span class="caret"></span></a>
+                  <ul class="dropdown-menu" role="menu">
+                    <li>
+                        <a href="<?= base_url(); ?>admin/email/member"><i class="fa fa-envelope"></i> + <i class="fa fa-phone"></i> 個人會員</a>
+                    </li>
+                    <li>
+                        <a href="<?= base_url(); ?>admin/email/chapter"><i class="fa fa-envelope"></i>  團體會員</a>
+                    </li>
+                    <li>
+                        <a href="<?= base_url(); ?>admin/chapter/list_contact"><i class="fa fa-phone"></i> 團體會員</a>
+                    </li>
+                    
                     <li class="divider"></li>
                     <li>
                         <a href="<?= base_url(); ?>admin/agm/"><i class="fa fa-briefcase"></i> 會員大會</a>
@@ -243,24 +278,6 @@
                   </ul>
                 </li>
 
-                <?php if($chapter_allowed[0] == 'all'): ?>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?= lang('glb_nav_dharma'); ?><span class="caret"></span></a>
-                  <ul class="dropdown-menu" role="menu">
-                    <?php foreach($this->config->item('tbs')['dharma_staff'] as $k => $v): ?>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/contact/dharma/<?= strtolower($k); ?>"><i class="fa fa-user fa-fw"></i> <?= $v; ?></a>
-                    </li>
-                    <?php endforeach;?>
-                    <li class="divider"></li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/insurance/"><i class="fa fa-user fa-fw"></i> <?= lang('glb_nav_insurance'); ?></a>
-                    </li>
-
-
-                  </ul>
-                </li>
-
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?= lang('glb_nav_user'); ?><span class="caret"></span></a>
                   <ul class="dropdown-menu" role="menu">
@@ -275,17 +292,6 @@
                     </li>
                     <li>
                         <a href="<?= base_url(); ?>admin/contact/add_contact"><i class="fa fa-user-plus fa-fw"></i> <?= lang('glb_nav_add_contact'); ?></a>
-                    </li>
-
-                    <li class="divider"></li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/email/chapter"><i class="fa fa-envelope"></i> Email - Chapters</a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/email/member"><i class="fa fa-envelope"></i> Email - Members</a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/chapter/list_contact"><i class="fa fa-phone"></i> Phone - Chapters</a>
                     </li>
 
                   </ul>

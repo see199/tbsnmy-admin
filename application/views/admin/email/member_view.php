@@ -15,6 +15,7 @@
                         <tr class="info">
                             <td><b>會員編號</b></td>
                             <td><b>法號</b></td>
+                            <td><b>電話</b></td>
                             <td><b>電郵</b></td>
                         </tr>
                     </thead>
@@ -31,6 +32,8 @@
                             <td><?= $c['membership_id'];?></td>
                             <td nowrap>
                                 <a href="<?= base_url("admin/contact/details/".$c['contact_id']); ?>"><?= $c['name_dharma'];?></a>
+                            </td>
+                            <td nowrap><?= $c['phone_mobile'];?></a>
                             </td>
                             <td><?php if($c['email']):?>
                                 <input onclick="check();" type="checkbox" id="email_<?=$c['contact_id'];?>" class="form-check-input email_in_list" value="<?= $c['email'];?>">

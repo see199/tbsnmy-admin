@@ -62,7 +62,7 @@ class Backend_model extends CI_Model {
 	public function get_all_member_email(){
 		$this->db = $this->load->database('local', TRUE);
 
-		$this->db->select('m.membership_id, c.contact_id, c.name_dharma, email')
+		$this->db->select('m.membership_id, c.contact_id, c.name_dharma, email, c.phone_mobile')
 				->where('m.status','A')
 				->from('tbs_member m')
 				->join('tbs_contact c','c.contact_id = m.member_id', 'left')

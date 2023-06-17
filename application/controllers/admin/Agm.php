@@ -470,6 +470,89 @@ class Agm extends CI_Controller {
         return;
     }
 
+    public function ajax_chg_to_onsite(){
+
+    	$post = $this->input->post();
+        $setting = json_decode(read_file('application/logs/agm_setting.txt'),1);
+
+        // Submit to Zoom API
+        $registrant = $this->agm_model->api_del_zoom_registrant($setting['zoom_id'],$post['registrant_id'],$setting['access_token']);
+
+        $registrant_primary = array(
+            'email'         => $post['email'],
+        );
+        $registrant_value = array(
+            'first_name'   => $post['first_name'],
+            'last_name'    => $post['last_name'],
+            'registrant_id'=> '',
+            'zoom_link'    => '現場出席',
+        );
+        $this->agm_model->add_registrant($registrant_primary,$registrant_value);
+
+        echo json_encode(array(
+        	'success' => 1,
+        	'msg'     => '轉換為[現場出席]! Refresh to reflect',
+        ));
+        return;
+
+    }
+
+    public function ajax_toggle_liexi_chuxi(){
+
+        $post = $this->input->post();
+
+        $first_name = $post['first_name'];
+        list($current_member_id,$chapter_name)  = explode('-',$first_name);
+
+        $membership_id = ($current_member_id == '列席') ? $post['membership_id'] : '列席';
+        $first_name    = $membership_id.'-'.$chapter_name;
+        
+        // Submit to Zoom API
+        if($post['registrant_id'] != ''){
+	        $setting = json_decode(read_file('application/logs/agm_setting.txt'),1);
+	        $registrant = $this->agm_model->api_add_zoom_registrant($setting['zoom_id'],array(
+	            "email"      => $post['email'],
+	            "first_name" => $post['first_name'],
+	            "last_name"  => $post['last_name'],
+	        ),$setting['access_token']);
+
+	        // if Error, Display ERROR to contact admin
+	        if(isset($registrant['code'])){
+	        	echo json_encode(array(
+	        		'success' => 0,
+	        		'msg'     => "Error ".$registrant['code'].":".$registrant['message'],
+	        	));
+	            return ;
+	        }
+	    }else{
+	    	$registrant = array(
+	    		'registrant_id' => '',
+	    		'join_url'      => '現場出席',
+	    	);
+	    }
+
+        $registrant_primary = array(
+            'email'         => $post['email'],
+        );
+        $registrant_value = array(
+            'first_name'   => $first_name,
+            'last_name'    => $post['last_name'],
+            'registrant_id'=> $registrant['registrant_id'],
+            'zoom_link'    => $registrant['join_url'],
+            'membership_id'=> $membership_id
+        );
+        $this->agm_model->add_registrant($registrant_primary,$registrant_value);
+
+        echo json_encode(array(
+        	'success' => 1,
+        	'msg'     => 'Success updated!',
+        	'zoom_link' => $registrant['join_url'],
+        	'first_name'=> $first_name,
+        ));
+        return;
+
+    }
+
     public function setting(){
 
     	$setting_file = 'application/logs/agm_setting.txt';

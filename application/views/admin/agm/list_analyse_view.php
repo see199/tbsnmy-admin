@@ -1,3 +1,4 @@
+<?php unset($members['G']['chapter']['0']); //Remove Chapter Without chapter_id ?>
 <div id="page-wrapper">
 
     <div class="row">

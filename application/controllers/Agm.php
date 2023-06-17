@@ -268,7 +268,7 @@ class AGM extends CI_Controller {
         }
 
         // Submit to Zoom API
-        $post['first_name'] = $chapter['membership_id'] . '-' . preg_replace(array('/真佛宗/','/同修會/','/雷藏寺/','/堂/','/（籌委會）/','/北干那那/','/大山腳/','/居林/','/亞羅士打/','/淡馬魯/','/根地咬/','/古晉/','/居鑾/','/關丹/','/和豐/'),'',$chapter['name_chinese']) .'-';
+        $post['first_name'] = $chapter['membership_id'] . '-' . preg_replace(array('/真佛宗/','/同修會/','/雷藏寺/','/堂/','/（籌委會）/','/北干那那/','/大山腳/','/居林/','/亞羅士打/','/淡馬魯/','/根地咬/','/古晉/','/居鑾/','/關丹/','/和豐/','/永平新港/','/永平/','/檳城/','/峇株吧轄/','/詩巫/'),'',$chapter['name_chinese']) .'-';
 
         // If choose ZOOM only call ZOOM API
         

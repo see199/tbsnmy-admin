@@ -55,6 +55,68 @@
             }
         });
     }
+
+    function update_onsite(form_id){
+        $('#msg_'+form_id).show();
+        $('#msg_'+form_id).html("Updating...");
+        $('#first_name_'+form_id).prop('readonly',true);
+        $('#last_name_'+form_id).prop('readonly',true);
+        $('#zoom_link_'+form_id).prop('readonly',true);
+
+        $.ajax({
+            url: '<?= base_url('admin/agm/ajax_chg_to_onsite'); ?>',
+            type: 'post',
+            data: {
+                'first_name': $('#first_name_'+form_id).val(),
+                'last_name': $('#last_name_'+form_id).val(),
+                'registrant_id': $('#registrant_id_'+form_id).val(),
+                'email': $('#email_'+form_id).val()
+            },
+            success: function( data, textStatus, jQxhr ){
+                me = JSON.parse(data);
+                
+                if(me.success){
+                    $('#zoom_link_'+form_id).val('現場出席');
+                }
+                $('#msg_'+form_id).html(me.msg);
+                $('#first_name_'+form_id).prop('readonly',false);
+                $('#last_name_'+form_id).prop('readonly',false);
+                $('#zoom_link_'+form_id).prop('readonly',false);
+            }
+        });
+    }
+
+    function toggle_chuxi_liexi(form_id){
+        $('#msg_'+form_id).show();
+        $('#msg_'+form_id).html("Updating...");
+        $('#first_name_'+form_id).prop('readonly',true);
+        $('#last_name_'+form_id).prop('readonly',true);
+        $('#zoom_link_'+form_id).prop('readonly',true);
+
+        $.ajax({
+            url: '<?= base_url('admin/agm/ajax_toggle_liexi_chuxi'); ?>',
+            type: 'post',
+            data: {
+                'first_name': $('#first_name_'+form_id).val(),
+                'last_name': $('#last_name_'+form_id).val(),
+                'registrant_id': $('#registrant_id_'+form_id).val(),
+                'membership_id': $('#membership_id_'+form_id).val(),
+                'email': $('#email_'+form_id).val()
+            },
+            success: function( data, textStatus, jQxhr ){
+                me = JSON.parse(data);
+                
+                if(me.success){
+                    $('#first_name_'+form_id).val(me.first_name);
+                    $('#zoom_link_'+form_id).val(me.zoom_link);
+                }
+                $('#msg_'+form_id).html(me.msg);
+                $('#first_name_'+form_id).prop('readonly',false);
+                $('#last_name_'+form_id).prop('readonly',false);
+                $('#zoom_link_'+form_id).prop('readonly',false);
+            }
+        });
+    }
 </script>
 <div id="page-wrapper">
 
@@ -108,8 +170,11 @@
                                             <input type='text' class='form-control' name='last_name' id='last_name_<?=$form_id;?>' value='<?=$r['last_name'];?>'>
                                             <input type='text' class='form-control' name='email' id='email_<?=$form_id;?>' value='<?=$r['email'];?>' readonly>
                                             <input type='hidden' class='form-control' name='registrant_id' id='registrant_id_<?=$form_id;?>' value='<?=$r['registrant_id'];?>'>
+                                            <input type='hidden' class='form-control' name='membership_id' id='membership_id_<?=$form_id;?>' value='<?=$c['membership_id'];?>'>
                                             <input type='text' class='form-control' name='zoom_link' id='zoom_link_<?=$form_id;?>' value='<?=$r['zoom_link'];?>'>
-                                            <button class='btn btn-warning' onclick="update_registrant('<?=$form_id;?>')">Update</button>
+                                            <button class='btn btn-warning' onclick="update_registrant('<?=$form_id;?>')">更新&轉為Zoom</button>
+                                            <button class='btn btn-warning' onclick="update_onsite('<?=$form_id;?>')">轉為現場出席</button>
+                                            <button class='btn btn-warning' onclick="toggle_chuxi_liexi('<?=$form_id;?>')"><?= ($r['membership_id'] == '列席') ? "列席轉出席" : "出席轉列席" ?></button>
                                             <button class='btn btn-danger' onclick="delete_registrant('<?=$form_id;?>')">Delete</button>
                                             <span id="msg_<?=$form_id;?>" class='badge' style='display:none;'> </span>
 

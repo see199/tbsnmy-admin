@@ -1,3 +1,4 @@
+<?php unset($members['G']['chapter']['0']); //Remove Chapter Without chapter_id ?>
 <div id="page-wrapper">
 
     <div class="row">
@@ -14,9 +15,9 @@
                 <table id="example" class="display table table-striped table-bordered" cellspacing="0" width="100%">
                     <tr><td>團體會員出席：</td><td><?= $members['G']['total']['chuxi']; ?> (現場：<?= $members['G']['total']['xianchang']; ?>)</td></tr>
                     <tr><td>個人會員出席：</td><td><?= sizeof($members['P']['chuxi']); ?> (現場：<?= $members['P']['total']['xianchang']; ?>)</td></tr>
-                    <tr><th>總出席人數：(合法人數 > 80人)  </th><th><?= $members['G']['total']['chuxi'] + sizeof($members['P']); ?> (現場：<?= $members['G']['total']['xianchang'] + $members['P']['total']['xianchang']; ?>)</th></tr>
+                    <tr><th>總出席人數：(合法人數 > 80人)  </th><th><?= $members['G']['total']['chuxi'] + sizeof($members['P']['chuxi']); ?> (現場：<?= $members['G']['total']['xianchang'] + $members['P']['total']['xianchang']; ?>)</th></tr>
                     <tr><td>總出席道場：  </td><td><?= sizeof($members['G']['chapter']); ?></td></tr>
-                    <tr><td>列席：       </td><td><?= sizeof($members['G']['liexi']); ?></td></tr>
+                    <tr><td>列席：       </td><td><?= $members['G']['total']['liexi']; ?></td></tr>
                 </table>
             </div><div class="col-lg-10 col-lg-offset-1">
                 <table width="100%"><tr>

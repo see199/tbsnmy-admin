@@ -238,7 +238,9 @@
 
                   </ul>
                 </li>
+                <?php endif; ?>
 
+                <?php if($chapter_allowed[0] == 'all' || $google_email == 'agm@tbsn.my'): ?>
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">馬密總會員<span class="caret"></span></a>
                   <ul class="dropdown-menu" role="menu">
@@ -274,10 +276,22 @@
                     <li>
                         <a href="<?= base_url(); ?>admin/agm/setting"><i class="fa fa-cog"></i> AGM Setting</a>
                     </li>
-
                   </ul>
                 </li>
 
+                  <li class="divider"></li>
+                    <li>
+                        <a href="<?= base_url(); ?>agm/register" target="_agmreg"><i class="fa fa-user"></i> AGM 團體會員登記</a>
+                    </li>
+                    <li>
+                        <a href="<?= base_url(); ?>agm/register2" target="_agmreg"><i class="fa fa-user"></i> AGM 個人會員登記</a>
+                    </li>
+
+                  </ul>
+                </li>
+                <?php endif; ?>
+
+                <?php if($chapter_allowed[0] == 'all'): ?>
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?= lang('glb_nav_user'); ?><span class="caret"></span></a>
                   <ul class="dropdown-menu" role="menu">

@@ -276,10 +276,8 @@
                     <li>
                         <a href="<?= base_url(); ?>admin/agm/setting"><i class="fa fa-cog"></i> AGM Setting</a>
                     </li>
-                  </ul>
-                </li>
-
-                  <li class="divider"></li>
+                    
+                    <li class="divider"></li>
                     <li>
                         <a href="<?= base_url(); ?>agm/register" target="_agmreg"><i class="fa fa-user"></i> AGM 團體會員登記</a>
                     </li>

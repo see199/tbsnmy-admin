@@ -103,6 +103,10 @@ $(document).ready(function() {
 
 } );
 </script>
+<?php 
+//CS can only view & search, cannot edit & save
+$cs_email = array('cs@tbsn.my','share@tbsn.my');
+?>
 
 <div id="page-wrapper">
 
@@ -118,7 +122,7 @@ $(document).ready(function() {
         <div class="box">
             <div class="col-lg-10 col-lg-offset-1">
 
-                <?php if($google_email != 'cs@tbsn.my'): ?>
+                <?php if(!in_array($google_email,$cs_email)): ?>
                 <div class='text-right'>
                     <a href="javascript:void(0)" onclick="load_box()" data-toggle="modal" data-target="#myModal" class='btn btn-success'><i class="fa fa-plus" aria-hidden="true"></i> 新增</a>
                 </div>
@@ -146,7 +150,7 @@ $(document).ready(function() {
                     </thead>
                 </table>
 
-                <?php if($google_email != 'cs@tbsn.my'): ?>
+                <?php if(!in_array($google_email,$cs_email)): ?>
                 打印：
                 <input type="submit" class='btn btn-success' name="action" value="儀軌">
                 <input type="submit" class='btn btn-success' name="action" value="備錄">

@@ -195,13 +195,11 @@ class Agm_model extends CI_Model {
 		return $res->result_array();
 	}
 
-	public function api_add_zoom_registrant($meeting_id,$user,$access_token){
+	public function api_add_zoom_registrant($meeting_id,$user){
 
-		// Generate at: https://marketplace.zoom.us/develop/apps/hpkMCtQGQa2t0MAGvIutEA/credentials
-		// Token expired on 2021-06-27 23:59
-		//$access_token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6Ikw4NWFOandIUkhtVkJZaU55VTh4NWciLCJleHAiOjE2MzMzMzE0MDAsImlhdCI6MTYyNjMyOTcwNn0.BC2a76bcYCFoMYt2y_aEV4Dszw_vIcmOZLXlALJpAXY";
-
+		$access_token = $this->get_zoom_access_token();
 		$curl = curl_init();
+
 		curl_setopt_array($curl, array(
 			CURLOPT_URL => "https://api.zoom.us/v2/meetings/".$meeting_id."/registrants",
 			CURLOPT_RETURNTRANSFER => true,
@@ -229,12 +227,9 @@ class Agm_model extends CI_Model {
 
 	}
 
-	public function api_del_zoom_registrant($meeting_id,$registrant_id,$access_token){
+	public function api_del_zoom_registrant($meeting_id,$registrant_id){
 
-		// Generate at: https://marketplace.zoom.us/develop/apps/hpkMCtQGQa2t0MAGvIutEA/credentials
-		// Token expired on 2021-06-27 23:59
-		//$access_token = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6Ikw4NWFOandIUkhtVkJZaU55VTh4NWciLCJleHAiOjE2MzMzMzE0MDAsImlhdCI6MTYyNjMyOTcwNn0.BC2a76bcYCFoMYt2y_aEV4Dszw_vIcmOZLXlALJpAXY";
-
+		$access_token = $this->get_zoom_access_token();
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
@@ -259,7 +254,44 @@ class Agm_model extends CI_Model {
 		} else {
 		  return json_decode($response,1);
 		}
-}
+	}
+
+    private function get_zoom_access_token(){
+
+    	// JWT Depreciated, Change to use Server-to-Server OAuth
+        /*
+        POST https://zoom.us/oauth/token?grant_type=account_credentials&account_id={accountId}
+        HTTP/1.1
+        Host: zoom.us
+        Authorization: Basic Base64Encoder(clientId:clientSecret)
+        */
+        $setting = json_decode(read_file('application/logs/agm_setting.txt'),1);
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://zoom.us/oauth/token?grant_type=account_credentials&account_id=".$setting['account_id'],
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => json_encode(array(
+                'grant_type' => 'account_credentials',
+                'account_id' => $setting['account_id'],
+            )),
+            CURLOPT_HTTPHEADER => array(
+                "authorization: Basic ".base64_encode($setting['client_id'].":".$setting['client_secret']),
+                "Accept: application/json",
+                "content-type: application/json"
+            ),
+        ));
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+        $access_token = json_decode($response)->access_token;
+        return($access_token);
+    }
 
 	// Temporary Unused
 	private function api_get_zoom_registrant_link($meeting_id, $page){

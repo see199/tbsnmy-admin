@@ -367,7 +367,7 @@ class Agm extends CI_Controller {
             "email"      => $post['email'],
             "first_name" => $post['first_name'],
             "last_name"  => $post['last_name'],
-        ),$setting['access_token']);
+        ));
 
         // if Error, Display ERROR to contact admin
         if(isset($registrant['code'])){
@@ -408,7 +408,7 @@ class Agm extends CI_Controller {
             "email"      => $post['email'],
             "first_name" => $post['first_name'],
             "last_name"  => $post['last_name'],
-        ),$setting['access_token']);
+        ));
 
         // if Error, Display ERROR to contact admin
         if(isset($registrant['code'])){
@@ -451,7 +451,7 @@ class Agm extends CI_Controller {
         $setting = json_decode(read_file('application/logs/agm_setting.txt'),1);
 
         // Submit to Zoom API
-        $registrant = $this->agm_model->api_del_zoom_registrant($setting['zoom_id'],$post['registrant_id'],$setting['access_token']);
+        $registrant = $this->agm_model->api_del_zoom_registrant($setting['zoom_id'],$post['registrant_id']);
 
         // if Error, Display ERROR to contact admin
         if(isset($registrant['code'])){
@@ -476,7 +476,7 @@ class Agm extends CI_Controller {
         $setting = json_decode(read_file('application/logs/agm_setting.txt'),1);
 
         // Submit to Zoom API
-        $registrant = $this->agm_model->api_del_zoom_registrant($setting['zoom_id'],$post['registrant_id'],$setting['access_token']);
+        $registrant = $this->agm_model->api_del_zoom_registrant($setting['zoom_id'],$post['registrant_id']);
 
         $registrant_primary = array(
             'email'         => $post['email'],
@@ -514,7 +514,7 @@ class Agm extends CI_Controller {
 	            "email"      => $post['email'],
 	            "first_name" => $post['first_name'],
 	            "last_name"  => $post['last_name'],
-	        ),$setting['access_token']);
+	        ));
 
 	        // if Error, Display ERROR to contact admin
 	        if(isset($registrant['code'])){
@@ -565,8 +565,9 @@ class Agm extends CI_Controller {
     			'date'    => $this->input->post('date'),
     			'time'    => $this->input->post('time'),
     			'zoom_id' => $this->input->post('zoom_id'),
-    			'access_token' => $this->input->post('access_token'),
-    			'token_expiry' => $this->input->post('token_expiry'),
+    			'account_id'    => $this->input->post('account_id'),
+    			'client_id'     => $this->input->post('client_id'),
+    			'client_secret' => $this->input->post('client_secret'),
     		);
     		write_file($setting_file,json_encode($setting));
     	}

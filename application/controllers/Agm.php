@@ -278,7 +278,7 @@ class AGM extends CI_Controller {
                 "email"      => $post['email'],
                 "first_name" => $post['first_name'],
                 "last_name"  => $post['name_chinese'],
-            ),$setting['access_token']);
+            ));
 
             // If Zoom return empty
             if(!isset($registrant['registrant_id'])){
@@ -370,7 +370,7 @@ class AGM extends CI_Controller {
                 "email"      => $post['email'],
                 "first_name" => $post['first_name'],
                 "last_name"  => $post['name_chinese'],
-            ),$setting['access_token']);
+            ));
 
             // If Zoom return empty
             if(!isset($registrant['registrant_id'])){

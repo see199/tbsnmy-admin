@@ -208,7 +208,13 @@ function delete_data(){
                         </tr>
                     </thead>
                     <tbody>
+                        <?php $email_list = array(); ?>
                         <?php foreach($list as $c): ?>
+                            <?php 
+                                // For Checking Purpose
+                                $email_list['email'][$c['wenxuan_email']] = rtrim($c['wenxuan_email']); 
+                                if(!filter_var(rtrim($c['wenxuan_email']),FILTER_VALIDATE_EMAIL)) $email_list['name'][$c['wenxuan_email']][] = rtrim($c['wenxuan_name']); 
+                            ?>
                             <tr>
                                 <td><textarea style="display:none;"><?= json_encode($c); ?></textarea>
                                     <a href='javascript:void(0)' onclick="load_box($(this).prev().val())" data-toggle="modal" data-target="#myModal"><?= $c['wenxuan_name']; ?></a></td>
@@ -229,6 +235,17 @@ function delete_data(){
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="box">
+            <div class="col-lg-8 col-lg-offset-2 form-group">
+                <h2>Email List -- <small>to copy to <a href="https://app.mailjet.com/contacts/lists/edit/YL" target="eml">MailJet subscription</a></small></h2>
+                <?php if($google_email == 'see199@gmail.com') print_pre($email_list['name']);?>
+                <textarea class="form-control w-100" rows="5"><?php echo implode(", ",$email_list['email']); ?></textarea>
             </div>
         </div>
     </div>

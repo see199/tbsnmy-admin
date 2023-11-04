@@ -195,7 +195,7 @@ class Event extends CI_Controller {
                 return "登記完成，感恩護持！ Success Registration!";
             }
             else
-                return "成功登入!";
+                return "成功登記!";
         }else{
             return "Error: 無法重複輸入！";
         }

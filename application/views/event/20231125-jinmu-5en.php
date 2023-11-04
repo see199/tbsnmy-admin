@@ -429,7 +429,7 @@ $event_2 = '2nd ceremony: Jade Pond Golden Mother Water Offering';
         7   :3 ,
         8   :3 ,
         9   :5 ,
-        10  :5 ,
+        10  :16 , //5
         11  :4 ,
         12  :2 ,
         13  :6 ,
@@ -451,16 +451,17 @@ $event_2 = '2nd ceremony: Jade Pond Golden Mother Water Offering';
         "3":   "<?= $event_1;?> (Local time: 11/25  4PM) ",
         "4":   "<?= $event_1;?> (Local time: 11/25  2PM) ",
         "5":   "<?= $event_1;?> (Local time: 11/25  5PM) ",
-        "6":   "<?= $event_1;?> (Local time: 11/25  7PM) ",
+        "6":   "<?= $event_1;?> (Local time: 11/25  8PM) ",
         "7":   "<?= $event_1;?> (Local time: 11/25  4AM) ",
         "8":   "<?= $event_1;?> (Local time: 11/25  0AM) ",
         "9":   "<?= $event_1;?> (Local time: 11/25  1AM) ",
         "10":  "<?= $event_1;?> (Local time: 11/25  2AM) ",
         "11":  "<?= $event_1;?> (Local time: 11/25  3AM) ",
         "12":  "<?= $event_1;?> (Local time: 11/24  9PM) ",
-        "13":  "<?= $event_1;?> (Local time: 11/25  8AM) ",
-        "14":  "<?= $event_1;?> (Local time: 11/25  9AM) ",
-        "15":  "<?= $event_1;?> (Local time: 11/25 10AM) "
+        "13":  "<?= $event_1;?> (Local time: 11/25  7AM) ",
+        "14":  "<?= $event_1;?> (Local time: 11/25  8AM) ",
+        "15":  "<?= $event_1;?> (Local time: 11/25  9AM) ",
+        "16":  "<?= $event_1;?> (Local time: 11/25  6PM) "
     }
 
     const timezone_list_2 = {
@@ -468,16 +469,17 @@ $event_2 = '2nd ceremony: Jade Pond Golden Mother Water Offering';
         "3":   "<?= $event_2;?> (Local time: 11/26  2AM) ",
         "4":   "<?= $event_2;?> (Local time: 11/26  0AM) ",
         "5":   "<?= $event_2;?> (Local time: 11/26  3AM) ",
-        "6":   "<?= $event_2;?> (Local time: 11/26  5AM) ",
+        "6":   "<?= $event_2;?> (Local time: 11/26  6AM) ",
         "7":   "<?= $event_2;?> (Local time: 11/25  2PM) ",
         "8":   "<?= $event_2;?> (Local time: 11/25 10AM) ",
         "9":   "<?= $event_2;?> (Local time: 11/25 11AM) ",
         "10":  "<?= $event_2;?> (Local time: 11/25 12PM) ",
         "11":  "<?= $event_2;?> (Local time: 11/25  1PM) ",
         "12":  "<?= $event_2;?> (Local time: 11/25  7AM) ",
-        "13":  "<?= $event_2;?> (Local time: 11/25  6PM) ",
-        "14":  "<?= $event_2;?> (Local time: 11/25  7PM) ",
-        "15":  "<?= $event_2;?> (Local time: 11/25  8PM) "
+        "13":  "<?= $event_2;?> (Local time: 11/25  5PM) ",
+        "14":  "<?= $event_2;?> (Local time: 11/25  6PM) ",
+        "15":  "<?= $event_2;?> (Local time: 11/25  7PM) ",
+        "16":  "<?= $event_2;?> (Local time: 11/25  4AM) "
     }
 
     const chapter_timezone = $('#chapter_timezone');

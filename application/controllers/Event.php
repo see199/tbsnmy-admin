@@ -40,7 +40,7 @@ class Event extends CI_Controller {
 
 
     public function ajax_get_master_by_country(){
-        $country = $this->input->post('country');
+        $country = $this->get_chinese_country($this->input->post('country'));
 
         // Get Master by Country
         $this->db = $this->load->database('local', TRUE);
@@ -204,23 +204,43 @@ class Event extends CI_Controller {
 
     private function master_country($lang){
 
-        return array(
-            '',
-            '澳洲',
-            '巴西',
-            '加拿大',
-            '柬埔寨',
-            '香港',
-            '印尼',
-            '日本',
-            '馬來西亞',
-            '荷蘭',
-            '新加坡',
-            '台灣',
-            '英國',
-            '美國',
-            '其他',
-        );
+         if($lang == 'en'){
+            return array(
+                '',
+                'Australia',
+                'Brazil',
+                'Canada',
+                'Cambodia',
+                'Hong Kong',
+                'Indonesia',
+                'Japan',
+                'Malaysia',
+                'Netherland',
+                'Singapura',
+                'Taiwan',
+                'United Kingdom',
+                'United States',
+                'Other'
+            );
+        } else {
+            return array(
+                '',
+                '澳洲',
+                '巴西',
+                '加拿大',
+                '柬埔寨',
+                '香港',
+                '印尼',
+                '日本',
+                '馬來西亞',
+                '荷蘭',
+                '新加坡',
+                '台灣',
+                '英國',
+                '美國',
+                '其他',
+            );
+        }
     }
 
     private function get_chinese_country($country){
@@ -254,6 +274,7 @@ class Event extends CI_Controller {
             'Brazil' => '巴西',
             'Brunei' => '汶萊',
             'Canada' => '加拿大',
+            'Cambodia' => '柬埔寨',
             'Dominican Republic' => '多明尼加共和國',
             'France' => '法國',
             'German' => '德國',

@@ -406,29 +406,29 @@ class Event extends CI_Controller {
     }
 
     public function test(){
-        $this->sendmail(array(
+        $this->sendmail2(array(
             'email' => 'see199@gmail.com',
             'title' => '成功登記線上法會',
             'text'  => '您好，<br><br>您已成功登記線上法會，感恩護持！<br> 請注意收取zoom密碼。<br/><br/>文宣處合十',
         ));
     }
 
-    public function sendmail($data){
-        echo 1;
+    public function sendmail($data){}
+
+    public function sendmail2($data){
+        $this->config->load('params', TRUE);
         $this->load->library('email');
-        
-        $this->email->initialize(array(
-            'protocol' => 'mail',
-            'mailtype' => 'html',
-            'charset' => 'utf-8'
-        ));
+        $this->email->initialize($this->config->item('email'));
 
         $this->email->from('wenxuan@tbsn.org', '宗委會文宣處');
+
         $this->email->to($data['email']);
         $this->email->subject($data['title']);
         $this->email->message($data['text']);
-        echo $this->email->send();
 
+        $this->email->send();
+
+        echo $this->email->print_debugger();
     }
 
 

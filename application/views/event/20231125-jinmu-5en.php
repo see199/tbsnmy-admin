@@ -1,7 +1,7 @@
 <?php
 
-$event_1 = '1st ceremony: Mahabala Feast Offering';
-$event_2 = '2nd ceremony: Jade Pond Golden Mother Water Offering';
+$event_1 = '1st Group Practice: Sat., Nov. 25 @ 3:00 PM (Taiwan time)';
+$event_2 = '2nd Group Practice: Sat. Nov. 25 @ 10:00 AM (Seattle time)';
 
 ?>
 <!DOCTYPE html>
@@ -260,25 +260,13 @@ $event_2 = '2nd ceremony: Jade Pond Golden Mother Water Offering';
                     <div class='col-lg-10 col-lg-offset-1 col-xs-10 col-xs-offset-1'>
 
                         <div class='row'>
-                            <h2 class='text-center'>Celebrating Guru Buddha’s Birthday in 2023 with Three Major Offerings<br /><br />Global Online Feast Offering and Water Offering “Pray for Guru Buddha to Stay in the World" Ceremonies</h2>
-                            <br /><img style='width: 100%; max-width:920px;' src='https://en.tbsn.org/images/2023_05_08/mahabala.jpg' />
-                            <br /><br /><div class='text-justify'>The True Buddha Foundation is joining hands with the True Buddha School Masters, Reverends, all-level Dharma propagating personnel, and worldwide cultivation venues to perform Mahabala Feast Offering Ceremony, Jade Pond Golden Mother Water Offering Ceremony, and Amitabha Buddha Feast Offering Ceremony to sincerely and wholeheartedly “pray for the Guru Buddha to stay in the world” and dedicate the merit to the health and well-being of Grandmaster, his long life, being unhindered, staying long in the world, forever turning the Dharma wheel, and benefitting infinite sentient beings.
-<br />
-<br />Cultivation venues can select a convenient time to participate via Zoom in the feast offering and water offering ceremonies supplicating Guru Buddha to stay in the world and collectively turn the Dharma wheel. The ceremonies will be held at three different times as below.
-<br />
-<br />1st ceremony: Mahabala Feast Offering
-<br />Taiwan time: Sat., June 24, 2023, 3:00PM
-<br />Seattle USA time: Sat., June 24, 2023, 12:00AM (midnight)
-<br />
-<br />2nd ceremony: Jade Pond Golden Mother Water Offering
-<br />Taiwan time: Sat., June 24, 2023, 7:00PM
-<br />Seattle USA time: Sat., June 24, 2023 4:00AM
-<br />
-<br />3rd ceremony: Amitabha Feast Offering
-<br />Taiwan time: Sun., June 25, 2023, 1:00AM
-<br />Seattle USA time: Sat., June 24, 2023, 10:00AM
-<br />
-<br />#Zoom ID and password will be forwarded to participants via email. Submit your registration form after you have confirmed the email address is correct.</div>
+                            <h2 class='text-center'>Worldwide TBS Cultivation Venues Leading Group Cultivation of<br />Feast-Offering to Jade Pond Golden Mother
+</h2>
+                            <br /><img style='width: 100%; max-width:920px;' src='https://en.tbsn.org/images/2023_11_07/2023-event-jinmu1-en.jpg' />
+                            <br /><br /><div class='text-center' style='color:red;font-weight: bold;'>Nov. 25 (Sat.)-26 (Sun.), 2023
+<br />Worldwide TBS Cultivation Venues will lead group cultivation of feast-offering 
+<br />to Jade Pond Golden Mother and dedicate the merit 
+</div>
                         </div>
 
 
@@ -355,7 +343,7 @@ $event_2 = '2nd ceremony: Jade Pond Golden Mother Water Offering';
                         </div>
 
                         <div class='row row-data'>
-                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>Ceremony:</div>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>Group Practice:</div>
                             <div class='col-xs-9 col-lg-6 text-left form-row'>
                                 <div class='form form-group'>
                                     <input type="radio" id="event_type_1" name="event_type" value="1">
@@ -376,7 +364,7 @@ $event_2 = '2nd ceremony: Jade Pond Golden Mother Water Offering';
                         </div>
 
                         <div class='row row-data'>
-                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>Cultivation Venue Email:</div>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>Email:</div>
                             <div class='col-xs-9 col-lg-6 text-left form-row'>
                                 <div class='form form-group'>
                                     <input type='email' name='chapter_email' class='form-control' placeholder="Cultivation Venue Email" required>
@@ -385,7 +373,7 @@ $event_2 = '2nd ceremony: Jade Pond Golden Mother Water Offering';
                         </div>
 
                         <div class='row row-data'>
-                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>Ceremony Presider</div>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>Group Practice Presider</div>
                             <div class='col-xs-9 col-lg-6 text-left'>
                                 <div class='form form-group'>
                                     <input type='text' name='master_name' class='form-control' placeholder="Examples：Master Shi Lianx, Dharma Assistant Lianhuaxx" required>
@@ -397,7 +385,7 @@ $event_2 = '2nd ceremony: Jade Pond Golden Mother Water Offering';
                             <div class='col-xs-3 col-lg-4 strong_txt text-right'>Supporter(s)</div>
                             <div class='col-xs-9 col-lg-6 text-left'>
                                 <div class='form form-group'>
-                                    <input type='text' name='join_personnel' class='form-control' placeholder="Can be multiple. Examples：Master Shi Lianx, Dharma Assistant Lianhuaxx">
+                                    <input type='text' name='join_personnel' class='form-control' placeholder="Can enter multiple propagators. Example: Dharma Instructor Shi Lianxx, Dharma Assistant Lianhuaxx">
                                 </div>
                             </div>
                         </div>

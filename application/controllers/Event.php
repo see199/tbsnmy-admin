@@ -186,7 +186,7 @@ class Event extends CI_Controller {
             // Insert the record
             $this->db->insert('zwh_event_reg',$event_reg);
             $reg_id = $this->db->insert_id();
-            if($event_reg['event_id'] == 3){
+            if($event_reg['event_id'] == 5){
                 $this->sendmail(array(
                     'email' => $event_reg['chapter_email'],
                     'title' => '成功登記線上法會',
@@ -406,16 +406,14 @@ class Event extends CI_Controller {
     }
 
     public function test(){
-        $this->sendmail2(array(
+        $this->sendmail(array(
             'email' => 'see199@gmail.com',
             'title' => '成功登記線上法會',
             'text'  => '您好，<br><br>您已成功登記線上法會，感恩護持！<br> 請注意收取zoom密碼。<br/><br/>文宣處合十',
         ));
     }
 
-    public function sendmail($data){}
-
-    public function sendmail2($data){
+    public function sendmail($data){
         $this->config->load('params', TRUE);
         $this->load->library('email');
         $this->email->initialize($this->config->item('email'));

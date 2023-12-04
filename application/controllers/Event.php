@@ -416,7 +416,7 @@ class Event extends CI_Controller {
     public function sendmail($data){
         $this->config->load('params', TRUE);
         $this->load->library('email');
-        $this->email->initialize($this->config->item('email'));
+        $this->email->initialize($this->config->item('email_wenxuan'));
 
         $this->email->from('wenxuan@tbsn.org', '宗委會文宣處');
 

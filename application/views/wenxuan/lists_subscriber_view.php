@@ -208,7 +208,7 @@ function delete_data(){
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $email_list = array(); ?>
+                        <?php $email_list = array('email' => array(),'name' => array()); ?>
                         <?php foreach($list as $c): ?>
                             <?php 
                                 // For Checking Purpose

@@ -133,7 +133,7 @@ class Event extends CI_Controller {
         unset($event_reg['chapter_name_other']);
 
 
-        if(is_array($event_reg['master_name'])){
+        if(@is_array($event_reg['master_name'])){
             foreach(array_filter($event_reg['master_name']) as $i => $name){
                 $new_event_reg = $event_reg;
                 $new_event_reg['event_counter'] = ($event_reg['event_counter']) ? $event_reg['event_counter'] : 1;
@@ -154,14 +154,20 @@ class Event extends CI_Controller {
     private function insert_event_reg($event_reg){
 
         // Rename Master Position by substr() and Rename 教授師
-        if(!isset($event_reg['master_position'])){
+        if(!isset($event_reg['master_position']) && isset($event_reg['master_name'])){
             $event_reg['master_position'] = mb_substr($event_reg['master_name'],-2);
             if($event_reg['master_position'] == '授師') $event_reg['master_position'] = '教授師';
         }
 
+
         // Set multiple_event_date to json format
         if(@$event_reg['event_date_multiple'])
             @$event_reg['event_date_multiple'] = json_encode($event_reg['event_date_multiple']);
+        
+
+        // Set multiple_event_date to json format
+        if(@$event_reg['event_type'])
+            @$event_reg['event_type'] = json_encode($event_reg['event_type']);
 
         //Unique Key Checking
         /*$unique = array('event_id','master_id','master_name','chapter_id','event_type','event_date','event_date_multiple');

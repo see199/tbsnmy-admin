@@ -1,29 +1,29 @@
 <?php
 $event_list = array(
-    array('第01場：',"2023-12-31 07:30PM"),
-    array('第02場：',"2023-12-31 08:30PM"),
-    array('第03場：',"2023-12-31 09:30PM"),
-    array('第04場：',"2023-12-31 10:30PM"),
-    array('第05場：',"2023-12-31 11:30PM"),
-    array('第06場：',"2024-01-01 12:30AM"),
-    array('第07場：',"2024-01-01 01:30AM"),
-    array('第08場：',"2024-01-01 02:30AM"),
-    array('第09場：',"2024-01-01 03:30AM"),
-    array('第10場：',"2024-01-01 04:30AM"),
-    array('第11場：',"2024-01-01 05:30AM"),
-    array('第12場：',"2024-01-01 06:30AM"),
-    array('第13場：',"2024-01-01 07:30AM"),
-    array('第14場：',"2024-01-01 08:30AM"),
-    array('第15場：',"2024-01-01 09:30AM"),
-    array('第16場：',"2024-01-01 10:30AM"),
-    array('第17場：',"2024-01-01 11:30AM"),
-    array('第18場：',"2024-01-01 12:30PM"),
-    array('第19場：',"2024-01-01 01:30PM"),
-    array('第20場：',"2024-01-01 02:30PM"),
-    array('第21場：',"2024-01-01 03:30PM"),
-    array('第22場：',"2024-01-01 04:30PM"),
-    array('第23場：',"2024-01-01 05:30PM"),
-    array('第24場：',"2024-01-01 06:30PM"),
+    array('第01場：',"2023-12-31 08:00PM"),
+    array('第02場：',"2023-12-31 09:00PM"),
+    array('第03場：',"2023-12-31 10:00PM"),
+    array('第04場：',"2023-12-31 11:00PM"),
+    array('第05場：',"2024-01-01 12:00AM"),
+    array('第06場：',"2024-01-01 01:00AM"),
+    array('第07場：',"2024-01-01 02:00AM"),
+    array('第08場：',"2024-01-01 03:00AM"),
+    array('第09場：',"2024-01-01 04:00AM"),
+    array('第10場：',"2024-01-01 05:00AM"),
+    array('第11場：',"2024-01-01 06:00AM"),
+    array('第12場：',"2024-01-01 07:00AM"),
+    array('第13場：',"2024-01-01 08:00AM"),
+    array('第14場：',"2024-01-01 09:00AM"),
+    array('第15場：',"2024-01-01 10:00AM"),
+    array('第16場：',"2024-01-01 11:00AM"),
+    array('第17場：',"2024-01-01 12:00PM"),
+    array('第18場：',"2024-01-01 01:00PM"),
+    array('第19場：',"2024-01-01 02:00PM"),
+    array('第20場：',"2024-01-01 03:00PM"),
+    array('第21場：',"2024-01-01 04:00PM"),
+    array('第22場：',"2024-01-01 05:00PM"),
+    array('第23場：',"2024-01-01 06:00PM"),
+    array('第24場：',"2023-01-01 07:00PM"),
 );
 ?>
 <!DOCTYPE html>
@@ -316,12 +316,21 @@ $event_list = array(
                         </div>
 
                         <div class='row row-data'>
-                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>道場:</div>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>道場:</div>
                             <div class='col-xs-9 col-lg-6 text-left form-row'>
                                 <div class='form form-group'>
                                     <select class='custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left ui-autocomplete-input' id='chapter_id' name='chapter_id'></select>
                                     <input type='text' class='form-control' id='chapter_name_other' name='chapter_name_other' style='display:none' placeholder="請填寫道場及國家" />
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class='row row-data'>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>弘法人員（<small>個人登入</small>）:</div>
+                            <div class='col-xs-9 col-lg-6 text-left form-row'>
+                                <div class='form form-group'>
+                                    <input type='text' name='master_name' class='form-control' placeholder="弘法人員(個人登入)例：釋蓮A上師,釋蓮B教授師, 蓮花CC助教">
+                                  </div>
                             </div>
                         </div>
 
@@ -365,18 +374,22 @@ $event_list = array(
                             <div class='col-xs-9 col-lg-6 text-left form-row'>
                                 <div class='form form-group'>
                                     <?php foreach($event_list as $k => $v):?> <?php $id = $k+1; ?>
-                                    <input type="checkbox" id="event_type_<?=$id;?>" name="event_type[<?=$id;?>]" value="<?=$id;?>">
+                                    <input type="checkbox" id="event_type_<?=$id;?>" name="event_type[<?=$id;?>]" value="<?=$id;?>" <?= ($k>10 && $k <14) ? "disabled" : "" ?>>
+                                    <?php if($k>10 && $k <14) : ?>
+                                    <label for="event_type_<?=$id;?>" id="label_type_<?=$id;?>">第<?=$k+1;?>場：大家共同參加師尊時輪金剛護摩</label><br>
+                                    <?php else: ?>
                                     <label for="event_type_<?=$id;?>" id="label_type_<?=$id;?>"><?= $v[0];?></label><br>
+                                    <?php endif;?>
                                     <?php endforeach; ?>
                                 </div>
                             </div>
                         </div>
 
                         <div class='row row-data'>
-                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>道場負責人:</div>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>道場負責人:</div>
                             <div class='col-xs-9 col-lg-6 text-left form-row'>
                                 <div class='form form-group'>
-                                    <input type='text' name='chapter_pic' class='form-control' placeholder="道場負責人" required>
+                                    <input type='text' name='chapter_pic' class='form-control' placeholder="道場負責人">
                                   </div>
                             </div>
                         </div>

@@ -411,6 +411,44 @@ class Event extends CI_Controller {
 
     }
 
+    // Public Stats
+    public function pstat($id=0){
+
+        // Show error if no ID is entered
+        if(!$id){
+            echo "Error ID";
+            exit;
+        }
+
+        // Get Event Details
+        $this->db = $this->load->database('local', TRUE);
+        $event = $this->db
+                ->where('event_id', $id)
+                ->from('zwh_event')
+                ->get()
+                ->result_array()[0];
+        //print_pre($event);
+
+        // Stats Calculation
+        $this->db = $this->load->database('local', TRUE);
+        $stats = $this->db
+                ->where('event_id', $id)
+                ->from('zwh_event_reg')
+                ->get()
+                ->result_array();
+
+        //print_pre($stats);
+        // Load view
+        $this->load->view('event/'.$event['stats_view'].'-public', array(
+            'event' => $event,
+            'stats' => $stats,
+            'chapter_country' => $this->chapter_country(''),
+            'master_country'  => $this->master_country(''),
+        ));
+
+
+    }
+
     public function test(){
         $this->sendmail(array(
             'email' => 'see199@gmail.com',

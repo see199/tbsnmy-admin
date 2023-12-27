@@ -1,29 +1,29 @@
 <?php
 $event_list = array(
-    array('第01場：',"2023-12-31 08:00PM"),
-    array('第02場：',"2023-12-31 09:00PM"),
-    array('第03場：',"2023-12-31 10:00PM"),
-    array('第04場：',"2023-12-31 11:00PM"),
-    array('第05場：',"2024-01-01 12:00AM"),
-    array('第06場：',"2024-01-01 01:00AM"),
-    array('第07場：',"2024-01-01 02:00AM"),
-    array('第08場：',"2024-01-01 03:00AM"),
-    array('第09場：',"2024-01-01 04:00AM"),
-    array('第10場：',"2024-01-01 05:00AM"),
-    array('第11場：',"2024-01-01 06:00AM"),
-    array('第12場：',"2024-01-01 07:00AM"),
-    array('第13場：',"2024-01-01 08:00AM"),
-    array('第14場：',"2024-01-01 09:00AM"),
-    array('第15場：',"2024-01-01 10:00AM"),
-    array('第16場：',"2024-01-01 11:00AM"),
-    array('第17場：',"2024-01-01 12:00PM"),
-    array('第18場：',"2024-01-01 01:00PM"),
-    array('第19場：',"2024-01-01 02:00PM"),
-    array('第20場：',"2024-01-01 03:00PM"),
-    array('第21場：',"2024-01-01 04:00PM"),
-    array('第22場：',"2024-01-01 05:00PM"),
-    array('第23場：',"2024-01-01 06:00PM"),
-    array('第24場：',"2023-01-01 07:00PM"),
+    array(' 1st Session：',"2023-12-31 08:00PM"),
+    array(' 2nd Session：',"2023-12-31 09:00PM"),
+    array(' 3rd Session：',"2023-12-31 10:00PM"),
+    array(' 4th Session：',"2023-12-31 11:00PM"),
+    array(' 5th Session：',"2024-01-01 12:00AM"),
+    array(' 6th Session：',"2024-01-01 01:00AM"),
+    array(' 7th Session：',"2024-01-01 02:00AM"),
+    array(' 8th Session：',"2024-01-01 03:00AM"),
+    array(' 9th Session：',"2024-01-01 04:00AM"),
+    array('10th Session：',"2024-01-01 05:00AM"),
+    array('11th Session：',"2024-01-01 06:00AM"),
+    array('12th Session：',"2024-01-01 07:00AM"),
+    array('13th Session：',"2024-01-01 08:00AM"),
+    array('14th Session：',"2024-01-01 09:00AM"),
+    array('15th Session：',"2024-01-01 10:00AM"),
+    array('16th Session：',"2024-01-01 11:00AM"),
+    array('17th Session：',"2024-01-01 12:00PM"),
+    array('18th Session：',"2024-01-01 01:00PM"),
+    array('19th Session：',"2024-01-01 02:00PM"),
+    array('20th Session：',"2024-01-01 03:00PM"),
+    array('21th Session：',"2024-01-01 04:00PM"),
+    array('22th Session：',"2024-01-01 05:00PM"),
+    array('23th Session：',"2024-01-01 06:00PM"),
+    array('24th Session：',"2023-01-01 07:00PM"),
 );
 ?>
 <!DOCTYPE html>
@@ -282,9 +282,17 @@ $event_list = array(
                     <div class='col-lg-10 col-lg-offset-1 col-xs-10 col-xs-offset-1'>
 
                         <div class='row'>
-                            <h2 class='text-center'><?=str_replace("\r\n", "<br>", $event['title']);?></h2>
-                            <br /><img style='width: 100%; max-width:920px;' src='<?=$event['banner_url'];?>' />
-                            <br /><br /><div class='text-justify'><?= str_replace("\r\n", "<br>", $event['description']);?></div>
+                            <h2 class='text-center'>2024 True Buddha School Prays for World Peace
+                            <br />May love and peace embrace the world 
+                            <br />May 2024 unfold in a shower of blessings
+                            </h2>
+                            <br /><img style='width: 100%; max-width:920px;' src='https://ch.tbsn.org/images/2023_12_26/2024-pray4world-991x5001.jpg' />
+                            <br /><br /><div class='text-justify'>The tears shed by Avalokitesvara Bodhisattva transformed into White Tara and Green Tara. The tears of Dharma King Lian-sheng transformed into the bodhicitta of True Buddha School (TBS) disciples, who will wholeheartedly pray to buddhas and bodhisattvas for the salvation of sentient beings suffering in this world. 
+                            <br /><br />As we prepare to enter 2024, let’s bring hope and peace to the world through mantras and light. May this wonderfulness continuously fill 2024, wishing the Earth a peaceful year. 
+                            <br /><br />In response to Grandmaster’s heartfelt compassion for sentient beings, the True Buddha Foundation has launched a global prayer initiative. On December 31, 2023, at 11:30PM New Zealand time (7:30PM Taiwan time), Dharma propagation personnel, cultivation venues, and all disciples are invited to light a blessing lamp and recite the Disaster Relief Mantra. We offer our prayers for world peace, the salvation of suffering sentient beings, the deliverance of wandering spirits, the eradication of disasters caused by earth, water, fire, and wind, and the successful accomplishment of disaster relief efforts.
+                            <br /><br />Dharma propagation personnel and cultivation venues, please register your schedule for this event via this page below:
+                            <br /><br />The Zoom link will be publicly shared just prior to the event. Everyone is welcome to join this event via Zoom.
+                            <br /><br />As soon as mantra recitation begins, participants may commence lighting lamps on the TBSN website. The link for this activity will be announced at a later date</div>
                         </div>
 
 
@@ -305,7 +313,7 @@ $event_list = array(
                         <div class='row'>&nbsp;</div>
 
                         <div class='row row-data'>
-                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>國家:</div>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>Country:</div>
                             <div class='col-xs-9 col-lg-6 text-left form-row'>
                                 <div class='form form-group'>
                                     <select required class='form-control' id='chapter_country' name='chapter_country'><?php foreach ($chapter_country as $c): ?>
@@ -316,7 +324,7 @@ $event_list = array(
                         </div>
 
                         <div class='row row-data'>
-                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>道場:</div>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>Cultivation Venue:</div>
                             <div class='col-xs-9 col-lg-6 text-left form-row'>
                                 <div class='form form-group'>
                                     <select class='custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left ui-autocomplete-input' id='chapter_id' name='chapter_id'></select>
@@ -326,57 +334,57 @@ $event_list = array(
                         </div>
 
                         <div class='row row-data'>
-                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>弘法人員（<small>個人登入</small>）:</div>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>Dharma Propagating Personnel:</div>
                             <div class='col-xs-9 col-lg-6 text-left form-row'>
                                 <div class='form form-group'>
-                                    <input type='text' name='master_name' class='form-control' placeholder="弘法人員(個人登入)例：釋蓮A上師,釋蓮B教授師, 蓮花CC助教">
+                                    <input type='text' name='master_name' class='form-control' placeholder="One entry per registration. Example: Dharma Assistant Lianhuac">
                                   </div>
                             </div>
                         </div>
 
                         <div class='row row-data'>
-                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>時區:</div>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>Time Zone:</div>
                             <div class='col-xs-9 col-lg-6 text-left form-row'>
                                 <div class='form form-group'>
                                     <select class='custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left' id='chapter_timezone' name='chapter_timezone'>
                                         <option value=''></option>
-                                        <option value='1'>馬來西亞 / 新加坡 / 汶萊</option>
-                                        <option value='2'>台灣</option>
-                                        <option value='3'>香港</option>
-                                        <option value='4'>泰國 / 越南 / 柬埔寨</option>
-                                        <option value='5'>印尼（西部）</option>
-                                        <option value='6'>印尼（中部）</option>
-                                        <option value='7'>印尼（東部）</option>
-                                        <option value='8'>日本</option>
-                                        <option value='9'>關島</option>
-                                        <option value='10'>澳洲（東南部）</option>
-                                        <option value='11'>澳洲（聖誕島）</option>
-                                        <option value='12'>澳洲（西部）</option>
-                                        <option value='13'>紐西蘭</option>
-                                        <option value='14'>巴西（聖保羅）/（福塔雷薩）</option>
-                                        <option value='15'>美國（西岸)/加拿大（BC省）</option>
-                                        <option value='16'>美國（山地時區）/加拿大（AB省）</option>
-                                        <option value='17'>美國（中部時區）</option>
-                                        <option value='18'>美國（東岸時區）/加拿大（ON/QC省）/巴拿馬</option>
-                                        <option value='19'>波多黎各/多米尼加共和國</option>
-                                        <option value='20'>夏威夷</option>
-                                        <option value='21'>英國/葡萄牙</option>
-                                        <option value='22'>歐洲-1：瑞典/挪威/德國/瑞士/法國/西班牙/意大利</option>
-                                        <option value='23'>歐洲-2：芬蘭/希臘</option>
-                                        <option value='24'>南非</option>
+                                        <option value="1">Malaysia / Singapore / Brunei</option>
+                                        <option value="2">Taiwan</option>
+                                        <option value="3">Hong Kong</option>
+                                        <option value="4">Tailand / Vietnam / Cambodia</option>
+                                        <option value="5">Indonesia（West）</option>
+                                        <option value="6">Indonesia（Central）</option>
+                                        <option value="7">Indonesia（East）</option>
+                                        <option value="8">Japan</option>
+                                        <option value="9">Quam</option>
+                                        <option value="10">Australia (South East)</option>
+                                        <option value="11">Australia (Christmas Island)</option>
+                                        <option value="12">Australia (Western)</option>
+                                        <option value="13">New Zealand</option>
+                                        <option value="14">Brazil (Sao Paulo)/(Fortaleza)</option>
+                                        <option value="15">United States (West Coast)/Canada (BC)</option>
+                                        <option value="16">United States (Mountain Time Zone)/Canada (AB Province)</option>
+                                        <option value="17">United States (Central Time Zone)</option>
+                                        <option value="18">United States (East Coast Time Zone)/Canada (ON/QC Province)/Panama</option>
+                                        <option value="19">Puerto Rico/Dominican Republic</option>
+                                        <option value="20">Hawaii</option>
+                                        <option value="21">UK/Portugal</option>
+                                        <option value="22">Europe-1: Sweden/Norway/Germany/Switzerland/France/Spain/Italy</option>
+                                        <option value="23">Europe-2: Finland/Greece</option>
+                                        <option value="24">South Africa</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
 
                         <div class='row row-data'>
-                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>時段:</div>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>Sessions:</div>
                             <div class='col-xs-9 col-lg-6 text-left form-row'>
                                 <div class='form form-group'>
                                     <?php foreach($event_list as $k => $v):?> <?php $id = $k+1; ?>
                                     <input type="checkbox" id="event_type_<?=$id;?>" name="event_type[<?=$id;?>]" value="<?=$id;?>" <?= ($k>10 && $k <14) ? "disabled" : "" ?>>
                                     <?php if($k>10 && $k <14) : ?>
-                                    <label for="event_type_<?=$id;?>" id="label_type_<?=$id;?>">第<?=$k+1;?>場：大家共同參加師尊時輪金剛護摩</label><br>
+                                    <label for="event_type_<?=$id;?>" id="label_type_<?=$id;?>"><?=$k+1;?>th Session：During this time period, please participate in the Kalachakra Homa Ceremony presided over by Grandmaster.</label><br>
                                     <?php else: ?>
                                     <label for="event_type_<?=$id;?>" id="label_type_<?=$id;?>"><?= $v[0];?></label><br>
                                     <?php endif;?>
@@ -386,28 +394,28 @@ $event_list = array(
                         </div>
 
                         <div class='row row-data'>
-                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>道場負責人:</div>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>Principal of Cultivation Venue:</div>
                             <div class='col-xs-9 col-lg-6 text-left form-row'>
                                 <div class='form form-group'>
-                                    <input type='text' name='chapter_pic' class='form-control' placeholder="道場負責人">
+                                    <input type='text' name='chapter_pic' class='form-control' placeholder="Principal of Cultivation Venue">
                                   </div>
                             </div>
                         </div>
 
                         <div class='row row-data'>
-                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>電郵:</div>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'><font color='red'>*</font>Email:</div>
                             <div class='col-xs-9 col-lg-6 text-left form-row'>
                                 <div class='form form-group'>
-                                    <input type='email' name='chapter_email' class='form-control' placeholder="電郵" required>
+                                    <input type='email' name='chapter_email' class='form-control' placeholder="Email" required>
                                   </div>
                             </div>
                         </div>
 
                         <div class='row row-data'>
-                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>參與弘法人員</div>
+                            <div class='col-xs-3 col-lg-4 strong_txt text-right'>Participating Dharma Propagating Personnel</div>
                             <div class='col-xs-9 col-lg-6 text-left'>
                                 <div class='form form-group'>
-                                    <input type='text' name='join_personnel' class='form-control' placeholder="可添多位。例：釋蓮A上師,釋蓮B教授師, 蓮花CC助教">
+                                    <input type='text' name='join_personnel' class='form-control' placeholder="Multiple entries are allowed, example: Master Shi Liana, Dharma Instructor Shi Lianb, Dharma Assistant Lianhuac">
                                 </div>
                             </div>
                         </div>
@@ -416,7 +424,7 @@ $event_list = array(
                             <div class='col-xs-12 col-lg-10'>
                                 <div class='form form-group text-right'>
                                     <button id="btn-check" class="btn btn-success">
-                                        登記
+                                        Submit
                                     </button>
                                 </div>
                             </div>
@@ -475,27 +483,27 @@ $event_list = array(
             $('#label_type_'+i).html(timezone_list[index][timezone_mapping[chapter_timezone.val()]]);
 
             if(i >= 12 && i < 15)
-                $('#label_type_'+i).html("第"+i+"場：大家共同參加師尊時輪金剛護摩");
+                $('#label_type_'+i).html(i+"th Session：During this time period, please participate in the Kalachakra Homa Ceremony presided over by Grandmaster.");
         });
     }
 
     function getTimeZoneList(eventDesc,myDate){
         return {
-            "6":   eventDesc + "（當地時間：" + addHours(myDate,  4) + "）",
-            "16":  eventDesc + "（當地時間：" + addHours(myDate,  3) + "）",
-            "5":   eventDesc + "（當地時間：" + addHours(myDate,  2) + "）",
-            "3":   eventDesc + "（當地時間：" + addHours(myDate,  1) + "）",
-            "2":   eventDesc + "（當地時間：" + addHours(myDate,  0) + "）",
-            "4":   eventDesc + "（當地時間：" + addHours(myDate,- 1) + "）",
-            "15":  eventDesc + "（當地時間：" + addHours(myDate,- 6) + "）",
-            "14":  eventDesc + "（當地時間：" + addHours(myDate,- 7) + "）",
-            "13":  eventDesc + "（當地時間：" + addHours(myDate,- 8) + "）",
-            "7":   eventDesc + "（當地時間：" + addHours(myDate,-11) + "）",
-            "11":  eventDesc + "（當地時間：" + addHours(myDate,-13) + "）",
-            "10":  eventDesc + "（當地時間：" + addHours(myDate,-14) + "）",
-            "9":   eventDesc + "（當地時間：" + addHours(myDate,-15) + "）",
-            "8":   eventDesc + "（當地時間：" + addHours(myDate,-16) + "）",
-            "12":  eventDesc + "（當地時間：" + addHours(myDate,-19) + "）",
+            "6":   eventDesc + "（Local Time：" + addHours(myDate,  4) + "）",
+            "16":  eventDesc + "（Local Time：" + addHours(myDate,  3) + "）",
+            "5":   eventDesc + "（Local Time：" + addHours(myDate,  2) + "）",
+            "3":   eventDesc + "（Local Time：" + addHours(myDate,  1) + "）",
+            "2":   eventDesc + "（Local Time：" + addHours(myDate,  0) + "）",
+            "4":   eventDesc + "（Local Time：" + addHours(myDate,- 1) + "）",
+            "15":  eventDesc + "（Local Time：" + addHours(myDate,- 6) + "）",
+            "14":  eventDesc + "（Local Time：" + addHours(myDate,- 7) + "）",
+            "13":  eventDesc + "（Local Time：" + addHours(myDate,- 8) + "）",
+            "7":   eventDesc + "（Local Time：" + addHours(myDate,-11) + "）",
+            "11":  eventDesc + "（Local Time：" + addHours(myDate,-13) + "）",
+            "10":  eventDesc + "（Local Time：" + addHours(myDate,-14) + "）",
+            "9":   eventDesc + "（Local Time：" + addHours(myDate,-15) + "）",
+            "8":   eventDesc + "（Local Time：" + addHours(myDate,-16) + "）",
+            "12":  eventDesc + "（Local Time：" + addHours(myDate,-19) + "）",
         }
     }
 

@@ -128,6 +128,7 @@ $event_timelist = array(
                                 <tbody>
                                     <?php for($i=1;$i<=24;$i++): ?>
                                     <tr <?= ($i >= 12 && $i <= 14)? "style='background:#FAA'" : "" ?>>
+                                        <?php if(isset($stats_by_time[$i]['group'])) ksort($stats_by_time[$i]['group']); ?>
                                         <td><?=$i;?></td>
                                         <td ><?= $event_timelist[$i-1][1]; ?></td>
                                         <td ><?= $event_timelist[$i-1][2]; ?></td>
@@ -137,6 +138,53 @@ $event_timelist = array(
                                         <td><?= isset($stats_by_time[$i]['master']) ? join(", ",$stats_by_time[$i]['master']) : ""; ?></td>
                                     </tr>
                                     <?php endfor; ?>
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class='row'>&nbsp;</div>
+
+
+                        <div class='row text-left'>
+                            <table id="example" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr class="info">
+                                        <td><b>No</b></td>
+                                        <td><b>國家</b></td>
+                                        <td><b>道場</b></td>
+
+                                        <?php for($i=1;$i<=24;$i++): ?>
+                                        <td><?php if($i >= 12 && $i <= 14):?><font color="A00"><?php endif; ?>
+                                            <b>第<?=$i;?>場</b><br/>[<?= isset($stats_by_time[$i]['group']) ? sizeof($stats_by_time[$i]['group']) : "0" ?>]
+                                        </td>
+                                        <?php endfor;?>
+
+                                        <td><b>參與弘法人員</b></td>
+                                        <td><b>弘法人員（個人登入）</b></td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php $k=0;?>
+                                    <?php if(isset($stats_sorted))foreach($stats_sorted as $country => $v): ?>
+                                    <?php foreach($v as $chapter_name => $v2): ?>
+                                    <?php foreach($v2 as $event_type => $data): $k++;?>
+                                    <?php $event_type_list = (json_decode($event_type,1));?>
+                                    <tr>
+                                        <td nowrap><?= $k;?></td>
+                                        <td nowrap><?= $country;?></td>
+                                        <td nowrap><?= $chapter_name;?></td>
+
+                                        <?php for($i=1;$i<=24;$i++): ?>
+                                        <td align="center" nowrap><?= (@$event_type_list[$i] == $i)? "&#x2714;":""; ?></td>
+                                        <?php endfor;?>
+
+                                        <td style='min-width:300px;'><?= $data['join_personnel'];?></td>
+                                        <td style='min-width:300px;'><?= $data['master_name'];?></td>
+                                    </tr>
+                                    <?php endforeach;?>
+                                    <?php endforeach;?>
+                                    <?php endforeach;?>
 
                                 </tbody>
                             </table>

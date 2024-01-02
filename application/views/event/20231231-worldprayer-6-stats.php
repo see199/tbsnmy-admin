@@ -11,12 +11,14 @@ foreach($stats as $k => $v){
     $stats_sorted[$v['chapter_country']][$v['chapter_name']][$v['event_type']] = $v;
     $chapter_joined[$v['chapter_name']] = $v['chapter_name'];
     $event_type_list = json_decode($v['event_type'],1);
-    foreach($event_type_list as $i){
-        @$event_counter[$i] += 1;
+    if(isset($event_type_list)){
+        foreach($event_type_list as $i){
+            @$event_counter[$i] += 1;
 
-        if($v['chapter_name']) $stats_by_time[$i]['group'][$v['chapter_country'].$v['chapter_name']] = $v['chapter_country'].$v['chapter_name'];
-        if($v['master_name']) $stats_by_time[$i]['master'][$v['master_name']] = $v['master_name'];
-        if($v['join_personnel']) $stats_by_time[$i]['join'][] = $v['join_personnel'];
+            if($v['chapter_name']) $stats_by_time[$i]['group'][$v['chapter_country'].$v['chapter_name']] = $v['chapter_country'].$v['chapter_name'];
+            if($v['master_name']) $stats_by_time[$i]['master'][$v['master_name']] = $v['master_name'];
+            if($v['join_personnel']) $stats_by_time[$i]['join'][] = $v['join_personnel'];
+        }
     }
 }
 
@@ -214,6 +216,7 @@ $event_timelist = array(
                                 </thead>
                                 <tbody>
                                     <?php foreach($stats as $k => $data): ?>
+                                    <?php if(!($data['event_type'])) $data['event_type'] = "{}"; ?>
                                     <tr>
                                         <td nowrap><?= $k+1;?></td>
                                         <td><?= $data['create_date'];?></td>

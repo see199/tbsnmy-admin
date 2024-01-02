@@ -178,6 +178,18 @@ function delete_data(){
 
     <div class="row">
         <div class="box">
+            <div class="col-lg-8 col-lg-offset-2 text-right">
+                <a class="btn btn-info" href="<?= base_url('wenxuan/lists/export_csv_unsent_package/'.$year); ?>"><i class="fa fa-download" aria-hidden="true"></i> Export CSV (EasyParcel)</a>
+
+                <a class="btn btn-info" href="<?= base_url('wenxuan/lists/export_csv_blessing/'.$year); ?>"><i class="fa fa-download" aria-hidden="true"></i> Export CSV (報名法會)</a>
+            </div>
+            <br /><br />
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="box">
             <div class="col-lg-8 col-lg-offset-2">
 
                 
@@ -223,7 +235,7 @@ function delete_data(){
                                 <?php foreach($total as $package_id => $t):?>
                                 <td><b><?= ($package_id == $c['package'][$year]['package_id']) ? '<i class="fa fa-check" aria-hidden="true"></i>' : ""; ?></b></td>
                                 <?php endforeach;?>
-                                <td><b><?= $c['package'][$year]['gift_taken'] ? '<i class="fa fa-check" aria-hidden="true"></i>' : ""; ?></b></td>
+                                <td><b><?= $c['package'][$year]['gift_taken'] ? 'Sent' : ""; ?></b></td>
                                 <td><b><?= $c['package'][$year]['payment_done'] ? '<i class="fa fa-check" aria-hidden="true"></i>' : "" ?></b></td>
                                 <td><b><?= $c['package'][$year]['fullpayment'] ? '一次付清' : "分期付款" ?></b></td>
                                 <td><?php foreach($c['package'] as $pyear => $p):?>

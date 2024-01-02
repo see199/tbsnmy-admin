@@ -325,6 +325,87 @@ class Lists extends CI_Controller {
 
 	}
 
+	public function export_csv_unsent_package($year=''){
+		if(!$year) $year = date('Y');
+
+		$data  = $this->data;
+		$package_data = array();
+
+		$list = $this->wenxuan_model->get_subscriber_list($year);
+		//echo'<pre>';print_r($list);
+
+		// Preset Value
+		$header_args = array('No','Category','Parcel Content','Parcel Value','Weight','Pickup Date','Sender Name','Sender Contact','Sender Address','Sender Postcode','Sender City','Receiver Name','Receiver Contact','Receiver Address','Receiver Postcode','Receiver City');
+		$preset_data = array('Fashion And Accessories','Gift and Wallet','100','1',date('Y-m-d',strtotime('+1 day')),'PABT Chen Foh Chong Malaysia','\'0333749399','1A, Jalan Perawas, Lebuh Setaka, Taman Chi Liung','41200','Klang');
+
+
+		$counter = 0;
+		foreach($list as $wenxuan_id => $subscriber){
+
+			$package = $subscriber['package'][$year];
+
+			// Only sent package that full payment is made & gift not taken
+			if(!$package['gift_taken'] && $package['status'] == 1){
+				//print_pre($package);
+
+				$counter++;
+				$package_data[] = array_merge(array($counter),$preset_data,array(
+					$package['wenxuan_name_receiver'],
+					$package['wenxuan_contact'],
+					$package['wenxuan_address1'].' '.$package['wenxuan_address2'],
+					$package['wenxuan_postcode'],
+					$package['wenxuan_city'],
+				));
+			}
+		}
+
+		//print_pre($package_data);
+		$this->generate_csv($header_args,$package_data);
+	}
+
+	public function export_csv_blessing($year=''){
+		if(!$year) $year = date('Y');
+
+		$data  = $this->data;
+		$blessing_data = array();
+
+		$list = $this->wenxuan_model->get_subscriber_list($year);
+		//echo'<pre>';print_r($list);
+
+		// Preset Value
+		$header_args = array('姓名','年齡','地址','祈願');
+
+		foreach($list as $wenxuan_id => $subscriber){
+			$package = $subscriber['package'][$year];
+			foreach(json_decode($package['register_blessing'],1) as $v){
+				$blessing_data[] = $v;
+			}
+		}
+
+		//print_pre($blessing_data);
+		$this->generate_csv($header_args,$blessing_data,'blessing_list');
+	}
+
+	private function generate_csv($header_args,$data,$filename='csv_export'){
+
+		ob_start();
+		header('Content-Type: text/csv; charset=utf-8');
+		header('Content-Disposition: attachment; filename='.$filename.'.csv');
+		ob_end_clean();
+
+		$output = fopen( 'php://output', 'w' );
+		fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
+		fputcsv( $output, $header_args );
+
+		foreach( $data as $data_item ){
+			fputcsv( $output, $data_item );
+		}
+
+		fclose( $output );
+		exit;
+
+	}
+
 }
 
 ?>

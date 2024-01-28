@@ -227,7 +227,12 @@ function delete_data(){
                                 $email_list['email'][$c['wenxuan_email']] = rtrim($c['wenxuan_email']); 
                                 if(!filter_var(rtrim($c['wenxuan_email']),FILTER_VALIDATE_EMAIL)) $email_list['name'][$c['wenxuan_email']][] = rtrim($c['wenxuan_name']); 
                             ?>
-                            <tr>
+                            <!-- Highlight if Payment not Fully Paid and Gift Sent -->
+                            <?php if(!$c['package'][$year]['payment_done'] && !$c['package'][$year]['fullpayment'] && $c['package'][$year]['gift_taken']): ?><tr class='danger'>
+                            <!-- Highlight if Payment Fully Paid and Gift not yet Sent -->
+                            <?php elseif($c['package'][$year]['payment_done'] && $c['package'][$year]['fullpayment'] && !$c['package'][$year]['gift_taken']): ?><tr class='success'>
+                            <?php else: ?><tr>
+                            <?php endif; ?>
                                 <td><textarea style="display:none;"><?= json_encode($c); ?></textarea>
                                     <a href='javascript:void(0)' onclick="load_box($(this).prev().val())" data-toggle="modal" data-target="#myModal"><?= $c['wenxuan_name']; ?></a></td>
                                 <td><?= $c['package'][$year]['create_date']; ?></td>

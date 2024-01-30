@@ -202,12 +202,16 @@ function delete_data(){
                             <td colspan=<?=sizeof($total);?>><b>功德主方案</b></td>
                             <td rowspan=2><b>已發贈品</b></td>
                             <td rowspan=2><b>完成付款</b></td>
+                            <td rowspan=2><b>報-訂</b></td>
+                            <td rowspan=2><b>報-送</b></td>
+                            <td rowspan=2><b>燃-訂</b></td>
+                            <td rowspan=2><b>燃-送</b></td>
                             <td rowspan=3><b>一次/分期</b></td>
                             <td rowspan=3><b><?=$year;?>年<br />報名表格</b></td>
                         </tr>
                         <tr class="info">
                             <?php foreach($total as $package_id => $t):?>
-                            <td><b><?= $package[$package_id]['package_name'].' (RM '.$package[$package_id]['package_amount'].')'; ?></b></td>
+                            <td><b><?= $package[$package_id]['package_name'].'<br />(RM '.$package[$package_id]['package_amount'].')'; ?></b></td>
                             <?php endforeach;?>
                         </tr>
                         <tr class="success">
@@ -217,6 +221,16 @@ function delete_data(){
                             <?php endforeach;?>
                             <td><b><?= $gift_sent; ?></b></td>
                             <td><b><?= $payment_done; ?></b></td>
+                            <?php $tbtotal = array();foreach($list as $c):
+                                @$tbtotal['tbnews_free'] += $c['tbnews_free'];
+                                @$tbtotal['tbnews_paid'] += $c['tbnews_paid'];
+                                @$tbtotal['randeng_free'] += $c['randeng_free'];
+                                @$tbtotal['randeng_paid'] += $c['randeng_paid'];
+                            endforeach;?>
+                            <td><b><?= $tbtotal['tbnews_free']; ?></b></td>
+                            <td><b><?= $tbtotal['tbnews_paid']; ?></b></td>
+                            <td><b><?= $tbtotal['randeng_free']; ?></b></td>
+                            <td><b><?= $tbtotal['randeng_paid']; ?></b></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -242,6 +256,10 @@ function delete_data(){
                                 <?php endforeach;?>
                                 <td><b><?= $c['package'][$year]['gift_taken'] ? 'Sent' : ""; ?></b></td>
                                 <td><b><?= $c['package'][$year]['payment_done'] ? '<i class="fa fa-check" aria-hidden="true"></i>' : "" ?></b></td>
+                                <td><?= $c['tbnews_free'];?></td>
+                                <td><?= $c['tbnews_paid'];?></td>
+                                <td><?= $c['randeng_free'];?></td>
+                                <td><?= $c['randeng_paid'];?></td>
                                 <td><b><?= $c['package'][$year]['fullpayment'] ? '一次付清' : "分期付款" ?></b></td>
                                 <td><?php foreach($c['package'] as $pyear => $p):?>
                                         <?php $form_full_url = ($pyear == $year ) ? $form_url.$p['md5_id'] : "" ?>

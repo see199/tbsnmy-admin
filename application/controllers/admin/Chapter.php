@@ -172,6 +172,33 @@ class Chapter extends CI_Controller {
 		$this->load->view('admin/footer');
 	}
 
+	public function list_all(){
+		$data = $this->data;
+
+		$this->load->model('api_model');
+		$this->load->config('tbsparam');
+
+		$chapters = json_decode($this->api_model->get_all_chapter_details(),1);
+
+		$list = $sorted_list = array();
+
+		foreach($chapters as $c){
+			//echo '<br />-'.$c['state']. ' - '.$c['chapter_id'];
+			$list[$c['state']][$c['chapter_id']] = $c;
+		}
+		$state_list = array('Sabah','Sarawak','Perlis','Kedah','Penang','Perak','Selangor','W.Persekutan','Melaka','Negeri Sembilan','Johor','Kelantan','Terengganu','Pahang');
+		foreach($state_list as $v) $sorted_list[$v] = $list[$v];
+
+		$data['contact'] = $sorted_list;
+		$data['chapter_status'] = $this->config->item('chapter_status');
+		echo $this->config->item('chapter_status');;
+
+		$this->load->view('admin/header', $data);
+		$this->load->view('admin/navigation', $data);
+		$this->load->view('admin/chapter_list_all_view',$data);
+		$this->load->view('admin/footer');
+	}
+
 
 	
 

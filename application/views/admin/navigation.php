@@ -217,6 +217,10 @@
                     <li>
                         <a href="<?= base_url(); ?>admin/event/detail"><i class="fa fa-plus-square fa-fw"></i> <?= lang('glb_nav_event_add'); ?></a>
                     </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="<?= base_url(); ?>admin/chapter/list_all"><i class="fa fa-bank fa-fw"></i> 全馬道場列表</a>
+                    </li>
 
                   </ul>
                 </li>

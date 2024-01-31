@@ -95,7 +95,7 @@ class Chapter extends CI_Controller {
 				return $d;
 			}
 			foreach(str_split(explode("-",$d['nric'])[0]) as $i){
-				$cal += $i;
+				if(is_numeric($i)) $cal += $i;
 			}
 			if($cal > 9){
 				foreach(str_split($cal) as $i){

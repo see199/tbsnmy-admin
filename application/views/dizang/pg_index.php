@@ -104,8 +104,9 @@ $(document).ready(function() {
 } );
 </script>
 <?php 
-//CS can only view & search, cannot edit & save
-$cs_email = array('cs@tbsn.my','share@tbsn.my');
+//Others can only view & search, cannot edit & save
+//$cs_email = array('cs@tbsn.my','share@tbsn.my');
+$admin_email = array('see199@gmail.com','tandy@tbsn.my','ahlian76@gmail.com','boyeone@gmail.com','xuan.lianxuan@gmail.com');
 ?>
 
 <div id="page-wrapper">
@@ -122,7 +123,7 @@ $cs_email = array('cs@tbsn.my','share@tbsn.my');
         <div class="box">
             <div class="col-lg-10 col-lg-offset-1">
 
-                <?php if(!in_array($google_email,$cs_email)): ?>
+                <?php if(in_array($google_email,$admin_email)): ?>
                 <div class='text-right'>
                     <a href="javascript:void(0)" onclick="load_box()" data-toggle="modal" data-target="#myModal" class='btn btn-success'><i class="fa fa-plus" aria-hidden="true"></i> 新增</a>
                 </div>
@@ -150,7 +151,7 @@ $cs_email = array('cs@tbsn.my','share@tbsn.my');
                     </thead>
                 </table>
 
-                <?php if(!in_array($google_email,$cs_email)): ?>
+                <?php if(in_array($google_email,$admin_email)): ?>
                 打印：
                 <input type="submit" class='btn btn-success' name="action" value="儀軌">
                 <input type="submit" class='btn btn-success' name="action" value="備錄">
@@ -196,7 +197,7 @@ $cs_email = array('cs@tbsn.my','share@tbsn.my');
                 </table>
             </div>
             
-            <?php if($google_email != 'cs@tbsn.my'): ?>
+            <?php if(in_array($google_email,$admin_email)): ?>
             <div class="modal-footer">
                 <button type="button" id="btn_modal_update" class="btn btn-success" onclick="post_data(0);" data-dismiss="modal"><i class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></i> Update</button>
                 <button type="button" id="btn_modal_cancel" class="btn btn-warning" data-dismiss="modal"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Cancel</button>

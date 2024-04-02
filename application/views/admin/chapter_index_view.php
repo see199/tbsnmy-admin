@@ -357,6 +357,37 @@ function toggle_form(){
                     <div class='row'>&nbsp;</div>
 
                     <div class='row col-xs-10 col-xs-offset-1'>
+                        <div class='h3 strong_txt'>宗委會相關</div>
+                    </div>
+
+                    <div class='row row-data col-xs-10 col-xs-offset-1'>
+                        <div class='col-xs-3 strong_txt'>真佛編號:</div>
+                        <div class='col-xs-9'>
+                            <div class='display'><?= $chapter['tb_id']; ?></div>
+                            <div class='form form-group'><input type='text' class='form-control col-xs-8' name='chapter[tb_id]' value='<?= $chapter['tb_id']; ?>' /></div>
+                        </div>
+                    </div>
+
+                    <div class='row row-data col-xs-10 col-xs-offset-1'>
+                        <div class='col-xs-3 strong_txt'>分堂代碼:</div>
+                        <div class='col-xs-9'>
+                            <div class='display'><?= $chapter['tb_chapter_id']; ?></div>
+                            <div class='form form-group'><input type='text' class='form-control col-xs-8' name='chapter[tb_chapter_id]' value='<?= $chapter['tb_chapter_id']; ?>' /></div>
+                        </div>
+                    </div>
+
+                    <div class='row row-data col-xs-10 col-xs-offset-1'>
+                        <div class='col-xs-3 strong_txt'>續證截止:</div>
+                        <div class='col-xs-9'>
+                            <div class='display'><?= $chapter['tb_cert_renew']; ?></div>
+                            <div class='form form-group'><input type='text' class='form-control col-xs-8' name='chapter[tb_cert_renew]' value='<?= $chapter['tb_cert_renew']; ?>' /></div>
+                        </div>
+                    </div>
+
+                    <div class='row'>&nbsp;</div>
+                    <div class='row'>&nbsp;</div>
+
+                    <div class='row col-xs-10 col-xs-offset-1'>
                         <div class='h3 strong_txt'><?= lang('col_title_chapter_member'); ?></div>
                     </div>
 

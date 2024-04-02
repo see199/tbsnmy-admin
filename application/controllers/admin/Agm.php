@@ -163,7 +163,11 @@ class Agm extends CI_Controller {
 				'liexi' => array(),
 				'chuxi' => array(),
 				'total' => array('chuxi' => 0,'liexi' => 0, 'xianchang' => 0)),
-			'P' => array(),
+			'P' => array(
+				'liexi' => array(),
+				'chuxi' => array(),
+				'total' => array('chuxi' => 0,'liexi' => 0, 'xianchang' => 0),
+			),
 		);
 
 		foreach($list as $k => $v){

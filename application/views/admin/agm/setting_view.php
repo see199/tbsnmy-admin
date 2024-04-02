@@ -41,14 +41,16 @@
             <div class="col-lg-6 col-lg-offset-3">
                 <form class='form-horizontal' method="post" action="<?= base_url('admin/agm/setting');?>">
                 <table id="example" class="display table table-striped table-bordered" cellspacing="0" width="100%">
-                    <tr><td>第幾屆：</td><td><input type='text' class='form-control' name="session" value="<?= $setting['session']; ?>" /></td></tr>
-                    <tr><td>年份：</td><td><input type='text' class='form-control' name="year" value="<?= $setting['year']; ?>" /></td></tr>
-                    <tr><td>會員大會日期：</td><td><input type='text' class='form-control' name="date" value="<?= $setting['date']; ?>" /></td></tr>
-                    <tr><td>會員大會時間：</td><td><input type='text' class='form-control' name="time" value="<?= $setting['time']; ?>" /></td></tr>
-                    <tr><td>ZOOM ID：</td><td><input type='text' class='form-control' name="zoom_id" value="<?= $setting['zoom_id']; ?>" /></td></tr>
+                    <tr class='success'><td>第幾屆：</td><td><input type='text' class='form-control' name="session" value="<?= $setting['session']; ?>" /></td></tr>
+                    <tr class='success'><td>年份：</td><td><input type='text' class='form-control' name="year" value="<?= $setting['year']; ?>" /></td></tr>
+                    <tr class='success'><td>會員大會日期：</td><td><input type='text' class='form-control' name="date" value="<?= $setting['date']; ?>" /></td></tr>
+                    <tr class='success'><td>會員大會時間：</td><td><input type='text' class='form-control' name="time" value="<?= $setting['time']; ?>" /></td></tr>
+                    <tr class='success'><td>ZOOM ID：</td><td><input type='text' class='form-control' name="zoom_id" value="<?= $setting['zoom_id']; ?>" /></td></tr>
+                    <tr class='success'><td colspan=2>** <font color='green'><b>Row in green: To be edited & updated</b></font></td></tr>
                     <tr><td>Account ID：</td><td><input type='text' class='form-control' name="account_id" value="<?= $setting['account_id']; ?>" /></td></tr>
                     <tr><td>Client ID：</td><td><input type='text' class='form-control' name="client_id" value="<?= $setting['client_id']; ?>" /></td></tr>
-                    <tr><td>Client Secret：</td><td><input type='text' class='form-control' name="client_secret" value="<?= $setting['client_secret']; ?>" /><br /><small>Generate at: <a href="https://marketplace.zoom.us/develop/apps/3EJzrY6ZTPGzGLbiLEd5qQ/credentials" target="_blank">https://marketplace.zoom.us/develop/apps/3EJzrY6ZTPGzGLbiLEd5qQ/credentials</a><br />Zoom Account: tbsdade@gmail.com</small></td></tr>
+                    <tr><td>Client Secret：</td><td><input type='text' class='form-control' name="client_secret" value="<?= $setting['client_secret']; ?>" /><br /><small>Generate at: <a href="https://marketplace.zoom.us/develop/apps/3EJzrY6ZTPGzGLbiLEd5qQ/credentials" target="_blank">https://marketplace.zoom.us/develop/apps/3EJzrY6ZTPGzGLbiLEd5qQ/credentials</a><br />Zoom Account: tbsdade@gmail.com
+                    <br/>Account ID, Client ID, Client Secret: all can be viewed at above link</small></td></tr>
                     
                     <tr><td colspan=2 align='right'>
                         <button type="submit" class="btn btn-success">

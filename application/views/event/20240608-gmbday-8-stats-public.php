@@ -26,7 +26,7 @@ foreach($stats as $k => $v){
 // Slot | TW Time | SEA Time
 $event_timelist = array(
     array( '1',"2024-<br/>06-08<br/>10AM","2024-<br/>06-07<br/>07PM"),
-    array( '2',"2024-<br/>06-08<br/>12PM","2024-<br/>06-07<br/>11PM"),
+    array( '2',"2024-<br/>06-08<br/>02PM","2024-<br/>06-07<br/>11PM"),
     array( '3',"2024-<br/>06-08<br/>05PM","2024-<br/>06-08<br/>02AM"),
     array( '4',"2024-<br/>06-08<br/>08PM","2024-<br/>06-08<br/>05AM"),
     array( '5',"2024-<br/>06-09<br/>01AM","2024-<br/>06-08<br/>10AM"),

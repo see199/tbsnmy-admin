@@ -55,7 +55,8 @@ class Agm extends CI_Controller {
 		// Place AJK into chapter
 		$chapter_list = array();
 		foreach($this->agm_model->get_chapter_list($year) as $chapter){
-			$chapter['ajk'] = @array_merge(array(""=>"-N/A-"),$chapter_ajk[$chapter['chapter_id']]);
+			//print_pre($chapter_ajk);
+			$chapter['ajk'] = @array_merge(array(""=>"-N/A-"),isset($chapter_ajk[$chapter['chapter_id']])?$chapter_ajk[$chapter['chapter_id']]:array());
 			$chapter['agm'] = @$agm_attendance[$chapter['chapter_id']];
 			$chapter_list[$chapter['chapter_id']] = $chapter;
 		}

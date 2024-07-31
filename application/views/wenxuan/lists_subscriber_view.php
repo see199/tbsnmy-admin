@@ -238,8 +238,10 @@ function delete_data(){
                         <?php foreach($list as $c): ?>
                             <?php 
                                 // For Checking Purpose
-                                $email_list['email'][$c['wenxuan_email']] = rtrim($c['wenxuan_email']); 
                                 if(!filter_var(rtrim($c['wenxuan_email']),FILTER_VALIDATE_EMAIL)) $email_list['name'][$c['wenxuan_email']][] = rtrim($c['wenxuan_name']); 
+                                else
+                                    $email_list['email'][$c['wenxuan_email']] = rtrim($c['wenxuan_email']);
+
                             ?>
                             <!-- Highlight if Payment not Fully Paid and Gift Sent -->
                             <?php if(!$c['package'][$year]['payment_done'] && !$c['package'][$year]['fullpayment'] && $c['package'][$year]['gift_taken']): ?><tr class='danger'>
@@ -280,7 +282,8 @@ function delete_data(){
             <div class="col-lg-8 col-lg-offset-2 form-group">
                 <h2>Email List -- <small>to copy to <a href="https://app.mailjet.com/contacts/lists/edit/YL" target="eml">MailJet subscription</a></small></h2>
                 <?php if($google_email == 'see199@gmail.com') print_pre($email_list['name']);?>
-                <textarea class="form-control w-100" rows="5"><?php echo implode(", ",$email_list['email']); ?></textarea>
+                <textarea class="form-control w-100" rows="5"><?php echo implode("\n ",$email_list['email']); ?></textarea>
+                <br /><br />
             </div>
         </div>
     </div>

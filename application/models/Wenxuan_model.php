@@ -92,7 +92,8 @@ class Wenxuan_model extends CI_Model {
 			->join('tbs_wenxuan_subscriber_package p','y.package_id = p.package_id', 'left')
 			->join('tbs_wenxuan_subscriber s','s.wenxuan_id = y.wenxuan_id')
 			->where('p.year =',$year)
-			->where('s.type','contact');
+			->where('s.type','contact')
+			->order_by('y.create_date');
 		$i = $this->db->get();
 		$res = array();
 		foreach($i->result_array() as $r){

@@ -282,7 +282,7 @@ function delete_data(){
             <div class="col-lg-8 col-lg-offset-2 form-group">
                 <h2>Email List -- <small>to copy to <a href="https://app.mailjet.com/contacts/lists/edit/YL" target="eml">MailJet subscription</a></small></h2>
                 <?php if($google_email == 'see199@gmail.com') print_pre($email_list['name']);?>
-                <textarea class="form-control w-100" rows="5"><?php echo implode("\n ",$email_list['email']); ?></textarea>
+                <textarea class="form-control w-100" rows="5"><?php echo implode("\n",$email_list['email']); ?></textarea>
                 <br /><br />
             </div>
         </div>

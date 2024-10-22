@@ -43,10 +43,13 @@ class Index extends CI_Controller {
         $this->session->set_userdata(array(
             'chapter_used' => $chapter_used,
         ));
-        if($chapter_page == "chapter_page")
+        /*if($chapter_page == "chapter_page")
         	redirect(base_url("admin/chapter"),'refresh');
         else
         	redirect($this->input->server('HTTP_REFERER'),'refresh');
+        */
+        // All redirect to chapter page
+        redirect(base_url("admin/chapter"),'refresh');
 	}
 
 	public function export_db(){

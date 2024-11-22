@@ -35,6 +35,12 @@
                   </ul>
                 </li>
 
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-bar-chart"></i> Statistics <span class="caret"></span></a>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="<?= base_url(); ?>wenxuan/lists/stats_tbsnews"><i class="fa fa-newspaper-o"></i> 真佛報</a></li>
+                  </ul>
+                </li>
 
 
                 <li><a href="http://form.tbsn.my/wenxuan" target="_form"><i class="fa fa-book fa-fw"></i> 文宣方案表格</a></li>

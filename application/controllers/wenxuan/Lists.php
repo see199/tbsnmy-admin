@@ -406,6 +406,45 @@ class Lists extends CI_Controller {
 
 	}
 
+	public function stats_tbsnews($year = ''){
+		$data = $this->data;
+
+		if(!$year) $year = date('Y');
+
+		$stat = array('view'/*,'download'*/);
+		$res  = array(
+			'year' => $year,
+			'view'     => array('total' => 0),
+			'download' => array('total' => 0),
+		);
+
+
+		foreach($stat as $type){
+			foreach(explode("\n",read_file("application/logs/tbsnews_".$type."_".$year.".log")) as $row){
+
+				if($row){
+					list($issue,$date) = explode("\t",$row);
+					list($y1,$y2,$mm,$dd,,,) = str_split($date,2);
+
+					@$res[$type]['total'] += 1;
+					@$res[$type]['details'][(int)$mm]['total'] += 1;
+					@$res[$type]['details'][(int)$mm]['details'][(int)$dd] += 1;
+					@$res['issue'][$issue]['total'] += 1;
+					if(!isset($res['issue'][$issue]['date']))
+						@$res['issue'][$issue]['date'] = date('Y-m-d',calculate_tbsnews_date($issue));
+				}
+			}
+		}
+		krsort($res['issue']);
+		$data = array_merge($data,$res);
+
+		$this->load->view('wenxuan/header', $data);
+		$this->load->view('wenxuan/navigation', $data);
+		$this->load->view('wenxuan/tbsnews_stats',$data);
+		$this->load->view('wenxuan/footer');
+		
+	}
+
 }
 
 ?>

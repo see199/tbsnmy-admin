@@ -160,7 +160,7 @@ class Api extends CI_Controller {
 	public function tbsnews_stats($year = ''){
 		if(!$year) $year = date('Y');
 
-		$data = array('view','download');
+		$data = array('view'/*,'download'*/);
 		$res  = array(
 			'year' => $year,
 			'view'     => array('total' => 0),

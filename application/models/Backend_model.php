@@ -241,4 +241,29 @@ class Backend_model extends CI_Model {
 		$i = $this->db->query($query);
 		return ($i->num_rows() > 0) ? $i->result_array() : array();
 	}
+
+	public function get_event_tbf_list(){
+		$this->db = $this->load->database('local', TRUE);
+
+		// Get All Contact
+		$this->db->select('*')
+			->from('zwh_event');
+		$i = $this->db->get();
+		return ($i->num_rows() > 0) ? $i->result_array() : array();
+	}
+
+	public function replace_tbf_event($event,$event_id){
+		$this->db = $this->load->database('local', TRUE);
+		$this->db->replace('zwh_event',array_merge(array('event_id' => $event_id),$event));
+
+		return ($this->db->affected_rows() != 1) ? false : true;
+	}
+
+	public function delete_tbf_event($event_id){
+
+		$this->db = $this->load->database('local', TRUE);
+		$this->db->delete('zwh_event', array('event_id' => $event_id));
+
+
+	}
 }

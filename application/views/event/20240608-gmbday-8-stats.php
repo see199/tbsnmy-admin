@@ -222,6 +222,5 @@ $event_timelist = array(
         </div>
         <div class='row'>&nbsp;</div>
     </div>
-
 </body>
 </html>

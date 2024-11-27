@@ -221,6 +221,65 @@ class Event extends CI_Controller {
 
         return $result;
     }
+
+
+    // For 宗委會 Event
+    public function tbf(){
+    	$data = $this->data;
+    	$data['events'] = $this->backend_model->get_event_tbf_list();
+
+        $this->load->view('admin/header', $data);
+		$this->load->view('admin/navigation', $data);
+		$this->load->view('admin/event_tbf_view',$data);
+		$this->load->view('admin/footer');
+    }
+
+	public function ajax_update_tbf(){
+		$post_data = $this->input->post();
+		$this->backend_model->replace_tbf_event($post_data,$post_data['event_id']);
+		echo 1;
+	}
+
+	public function ajax_delete_tbf(){
+		$post_data = $this->input->post();
+		$this->backend_model->delete_tbf_event($post_data['event_id']);
+		echo 1;
+	}
+
+	public function ajax_load_view($view_name){
+		// Define the path to the view file
+		$view_path = APPPATH . 'views/event/' . $view_name . '.php';
+
+		// Check if the view file exists
+        if (!file_exists($view_path)) {
+            // Create the view file with some default content
+            $default_content = "<h1>This is the new view: $view_name</h1>";
+            file_put_contents($view_path, $default_content);
+        }
+
+        // Load the content of the view file for editing
+        $data['content'] = file_get_contents($view_path);
+        $data['view_name'] = $view_name;
+
+        echo json_encode($data);
+	}
+
+	public function ajax_save_view($view_name){
+
+		// Get data from POST request
+        $view_name = $this->input->post('view_name');
+        $content = $this->input->post('content');
+
+        // Define the path to the view file
+        $view_path = APPPATH . 'views/event/' . $view_name . '.php';
+
+        // Save the content to the view file
+        if (file_put_contents($view_path, $content) !== false) {
+            echo 1;
+        } else {
+            echo "Error saving the file.";
+        }
+	}
 }
 
 ?>

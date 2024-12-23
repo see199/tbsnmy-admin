@@ -135,7 +135,7 @@ function delete_data(){
     <!-- Statistic Chart -->
     <div class="row">
         <div class="box">
-            <div class="col-lg-8 col-lg-offset-2 text-center">
+            <div class="col-lg-6 col-lg-offset-3 text-center">
                 <canvas id="myChart"></canvas>
             </div>
         </div>
@@ -175,7 +175,7 @@ function delete_data(){
 
     <div class="row">
         <div class="box">
-            <div class="col-lg-8 col-lg-offset-2 text-center">
+            <div class="col-lg-10 col-lg-offset-1 text-center">
                 <h1>文宣功德主名單（ <?=$year;?> 年）</h1>
             </div>
         </div>
@@ -184,7 +184,7 @@ function delete_data(){
 
     <div class="row">
         <div class="box">
-            <div class="col-lg-8 col-lg-offset-2 text-right">
+            <div class="col-lg-10 col-lg-offset-1 text-right">
                 <a class="btn btn-info" href="<?= base_url('wenxuan/lists/export_csv_unsent_package/'.$year); ?>"><i class="fa fa-download" aria-hidden="true"></i> Export CSV (EasyParcel)</a>
 
                 <a class="btn btn-info" href="<?= base_url('wenxuan/lists/export_csv_blessing/'.$year); ?>"><i class="fa fa-download" aria-hidden="true"></i> Export CSV (報名法會)</a>
@@ -196,7 +196,7 @@ function delete_data(){
 
     <div class="row">
         <div class="box">
-            <div class="col-lg-8 col-lg-offset-2">
+            <div class="col-lg-10 col-lg-offset-1">
 
                 
                 <table id="example" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">

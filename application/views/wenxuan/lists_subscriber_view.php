@@ -94,6 +94,11 @@ function post_data(refresh_page){
         $(this).find(':input[type=checkbox]').each(function(){
             data['package_'+$(this).attr("id")] = $(this).prop('checked');
         });
+        $(this).find(':input[type=dropdown]').each(function(){
+            data['package_'+$(this).attr("id")] = $(this).val();
+        });
+        
+
     });
     
     $.ajax({
@@ -123,6 +128,7 @@ function delete_data(){
 }
 
 </script>
+<?php $source = ['web' => '<i class="fa fa-globe" aria-hidden="true"></i>', 'desk' => '<i class="fa fa-phone" aria-hidden="true"></i>']; ?>
 
 <div id="page-wrapper">
 
@@ -199,6 +205,7 @@ function delete_data(){
                             <td rowspan=2><b>名字<br /><small>** 點擊可查看 / 更新資料 **</small></b></td>
                             <td rowspan=2><b>登記日期</b></td>
                             <td rowspan=2><b>聯絡</b></td>
+                            <td rowspan=2><b>來源</b></td>
                             <td colspan=<?=sizeof($total);?>><b>功德主方案</b></td>
                             <td rowspan=2><b>已發贈品</b></td>
                             <td rowspan=2><b>完成付款</b></td>
@@ -215,7 +222,7 @@ function delete_data(){
                             <?php endforeach;?>
                         </tr>
                         <tr class="success">
-                            <td colspan=3><b>總數</b></td>
+                            <td colspan=4><b>總數</b></td>
                             <?php foreach($total as $package_id => $t):?>
                             <td><b><?= $t; ?></b></td>
                             <?php endforeach;?>
@@ -253,6 +260,7 @@ function delete_data(){
                                     <a href='javascript:void(0)' onclick="load_box($(this).prev().val())" data-toggle="modal" data-target="#myModal"><?= $c['wenxuan_name']; ?></a></td>
                                 <td><?= $c['package'][$year]['create_date']; ?></td>
                                 <td><?= $c['wenxuan_contact']; ?></td>
+                                <td><?= $source[$c['package'][$year]['source']]; ?></td>
                                 <?php foreach($total as $package_id => $t):?>
                                 <td><b><?= ($package_id == $c['package'][$year]['package_id']) ? '<i class="fa fa-check" aria-hidden="true"></i>' : ""; ?></b></td>
                                 <?php endforeach;?>

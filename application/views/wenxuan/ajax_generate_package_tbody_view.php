@@ -6,6 +6,9 @@
         <?php endforeach;?>
     </select>
     <br />* <?= ($cp['fullpayment']) ? "一次付清" : "分期付款"; ?>
+    <br /><br />Source:
+    <?php echo form_dropdown('',['desk' => '知客', 'web' => '網站'],$cp['source'],['class' => 'custom-select form-control','id' => $cp['package_id'].'_source']); ?>
+
 </td>
 <td><input type="date" id='<?=$cp['package_id'];?>_start_date' value="<?= $cp['start_date']; ?>"> - 
     <input type="date" id='<?=$cp['package_id'];?>_end_date' value="<?= $cp['end_date']; ?>"></td>

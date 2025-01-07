@@ -264,7 +264,7 @@ $event_list = array(
 
                         <div class='row'>
                             <h2 class='text-center'>2025 True Buddha School Praying for Buddha to Stay in the World and Praying for the World Event<br />Grand Worldwide Online Feast Offering to Golden Mother Ceremony Dedicated to Buddha Remaining in the World and for Blessing of the World.</h2>
-                            <br /><img style='width: 100%; max-width:920px;' src='<?=$event['banner_url'];?>' />
+                            <br /><img style='width: 100%; max-width:920px;' src='https://en.tbsn.org/images/2024_12_15/pray-for-world-en.jpg' />
                             <br /><br /><div class='text-justify'>
 <font color="red">
 <br />Love is a compassionate and selfless force.

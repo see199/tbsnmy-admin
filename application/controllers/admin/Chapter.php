@@ -60,6 +60,9 @@ class Chapter extends CI_Controller {
 		$chapter_bannerimg = 'asset/img/banner_'.$chapter['url_name'].'.jpg';
 		$chapter['bannerimgurl'] = (file_exists($chapter_bannerimg)) ? $chapter_bannerimg : $default_bannerimg;
 
+		//NAS Location
+		$chapter['nas_location'] = $this->get_nas_location($chapter);
+
 		$data['chapter'] = $chapter;
 		$data['chapter_member'] = $chapter_member;
 		$data['form_state'] = form_dropdown('chapter[state]', array(
@@ -83,6 +86,47 @@ class Chapter extends CI_Controller {
 		$this->load->view('admin/navigation', $data);
 		$this->load->view('admin/chapter_index_view',$data);
 		$this->load->view('admin/footer');
+	}
+
+	private function get_nas_location($chapter){
+
+		switch($this->session->userdata('email')) {
+			case 'see199@gmail.com':
+				$nas_location = 'C:\Users\boyet\Synology';
+				break;
+			case 'tandy@tbsn.my':
+				$nas_location = 'C:\Users\chong\SYNOLOGY';
+				break;
+			default:
+				$nas_location = '';
+		}
+
+		// Check for empty TB_ID or MizongMemberID
+		$tb_id         = $chapter['tb_id'] ? $chapter['tb_id'] : 'C00000';
+		$membership_id = $chapter['membership_id'] ? $chapter['membership_id'] : '0000';
+
+		// Determine the folder name based on chapter status
+		switch ($chapter['status']) {
+		    case 'A':
+		        $nas_folder = '11-道場 Active';
+		        break;
+		    case 'I':
+		        $nas_folder = '13-道場 Inactive';
+		        break;
+		    default:
+		        $nas_folder = '12-道場 New';
+		}
+
+		// Remove 真佛宗 in name_chinese
+		$name = str_replace('真佛宗', '', $chapter['name_chinese']);
+
+		// Create the folder name
+		$folder_name = ($chapter['status'] === 'A' || $chapter['status'] === 'I') 
+		               ? "{$tb_id}-{$membership_id}-{$name}" 
+		               : $name;
+
+		// Set the nas_location
+		return "{$nas_location}\\秘書\\41-道場\\{$nas_folder}\\{$folder_name}";
 	}
 
 	private function bday_cal($d){

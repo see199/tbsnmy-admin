@@ -225,10 +225,31 @@ function toggle_form(){
                         </div>
                     </div>
                     <div class='row row-data col-xs-10 col-xs-offset-1'>
+                        <div class='col-xs-3 strong_txt'>NAS Location:</div>
+                        <div class='col-xs-9'>
+                            <div class='display'><input type='text' class='form-control col-xs-8' value='<?= $chapter['nas_location']; ?>' /></div>
+                            <div class='form form-group'><input type='text' class='form-control col-xs-8' value='<?= $chapter['nas_location']; ?>' /></div>
+                        </div>
+                    </div>
+                    <div class='row row-data col-xs-10 col-xs-offset-1'>
+                        <div class='col-xs-3 strong_txt'>產業:</div>
+                        <div class='col-xs-9'>
+                            <div class='display'><?= $this->config->item('tbs')['properties'][$chapter['properties']]; ?></div>
+                            <div class='form form-group'><?= form_dropdown("chapter[properties]",$this->config->item('tbs')['properties'],($chapter['properties']) ? $chapter['properties'] : "U",array("class"=>"form-control")); ?></div>
+                        </div>
+                    </div>
+                    <div class='row row-data col-xs-10 col-xs-offset-1'>
+                        <div class='col-xs-3 strong_txt'>產業備註:</div>
+                        <div class='col-xs-9'>
+                            <div class='display'><textarea class='form-control col-xs-8'readonly rows=3><?= $chapter['properties_remarks']; ?></textarea></div>
+                            <div class='form form-group'><textarea class='form-control col-xs-8' rows=3 name='chapter[properties_remarks]'><?= $chapter['properties_remarks']; ?></textarea></div>
+                        </div>
+                    </div>
+                    <div class='row row-data col-xs-10 col-xs-offset-1'>
                         <div class='col-xs-3 strong_txt'><?= lang('col_remarks'); ?>:</div>
                         <div class='col-xs-9'>
-                            <div class='display'><?= $chapter['remarks']; ?></div>
-                            <div class='form form-group'><textarea class='form-control col-xs-8' name='chapter[remarks]'><?= $chapter['remarks']; ?></textarea></div>
+                            <div class='display'><textarea class='form-control col-xs-8'readonly rows=5><?= $chapter['remarks']; ?></textarea></div>
+                            <div class='form form-group'><textarea class='form-control col-xs-8' rows=5 name='chapter[remarks]'><?= $chapter['remarks']; ?></textarea></div>
                         </div>
                     </div>
 

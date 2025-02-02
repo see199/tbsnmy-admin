@@ -156,6 +156,7 @@
                                             <?= $r['name_chinese']; ?>
                                             <br /><?= $r['name_malay']; ?>
                                             <br /><?= $r['nric']; ?>
+                                            <br /><a href='https://wa.me/<?= preg_replace('/[+-]/', '', $r['phone_mobile']); ?>' target='wa'><?= $r['phone_mobile']; ?></a>
                                             <br /><?= $r['position']; ?><?= is_numeric($r['membership_id']) ? "" : " (".$r['membership_id'].")"; ?>
                                             <small><br />登記：<?= $r['reg_date']; ?></small>
                                             <?php if(isset($r['qr'])) echo "<br /><img src='".base_url('asset/img/qr_contact/').$r['qr'].".png' height=100>"; ?>

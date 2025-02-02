@@ -1,4 +1,8 @@
 <?php
+require_once APPPATH . '../vendor/autoload.php';
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+
 class Agm extends CI_Controller {
 
 	public function __construct()
@@ -157,6 +161,33 @@ class Agm extends CI_Controller {
 
 	public function list_analyse(){
 		$list = $this->agm_model->list_zoom_registrant();
+		
+		$data = $this->data;
+		$data['members'] = $this->process_registrant_list($list);
+
+		$this->load->view('admin/header', $data);
+		$this->load->view('admin/navigation', $data);
+		$this->load->view('admin/agm/list_analyse_view',$data);
+		$this->load->view('admin/footer');
+	}
+
+	public function list_login_zoom(){
+		$list = $this->agm_model->list_login_zoom_registrant_all();
+
+		$data = $this->data;
+		$data['members'] = $this->process_registrant_list($list);
+
+		$this->load->view('admin/header', $data);
+		$this->load->view('admin/navigation', $data);
+		$this->load->view('admin/agm/list_login_zoom_view',$data);
+		$this->load->view('admin/footer');
+	}
+
+	//
+	// Process Members that Registered AGM
+	// To be called from AGM 登記記錄 & AGM 簽到記錄
+	//
+	private function process_registrant_list($list){
 
 		$members = array(
 			'G' => array(
@@ -195,60 +226,8 @@ class Agm extends CI_Controller {
 		ksort($members['P']['chuxi']);
 		ksort($members['G']['chuxi']);
 		ksort($members['G']['liexi']);
-		
-		$data = $this->data;
-		$data['members'] = $members;
 
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/navigation', $data);
-		$this->load->view('admin/agm/list_analyse_view',$data);
-		$this->load->view('admin/footer');
-	}
-
-	public function list_login_zoom(){
-		/*echo '<pre>';
-		$list = $this->agm_model->list_login_zoom_registrant();
-		print_r($list);exit;*/
-		$list = $this->agm_model->list_login_zoom_registrant_all();
-
-		$members = array(
-			'G' => array(
-				'chapter' => array(),
-				'liexi' => array(),
-				'chuxi' => array(),
-				'total' => array('chuxi' => 0,'liexi' => 0)),
-			'P' => array(),
-		);
-
-		foreach($list as $k => $v){
-			
-			if($v['membership_id'] < 2000 && $v['membership_id'] != '列席'){
-				@$members['P'][$v['membership_id']] = $v;
-			}else{
-				$members['G']['chapter'][$v['chapter_id']] = $v['chapter_id'];
-				if($v['membership_id'] == '列席'){
-					@$members['G']['liexi'][$v['membership_id']][] = $v;
-					@$members['G']['total']['liexi']++;
-				}else{
-					@$members['G']['chuxi'][$v['membership_id']][] = $v;
-					@$members['G']['total']['chuxi']++;
-				}
-			}
-		}
-
-		ksort($members['P']);
-		ksort($members['G']['chuxi']);
-		ksort($members['G']['liexi']);
-
-		//echo "<pre>";print_r($members['G']['chuxi']);
-		
-		$data = $this->data;
-		$data['members'] = $members;
-
-		$this->load->view('admin/header', $data);
-		$this->load->view('admin/navigation', $data);
-		$this->load->view('admin/agm/list_login_zoom_view',$data);
-		$this->load->view('admin/footer');
+		return $members;
 	}
 
 	public function list_zoom_registrant(){
@@ -256,6 +235,8 @@ class Agm extends CI_Controller {
 		$registrant_by_chapter = array();
 		$list = $this->agm_model->list_zoom_registrant();
 		foreach($list as $registrant){
+			if($registrant['zoom_link'] == '現場出席')
+				$registrant['qr'] = $this->generate_qr($registrant['nric']);
 			$registrant_by_chapter[$registrant['chapter_id']][] = $registrant;
 		}
 
@@ -298,7 +279,10 @@ class Agm extends CI_Controller {
 		foreach($list as $l){
 			if($l['membership_id'] < 3000 && $l['membership_id'] > 1000){
 				$registrant[$l['nric']] = $l;
-				if($l['zoom_link'] == '現場出席') $total['offline'] += 1;
+				if($l['zoom_link'] == '現場出席'){
+					$total['offline'] += 1;
+					$registrant[$l['nric']]['qr'] = $this->generate_qr($l['nric']);
+				}
 				else  $total['online'] += 1;
 			}
 		}
@@ -455,16 +439,22 @@ class Agm extends CI_Controller {
         $post = $this->input->post();
         $setting = json_decode(read_file('application/logs/agm_setting.txt'),1);
 
-        // Submit to Zoom API
-        $registrant = $this->agm_model->api_del_zoom_registrant($setting['zoom_id'],$post['registrant_id']);
+        // Check if Registrant is On Site, if yes, then skip submit to zoom
+        $check = $this->agm_model->check_duplicate_email_registrant($post['email']);
+        if($check[0]['zoom_link'] != '現場出席'){
 
-        // if Error, Display ERROR to contact admin
-        if(isset($registrant['code'])){
-        	echo json_encode(array(
-        		'success' => 0,
-        		'msg'     => "Error ".$registrant['code'].":".$registrant['message'],
-        	));
-            return ;
+        	// Submit to Zoom API
+	        $registrant = $this->agm_model->api_del_zoom_registrant($setting['zoom_id'],$post['registrant_id']);
+
+	        // if Error, Display ERROR to contact admin
+	        if(isset($registrant['code'])){
+	        	echo json_encode(array(
+	        		'success' => 0,
+	        		'msg'     => "Error ".$registrant['code'].":".$registrant['message'].json_encode($post),
+	        	));
+	            return ;
+	        }
+
         }
 
         $this->agm_model->del_registrant($post['email']);
@@ -605,6 +595,99 @@ class Agm extends CI_Controller {
         ));
         return;
     }
+
+    public function scan_qr(){
+    	$data = $this->data;
+
+		$this->load->view('admin/header', $data);
+		$this->load->view('admin/navigation', $data);
+		//$this->load->view('admin/agm/scan_qr_video_view',$data);
+		$this->load->view('admin/agm/scan_qr_device_view',$data);
+		$this->load->view('admin/footer');
+    }
+
+    public function ajax_scan_qr(){
+    	$data = $this->data;
+
+    	$nric = $this->qr_decrypt($this->input->post('qrdata'));
+    	if($nric == 'err'){
+			echo json_encode(['error' => '二维码扫不正確，無法掃描。']);
+    	}else{
+
+	    	$userData = $this->agm_model->get_registrant($nric);
+
+	    	if($userData) {
+	            echo json_encode($userData);
+	        } else {
+	            echo json_encode(['error' => '【會員尚未登記】 -- '.$nric.'尚未在我们的 AGM 系统中注册。请先完成注册后，才能进行二维码扫描以记录出席。']);
+	        }
+    	}
+
+    }
+
+    public function ajax_log_attendance() {
+        $nric = $this->qr_decrypt($this->input->post('qrdata'));
+
+        // Logic to log attendance
+        $this->agm_model->login_on_site($nric);
+
+        // Process Log File
+        $this->process_onsite_list();
+        echo json_encode(['success' => '簽到成功！']);
+    }
+
+    private function process_onsite_list(){
+    	
+    	$attendance = $this->agm_model->count_onsite_attendance();
+
+    	//Write to log file
+    	$file = $this->config->item('file_attendance');
+    	$txt = '';
+    	foreach($attendance as $k => $v){
+    		$type = ($v['membership_id'] > 5000) ? 'chapter' : 'member';
+    		$id   = ($v['membership_id'] > 5000) ? $v['chapter_id'] : $v['contact_id'];
+    		$txt .= $type."\t".$id."\t".$v['total']."\n";
+    	}
+    	write_file($file,$txt);
+    }
+
+    private function generate_qr($nric) {
+
+    	$cacheFile = APPPATH . '../asset/img/qr_contact/' . $nric . '.png';
+
+    	// Generate QR File if not exists
+    	if(!file_exists($cacheFile)){
+
+    		$qrCode = QrCode::create($this->qr_encrypt($nric))->setSize(200);
+	        $writer = new PngWriter();
+	        $result = $writer->write($qrCode);
+
+	        // Save the image to the cache folder
+	        file_put_contents($cacheFile, $result->getString());
+
+    	}
+
+    	return $nric;
+	}
+
+	private function qr_encrypt($data){
+		$key = $this->config->item('encryption_key');
+		$iv  = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
+		$encryptedData = openssl_encrypt($data, 'aes-256-cbc', $key, 0, $iv);
+		return base64_encode($encryptedData . '::' . $iv);
+	}
+
+	private function qr_decrypt($data){
+		$key = $this->config->item('encryption_key');
+		$parts = explode('::', base64_decode($data), 2);
+
+		if(count($parts) === 2){
+			list($encryptedData, $iv) = $parts;
+			return openssl_decrypt($encryptedData, 'aes-256-cbc', $key, 0, $iv);
+		}
+		else return 'err';
+	}
+
 
 	
 }

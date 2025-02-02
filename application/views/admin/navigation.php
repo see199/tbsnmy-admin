@@ -1,3 +1,21 @@
+<?php
+//
+// Helper function to generate menu items
+// Menu Format: URL,FontAwesome Icon,Text
+// 'divider' for Divider
+//
+function generateMenuItem($menuItem) {
+  if($menuItem[0] === 'divider') return '<li class="divider"></li>';
+  else {
+    return '<li>' . anchor(base_url($menuItem[0]),"<i class='${menuItem[1]}'></i> ${menuItem[2]}",'') . '</li>';
+  }
+}
+
+function generateMenuTitle($menuText){
+  return '<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">'.$menuText.' <span class="caret"></span></a>';
+}
+?>
+
 <style>
   .custom-combobox {
     position: relative;
@@ -155,221 +173,201 @@
     $( "#select_master" ).combobox();
   });
   </script>
+
 <!-- Navigation -->
-        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="<?= base_url(); ?>admin/index"><?= lang('glb_nav_title'); ?></a>
-            </div>
-            <!-- /.navbar-header -->
+<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="<?= base_url(); ?>admin/index"><?= lang('glb_nav_title'); ?></a>
+  </div>
 
-            
-            <!-- /.navbar-top-links -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-              <ul class="nav navbar-nav">
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?= lang('glb_nav_menu'); ?><span class="caret"></span></a>
-                  <ul class="dropdown-menu" role="menu">
-                    <li>
-                        <a href="<?= base_url(); ?>admin/index"><i class="fa fa-dashboard fa-fw"></i> <?= lang('glb_nav_dashboard'); ?></a>
-                    </li>
-                    
-                    <?php if($chapter_allowed[0] == 'all'): ?>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/tbnews"><i class="fa fa-newspaper-o fa-fw"></i> <?= lang('glb_nav_tbnews'); ?></a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/game"><i class="fa fa-gamepad "></i> Games</a>
-                    </li>
-                    <?php endif; ?>
-                    
-                    <?php if($chapter_allowed[0] == 'all'): ?>
-                    
-                    <li class="divider"></li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/index/export_db"><i class="fa fa-upload fa-fw"></i> <?= lang('glb_nav_export'); ?></a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/index/import_db"><i class="fa fa-download fa-fw"></i> <?= lang('glb_nav_import'); ?></a>
-                    </li>
-                    
+  <!-- /.navbar-header -->
+  <!-- /.navbar-top-links -->
+  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <ul class="nav navbar-nav">
+      
+      <!-- MENU 1: 目錄 -->
+      <li class="dropdown">
+        <?= generateMenuTitle(lang('glb_nav_menu'));?>
+        <ul class="dropdown-menu" role="menu">
+          <?= generateMenuItem(['admin/index','fa fa-dashboard fa-fw',lang('glb_nav_dashboard')]);?>
+          <?php
+            if($chapter_allowed[0] == 'all'):
+              $menu = [
+                ['admin/tbnews','fa-solid fa-newspaper',lang('glb_nav_tbnews')],
+                ['admin/game','fa fa-gamepad','Games'],
+                ['divider'],
+                ['admin/index/export_db','fa fa-upload fa-fw',lang('glb_nav_export')],
+                ['admin/index/import_db','fa fa-download fa-fw',lang('glb_nav_import')],
+              ];
+              foreach($menu as $m) echo generateMenuItem($m);
+            endif;
+          ?>
+        </ul>
+      </li>
 
+      <!-- MENU 2: 道場 -->
+      <li class="dropdown">
+        <?= generateMenuTitle(lang('glb_nav_chapter'));?>
+        <ul class="dropdown-menu" role="menu">
+          <?php
+            $menu = [
+              ['admin/chapter','fa fa-info fa-fw',lang('glb_nav_chapter_details')],
+              ['admin/event/index','fa-solid fa-calendar-days',lang('glb_nav_event_index')],
+              ['admin/event/detail','fa fa-plus-square fa-fw',lang('glb_nav_event_add')],
+            ];
+            foreach($menu as $m) echo generateMenuItem($m);
 
-                    <?php endif; ?>
+            if($chapter_allowed[0] == 'all'){
+              echo generateMenuItem(['divider']);
+              echo generateMenuItem(['admin/chapter/list_all','fa fa-bank fa-fw','全馬道場列表']);
+            }
+          ?>
+        </ul>
+      </li>
+        
+      <!-- MENU 3: 弘法人員 -->
+      <?php if($chapter_allowed[0] == 'all'): ?>
+      <li class="dropdown">
+        <?= generateMenuTitle(lang('glb_nav_dharma'));?>
+        <ul class="dropdown-menu" role="menu">
+          <?php
+            $menu = [];
+            foreach($this->config->item('tbs')['dharma_staff'] as $k => $v){
+              $menu[] = ['admin/contact/dharma/'.strtolower($k),'fa fa-user fa-fw',$v];
+            }
+            $menu[] = ['divider'];
+            $menu[] = ['admin/insurance','fa-solid fa-suitcase-medical',lang('glb_nav_insurance')];
+            foreach($menu as $m) echo generateMenuItem($m);
+          ?>
+        </ul>
+      </li>
+      <?php endif; ?>
 
-                  </ul>
-                </li>
+        
+      <!-- MENU 4: 馬密總會員 -->
+      <?php if($chapter_allowed[0] == 'all' || $google_email == 'agm@tbsn.my'): ?>
+      <li class="dropdown">
+        <?= generateMenuTitle('馬密總會員');?>
+        <ul class="dropdown-menu" role="menu">
+          <?php
+            $menu = [
+              ['admin/email/member','fa fa-envelope',' + <i class="fa fa-phone"></i> 個人會員'],
+              ['admin/email/chapter','fa fa-envelope','團體會員'],
+              ['admin/chapter/list_contact','fa fa-phone','團體會員'],
+              ['divider'],
+              ['admin/agm','fa fa-briefcase','會員大會'],
+              ['admin/agm/list_analyse','fa-solid fa-chart-line',date('Y').' AGM 登記'],
+              ['admin/agm/list_login_zoom','fa-solid fa-chart-line',date('Y').' AGM 簽到'],
+              ['admin/agm/list_zoom_registrant','fa-regular fa-rectangle-list','AGM Zoom 團體'],
+              ['admin/agm/list_zoom_registrant_personal','fa-regular fa-rectangle-list','AGM Zoom 個人'],
+              ['admin/agm/list_zoom_registrant_nonvote','fa-regular fa-rectangle-list','AGM Zoom 列席'],
+              ['admin/agm/setting','fa fa-cog','AGM Setting'],
+              ['divider'],
+              ['agm/register','fa fa-user','AGM 團體會員登記'],
+              ['agm/register2','fa fa-user','AGM 個人會員登記'],
+              ['admin/agm/scan_qr','fa-solid fa-qrcode','AGM QR 簽到'],
+            ];
+            foreach($menu as $m) echo generateMenuItem($m);
+          ?>
+        </ul>
+      </li>
+      <?php endif; ?>
 
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?= lang('glb_nav_chapter'); ?><span class="caret"></span></a>
-                  <ul class="dropdown-menu" role="menu">
-                    <li>
-                        <a href="<?= base_url(); ?>admin/chapter"><i class="fa fa-info fa-fw"></i> <?= lang('glb_nav_chapter_details'); ?></a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/event/index"><i class="fa fa-clock-o fa-fw"></i> <?= lang('glb_nav_event_index'); ?></a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/event/detail"><i class="fa fa-plus-square fa-fw"></i> <?= lang('glb_nav_event_add'); ?></a>
-                    </li>
-                    <li class="divider"></li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/chapter/list_all"><i class="fa fa-bank fa-fw"></i> 全馬道場列表</a>
-                    </li>
+      <?php if($chapter_allowed[0] == 'all'): ?>
+        
+        <!-- MENU 5: 用戶管理 -->
+        <li class="dropdown">
+          <?= generateMenuTitle(lang('glb_nav_user'));?>
+          <ul class="dropdown-menu" role="menu">
+            <?php
+              $menu = [
+                ['admin/user/index','fa fa-users fa-fw',lang('glb_nav_user_list')],
+                ['admin/user/add','fa fa-user-plus fa-fw',lang('glb_nav_user_new')],
+                ['admin/contact/list','fa fa-users fa-fw',lang('glb_nav_contact')],
+                ['admin/contact/add_contact','fa fa-user-plus fa-fw',lang('glb_nav_add_contact')],
+              ];
+              foreach($menu as $m) echo generateMenuItem($m);
+            ?>
+          </ul>
+        </li>
 
-                  </ul>
-                </li>
+        <!-- MENU 6: 其他系統 -->
+        <li class="dropdown">
+          <?= generateMenuTitle('其他系統');?>
+          <ul class="dropdown-menu" role="menu">
+            <?php
+              $menu = [
+                ['dizang/login','fa fa-user-md','地藏殿系統'],
+                ['wenxuan/login','fa fa-book','文宣處系統'],
+                ['admin/api/verify_list','','Verify List'],
+                ['divider'],
+                ['admin/event/tbf','fa fa-calendar','宗委會活動'],
+              ];
+              foreach($menu as $m) echo generateMenuItem($m);
+            ?>
+          </ul>
+        </li>
 
-                <?php if($chapter_allowed[0] == 'all'): ?>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?= lang('glb_nav_dharma'); ?><span class="caret"></span></a>
-                  <ul class="dropdown-menu" role="menu">
-                    <?php foreach($this->config->item('tbs')['dharma_staff'] as $k => $v): ?>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/contact/dharma/<?= strtolower($k); ?>"><i class="fa fa-user fa-fw"></i> <?= $v; ?></a>
-                    </li>
-                    <?php endforeach;?>
-                    <li class="divider"></li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/insurance/"><i class="fa fa-user fa-fw"></i> <?= lang('glb_nav_insurance'); ?></a>
-                    </li>
+        <!-- Unused Menu -->
+        <?php /*
+        <li class="dropdown">
+          <?= generateMenuTitle('供僧大會');?>
+          <ul class="dropdown-menu" role="menu">
+            <?php
+              $menu = [
+                ['admin/forms/sangha','fa fa-info fa-fw','供僧功德主'],
+                ['admin/forms/blessing','fa fa-info fa-fw','法會主祈者-祈福'],
+                ['admin/forms/bardo','fa fa-info fa-fw','法會主祈者-超度'],
+                ['admin/forms/blessing_normal','fa fa-info fa-fw','法會報名-祈福'],
+                ['admin/forms/bardo_normal','fa fa-info fa-fw','法會報名-超度'],
+              ];
+              foreach($menu as $m) echo generateMenuItem($m);
+            ?>
+          </ul>
+        </li>
+        */?>
+      <?php endif; ?>
+    </ul>
 
+    <!-- Right Side Menu -->
+    <ul class="nav navbar-nav navbar-right" style='margin-right:10px;'>
+      <li><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?= $google_name; ?> <img src='<?= $avatar; ?>?sz=20' class='img-circle' style='width:20px'> <span class="caret"></span></a>
+        <ul class="dropdown-menu" role="menu">
+          <!-- User Profile -->
+          <li>
+            <a href='#'>
+              <table><tr>
+                <td><img src='<?= $avatar; ?>?sz=50' style='width:50px' /></td>
+                <td style='padding-left:10px;'>
+                  <b><?= $google_name; ?></b>
+                  <small><br /><?= $google_email; ?></small>
+                </td>
+              </tr></table>
+            </a>
+          </li>
+          <?php
+            $menu = [
+              ['divider'],
+              ['admin/login/logout','fa fa-sign-out','Logout'],
+            ];
+            foreach($menu as $m) echo generateMenuItem($m);
+          ?>
+        </ul>
+      </li>
+    </ul>
 
-                  </ul>
-                </li>
-                <?php endif; ?>
+    <form class="navbar-form navbar-right" style='margin-right:15px;'>
+      <div class="form-group">
+        <?= $chapter_dropdown; ?>
+      </div>
+    </form>
+  </div>
 
-                <?php if($chapter_allowed[0] == 'all' || $google_email == 'agm@tbsn.my'): ?>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">馬密總會員<span class="caret"></span></a>
-                  <ul class="dropdown-menu" role="menu">
-                    <li>
-                        <a href="<?= base_url(); ?>admin/email/member"><i class="fa fa-envelope"></i> + <i class="fa fa-phone"></i> 個人會員</a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/email/chapter"><i class="fa fa-envelope"></i>  團體會員</a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/chapter/list_contact"><i class="fa fa-phone"></i> 團體會員</a>
-                    </li>
-                    
-                    <li class="divider"></li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/agm/"><i class="fa fa-briefcase"></i> 會員大會</a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/agm/list_analyse"><i class="fa fa-briefcase"></i> <?= date('Y');?> AGM Zoom</a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/agm/list_login_zoom"><i class="fa fa-briefcase"></i> <?= date('Y');?> AGM Zoom Login</a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/agm/list_zoom_registrant"><i class="fa fa-briefcase"></i> AGM Zoom 團體</a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/agm/list_zoom_registrant_personal"><i class="fa fa-briefcase"></i> AGM Zoom 個人</a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/agm/list_zoom_registrant_nonvote"><i class="fa fa-briefcase"></i> AGM Zoom 列席</a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/agm/setting"><i class="fa fa-cog"></i> AGM Setting</a>
-                    </li>
-                    
-                    <li class="divider"></li>
-                    <li>
-                        <a href="<?= base_url(); ?>agm/register" target="_agmreg"><i class="fa fa-user"></i> AGM 團體會員登記</a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url(); ?>agm/register2" target="_agmreg"><i class="fa fa-user"></i> AGM 個人會員登記</a>
-                    </li>
-
-                  </ul>
-                </li>
-                <?php endif; ?>
-
-                <?php if($chapter_allowed[0] == 'all'): ?>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?= lang('glb_nav_user'); ?><span class="caret"></span></a>
-                  <ul class="dropdown-menu" role="menu">
-                    <li>
-                        <a href="<?= base_url(); ?>admin/user/index"><i class="fa fa-users fa-fw"></i> <?= lang('glb_nav_user_list'); ?></a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/user/add"><i class="fa fa-user-plus fa-fw"></i> <?= lang('glb_nav_user_new'); ?></a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/contact/list"><i class="fa fa-users fa-fw"></i> <?= lang('glb_nav_contact'); ?></a>
-                    </li>
-                    <li>
-                        <a href="<?= base_url(); ?>admin/contact/add_contact"><i class="fa fa-user-plus fa-fw"></i> <?= lang('glb_nav_add_contact'); ?></a>
-                    </li>
-
-                  </ul>
-                </li>
-
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">其他系統 <span class="caret"></span></a>
-                  <ul class="dropdown-menu" role="menu">
-                    <li><a href="<?= base_url(); ?>/dizang/login" target="_blank"><i class="fa fa-user-md"></i> 地藏殿系統</a></li>
-                    <li><a href="<?= base_url(); ?>/wenxuan/login" target="_blank"><i class="fa fa-book"></i> 文宣處系統</a></li>
-                    <li><a href="<?= base_url(); ?>admin/api/verify_list/">Verify List</a></li>
-                    <li class="divider"></li>
-                    <li><a href="<?= base_url(); ?>admin/event/tbf/"><i class="fa fa-calendar"></i> 宗委會活動</a></li>
-                  </ul>
-                </li>
-                
-
-
-                <!-- li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">供僧大會 <span class="caret"></span></a>
-                  <ul class="dropdown-menu" role="menu">
-                    <li><a href="<?= base_url(); ?>admin/forms/sangha"><i class="fa fa-info fa-fw"></i> 供僧功德主</a></li>
-                    <li><a href="<?= base_url(); ?>admin/forms/blessing"><i class="fa fa-info fa-fw"></i> 法會主祈者-祈福</a></li>
-                    <li><a href="<?= base_url(); ?>admin/forms/bardo"><i class="fa fa-info fa-fw"></i> 法會主祈者-超度</a></li>
-                    <li><a href="<?= base_url(); ?>admin/forms/blessing_normal"><i class="fa fa-info fa-fw"></i> 法會報名-祈福</a></li>
-                    <li><a href="<?= base_url(); ?>admin/forms/bardo_normal"><i class="fa fa-info fa-fw"></i> 法會報名-超度</a></li>
-
-                  </ul>
-                </li -->
-                <?php endif; ?>
-
-              </ul>
-
-              <ul class="nav navbar-nav navbar-right" style='margin-right:10px;'>
-                <li><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><?= $google_name; ?> <img src='<?= $avatar; ?>?sz=20' class='img-circle' style='width:20px'> <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li>
-                            <a href='#'>
-                            <table><tr>
-                                <td><img src='<?= $avatar; ?>?sz=50' style='width:50px' /></td>
-                                <td style='padding-left:10px;'>
-                                    <b><?= $google_name; ?></b>
-                                    <small><br /><?= $google_email; ?></small>
-                                </td>
-                            </tr></table>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="<?= base_url(); ?>admin/login/logout/"><i class="fa fa-sign-out"></i> Logout</a>
-                        </li>
-                    </ul>
-                </li>
-              </ul>
-
-              <form class="navbar-form navbar-right" style='margin-right:15px;'>
-                <div class="form-group">
-                  <?= $chapter_dropdown; ?>
-                </div>
-              </form>
-          </div>
-
-            
-            <!-- /.navbar-static-side -->
-        </nav>
+  <!-- /.navbar-static-side -->
+</nav>

@@ -124,6 +124,16 @@ class Agm_model extends CI_Model {
 		));
 	}
 
+	public function login_on_site($nric){
+		$this->db = $this->load->database('local', TRUE);
+
+		$this->db->where('nric',$nric);
+		$this->db->update('tbs_agm_zoom_reg',array(
+			'login_time' => date('Y-m-d H:i:s'),
+			'zoom_link' => '現場出席'
+		));
+	}
+
 	public function update_voted($nric){
 		$this->db = $this->load->database('local', TRUE);
 
@@ -144,7 +154,8 @@ class Agm_model extends CI_Model {
 	public function count_same_chapter($chapter_id){
 		$this->db = $this->load->database('local', TRUE);
 
-		$this->db->where('chapter_id',$chapter_id);
+		$this->db->where('chapter_id',$chapter_id)
+				->order_by('reg_date');
 		$res = $this->db->get('tbs_agm_zoom_reg');
 		return $res->result_array();
 	}
@@ -325,5 +336,16 @@ class Agm_model extends CI_Model {
 		} else {
 		  echo "<pre>";print_r(json_decode($response,1));
 		}
+	}
+
+	public function count_onsite_attendance(){
+		$this->db = $this->load->database('local', TRUE);
+		$this->db->select('membership_id, chapter_id, contact_id, COUNT(*) as total')
+				->where('login_time <>','0000-00-00 00:00:00')
+				->where('membership_id <>','列席')
+				->where('zoom_link','現場出席')
+				->group_by('membership_id');
+		$res = $this->db->get('tbs_agm_zoom_reg');
+		return $res->result_array();		
 	}
 }

@@ -206,7 +206,7 @@ class Chapter extends CI_Controller {
 		}
 		//print_pre($list);
 		$state_list = array('Sabah','Sarawak','Perlis','Kedah','Penang','Perak','Selangor','W.Persekutan','Melaka','Negeri Sembilan','Johor','Kelantan','Terengganu','Pahang');
-		foreach($state_list as $v) $sorted_list[$v] = $list[$v];
+		foreach($state_list as $v) $sorted_list[$v] = isset($list[$v]) ? $list[$v] : array();
 
 		$data['contact'] = $sorted_list;
 

@@ -95,6 +95,7 @@
                                     <br /><?= $m['nric']; ?>
                                     <br />會員編號：<?= $m['membership_id'];?>
                                     <small><br /><br />登記：<?= $r['reg_date']; ?></small>
+                                    <?php if(isset($r['qr'])) echo "<br /><img src='".base_url('asset/img/qr_contact/').$r['qr'].".png' height=100>"; ?>
                                 </td>
                                 <td>
                                 <table class='table table-striped table-bordered table-hover'>

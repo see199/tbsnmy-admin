@@ -4,7 +4,7 @@
     <div class="row">
         <div class="box">
             <div class="col-lg-8 col-lg-offset-2 text-center form-inline">
-                <h1>會員大會 ZOOM 登記記錄<br />統計</h1>
+                <h1>AGM 登記記錄統計</h1>
             </div>
         </div>
     </div>
@@ -21,14 +21,14 @@
                 </table>
             </div><div class="col-lg-10 col-lg-offset-1">
                 <table width="100%"><tr>
-                    <td width=50% valign=top>出席<table id="example" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+                    <td width=50% valign=top style="padding:5px">出席<table id="example" class="display table table-striped table-bordered" cellspacing="0" width="100%">
                         <thead><tr class='info'><td>道場</td><td>代表</td><td>職位</td><td>NRIC</td><td>聯絡號碼</td><td>登記日期</td></tr></thead>
                         <tbody><?php foreach($members['G']['chuxi'] as $chapter_id => $list):foreach($list as $r): ?>
                         <tr <?= ($r['zoom_link'] == '現場出席') ? "class='warning'" : ""; ?>><td><?= $r['first_name']; ?></td><td><?= $r['last_name']; ?></td><td><?= $r['position']; ?></td><td><?= $r['nric']; ?></td><td><?= $r['phone_mobile']; ?></td><td><?= $r['reg_date']; ?></td></tr>
                         <?php endforeach;endforeach; ?></tbody>
                     </table></td>
                     
-                    <td width=50% valign=top>個人出席<table id="example" class="display table table-striped table-bordered" cellspacing="0" width="100%">
+                    <td width=50% valign=top style="padding:5px">個人出席<table id="example" class="display table table-striped table-bordered" cellspacing="0" width="100%">
                         <thead><tr class='info'><td>姓名</td><td>NRIC</td><td>聯絡號碼</td><td>登記日期</td></tr></thead>
                         <tbody><?php foreach($members['P']['chuxi'] as $r): ?>
                          <tr <?= ($r['zoom_link'] == '現場出席') ? "class='warning'" : ""; ?>><td><?= $r['membership_id']; ?>-<?= $r['name_chinese']; ?></td><td><?= $r['nric']; ?></td><td><?= $r['phone_mobile']; ?></td><td><?= $r['reg_date']; ?></td></tr>

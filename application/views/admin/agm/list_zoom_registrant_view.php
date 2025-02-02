@@ -158,6 +158,7 @@
                                             <br /><?= $r['nric']; ?>
                                             <br /><?= $r['position']; ?><?= is_numeric($r['membership_id']) ? "" : " (".$r['membership_id'].")"; ?>
                                             <small><br />登記：<?= $r['reg_date']; ?></small>
+                                            <?php if(isset($r['qr'])) echo "<br /><img src='".base_url('asset/img/qr_contact/').$r['qr'].".png' height=100>"; ?>
                                         </td>
                                         <td width="10%" nowrap style="line-height: 2.45;">
                                             First Name:

@@ -218,6 +218,7 @@ function generateMenuTitle($menuText){
           <?php
             $menu = [
               ['admin/chapter','fa fa-info fa-fw',lang('glb_nav_chapter_details')],
+              ['admin/chapter/list_ajk','fa-solid fa-users','理事會成員'],
               ['admin/event/index','fa-solid fa-calendar-days',lang('glb_nav_event_index')],
               ['admin/event/detail','fa fa-plus-square fa-fw',lang('glb_nav_event_add')],
             ];

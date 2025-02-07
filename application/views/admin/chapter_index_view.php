@@ -423,17 +423,17 @@ function toggle_form(){
                     <div class='row row-data col-xs-10 col-xs-offset-1'>
                         <table class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
                             <thead><tr class='info'>
+                                <td><?= lang('col_contact_position');?></td>
                                 <td><?= lang('col_contact_name');?></td>
                                 <td><?= lang('col_contact_contact');?></td>
-                                <td><?= lang('col_contact_position');?></td>
                                 <td><?= lang('col_contact_mizong_agm');?></td>
                                 <td><?= lang('col_contact_view');?></td>
                             </tr></thead>
                             <tbody><?php foreach($chapter_member as $c):?>
                                 <tr>
+                                    <td><?= $c['position']; ?><?= isset($c['bday_cal'])?$c['bday_cal']:""; ?></td>
                                     <td><?= $c['name_chinese'] . "<br />" . $c['name_dharma']; ?></td>
                                     <td><?= $c['phone_mobile']."<br />".$c['email']; ?></td>
-                                    <td><?= $c['position']; ?><?= isset($c['bday_cal'])?$c['bday_cal']:""; ?></td>
                                     <td><?= ($c['mizong_agm']) ? "是" : "否"; ?></td>
                                     <td><a href="<?= base_url("admin/contact/details/".$c['contact_id']); ?>"><?= lang('col_contact_view');?></a></td>
                                 </tr>

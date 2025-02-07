@@ -41,13 +41,18 @@ $( document ).ready(function() {
                         <div class='row col-xs-10 col-xs-offset-1'>
                             <div class='h3 strong_txt'><?= lang('col_title_info');?></div>
                         </div>
-                        
+
                         <?php $loop = array("name_chinese","name_malay","name_dharma","nric","phone_mobile","phone_home","phone_office","email"); ?>
                         <?php foreach($loop as $col_name): ?>
                         <div class='row row-data col-xs-10 col-xs-offset-1'>
                             <div class='col-xs-3 strong_txt'><?= lang('col_'.$col_name);?>:</div>
                             <div class='col-xs-9'>
-                                <div class='form form-group'><input type='text' class='form-control col-xs-8' name='contact[<?=$col_name;?>]' value='' /></div>
+                                <div class='form form-group'>
+                                    <?= form_input([
+                                        'name'  => "contact[${col_name}]",
+                                        'class' => 'form-control col-xs-8' . ($col_name == 'nric' ? ' nric-input' : '')
+                                    ]);?>
+                                </div>
                             </div>
                         </div>
                         <?php endforeach;?>

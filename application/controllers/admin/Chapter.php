@@ -24,27 +24,11 @@ class Chapter extends CI_Controller {
 		// AJK
 		$this->load->model('contact_model');
 		$chapter_member = $this->contact_model->get_chapter_ajk($chapter['chapter_id']);
+		
 		// AJK Sorting
-		{
-			$ordering = array("堂主","顧問","永久顧問","法律顧問","法務顧問","行政顧問","常住","主席","總會長","署理主席","署理總會長","副主席","副總會長","總秘書","秘書","副總秘書","副秘書","總財政","財政","副總財政","副財政","總務","副總務","公關");
-			$exists_position = $sorted_chapter_member = $normal_ajk = array();
-
-			foreach($chapter_member as $k => $c){
-				$exists_position[$c['position']][$c['contact_id']] = $k;
-				$chapter_member[$k] = $this->bday_cal($c);
-			}
-			foreach($ordering as $o){
-				if(isset($exists_position[$o])){
-					foreach($exists_position[$o] as $new_k){
-						$sorted_chapter_member[] = $chapter_member[$new_k];
-						unset($chapter_member[$new_k]);
-					}
-				}
-			}
-			foreach($chapter_member as $c) if(in_array($c['position'],array("理事","中央理事","委員"))) $normal_ajk[] = $c; else $sorted_chapter_member[] = $c;
-			$chapter_member = array_merge($sorted_chapter_member,$normal_ajk);
-		}
-
+		$chapter_member = $this->order_committee_members($chapter_member);
+		foreach($chapter_member as $k => $v) $chapter_member[$k] = $this->bday_cal($v);
+		
 		// Website Setting
 		$web = json_decode($chapter['website'],1);
 		$chapter['weburl'] = $web['link'];
@@ -152,7 +136,7 @@ class Chapter extends CI_Controller {
 					$cal2 = $cal2."|".$cal3;
 				}
 			}
-			$d['bday_cal'] = "<br />".$d['nric']."(".$cal."|".$cal2.")";
+			$d['bday_cal'] = "<br />".$d['nric']." (".$cal."|".$cal2.")";
 		}else{
 			$d['bday_cal'] = "<br />".$d['nric'];
 		}
@@ -241,6 +225,152 @@ class Chapter extends CI_Controller {
 		$this->load->view('admin/navigation', $data);
 		$this->load->view('admin/chapter_list_all_view',$data);
 		$this->load->view('admin/footer');
+	}
+
+	public function list_ajk(){
+		$data = $this->data;
+
+		$chapter = $this->backend_model->get_chapter_details($this->url_name);
+
+		// AJK
+		$this->load->model('contact_model');
+		$chapter_member = $this->contact_model->get_chapter_ajk($chapter['chapter_id']);
+
+		// Sort AJK
+		$chapter_member = $this->order_committee_members($chapter_member);
+		//print_pre($chapter_member);
+
+		$data['chapter'] = $chapter;
+		$data['chapter_member'] = $chapter_member;
+
+		$this->load->view('admin/header', $data);
+		$this->load->view('admin/navigation', $data);
+		$this->load->view('admin/chapter_list_ajk_view',$data);
+		$this->load->view('admin/footer');
+	}
+
+	private function order_committee_members($chapter_members) {
+        $position_order = ["堂主","顧問","永久顧問","法律顧問","法務顧問","行政顧問","常住","主席","總會長","署理主席","署理總會長","副主席","副總會長","總秘書","秘書","副總秘書","副秘書","總財政","財政","副總財政","副財政","總務","副總務","公關"];
+        $last_position = ["理事","中央理事","委員","稽查師","查賬","員工"];
+        
+        usort($chapter_members, function($a, $b) use ($position_order, $last_position) {
+            $a_pos = array_search($a['position'], $position_order);
+            $b_pos = array_search($b['position'], $position_order);
+            $a_last = array_search($a['position'], $last_position);
+            $b_last = array_search($b['position'], $last_position);
+            
+            // If both positions are in the main order list
+            if ($a_pos !== false && $b_pos !== false) {
+                return $a_pos - $b_pos;
+            }
+            
+            // If one is in main order and the other is not
+            if ($a_pos !== false) return -1;
+            if ($b_pos !== false) return 1;
+            
+            // If both are in last position order
+            if ($a_last !== false && $b_last !== false) {
+                return $a_last - $b_last;
+            }
+            
+            // If one is in last position and the other is not
+            if ($a_last !== false) return 1;
+            if ($b_last !== false) return -1;
+            
+            // Any other positions stay in the middle
+            return 0;
+        });
+        
+        return $chapter_members;
+    }
+
+
+
+	public function update_ajk_list(){
+
+		$this->load->model('contact_model');
+
+		//print_pre($this->input->post());
+		$contact_list = $this->input->post('contact');
+		$chapter_id   = $this->input->post('chapter_id');
+		$contact_new  = $this->input->post('contact_new');
+
+		// Update Current AJK
+		foreach($contact_list as $contact_id => $c){
+
+			// Update Contact
+			$this->contact_model->update_contact([
+				'contact_id'   => $contact_id,
+				'name_chinese' => $c['name_chinese'],
+				'name_dharma'  => $c['name_dharma'],
+				'name_malay'   => $c['name_malay'],
+				'phone_mobile' => $c['phone_mobile'],
+				'email'        => $c['email'],
+				'nric'         => '', // Don't Update NRIC
+			]);
+
+			// Update Chapter Member
+			$this->contact_model->replace_chapter_member([
+				'chapter_id' => $chapter_id,
+				'contact_id' => $contact_id,
+				'position'   => isset($c['delete']) ? "會員" : $c['position'],
+			],$c['cm_id']);
+		}
+
+		// Add New AJK
+		foreach($contact_new as $c){
+			
+			// Only Add AJK with NRIC
+			if($c['nric']){
+
+				// If Contact already exists, just update
+				if($c['contact_id']){
+					$contact_id = $c['contact_id'];
+					$this->contact_model->update_contact([
+						'contact_id'   => $c['contact_id'],
+						'name_chinese' => $c['name_chinese'],
+						'name_dharma'  => $c['name_dharma'],
+						'name_malay'   => $c['name_malay'],
+						'phone_mobile' => $c['phone_mobile'],
+						'email'        => $c['email'],
+						'nric'         => $c['nric'],
+					]);
+				} else {
+
+					// Create New Contact
+					$res = $this->contact_model->add_contact([
+						'contact_id'   => $c['contact_id'],
+						'name_chinese' => $c['name_chinese'],
+						'name_dharma'  => $c['name_dharma'],
+						'name_malay'   => $c['name_malay'],
+						'phone_mobile' => $c['phone_mobile'],
+						'email'        => $c['email'],
+						'nric'         => $c['nric'],
+					]);
+					$contact_id = $res['contact_id'];
+				}
+
+				// Update if Chapter ID is same -- For 會員 to 理事
+				// If not, just add new ChapterMember
+				$cm_id = ($c['chapter_id'] == $chapter_id) ? $c['cm_id'] : '';
+
+				$this->contact_model->replace_chapter_member([
+					'chapter_id' => $chapter_id,
+					'contact_id' => $contact_id,
+					'position'   => $c['position'],
+				],$cm_id);
+
+			}
+		}
+
+		redirect('admin/chapter/list_ajk','refresh');
+
+	}
+
+	public function ajax_get_contact(){
+		$this->load->model('contact_model');
+		$contact = $this->contact_model->get_contact_by_nric($this->input->post('nric'),true);
+		echo json_encode($contact);
 	}
 
 

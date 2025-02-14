@@ -9,7 +9,7 @@
     <hr />
     <!-- Div container for the iframe with mt-5 -->
     <div class="mt-5">
-        <iframe src="http://localhost/admin/agm/stats" style="width: 100%; height: 300px; border: none;" scrolling="no" ></iframe>
+        <iframe src="<?= base_url('agm/stats'); ?>" style="width: 100%; height: 300px; border: none;" scrolling="no" ></iframe>
     </div>
 </div>
 

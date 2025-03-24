@@ -1,4 +1,54 @@
 <script>
+$(document).ready(function() {
+  $("#searchInput").on("keyup", function() {
+    filterTable(); // Call filterTable() on keyup
+  });
+
+  $(".searchFilter").on("change", function() {
+    filterTable(); // Call filterTable() on checkbox change
+  });
+
+  function filterTable() {
+    var value = $("#searchInput").val().toLowerCase();
+
+    <?php $counter = 0; foreach($total as $package_id => $t): $counter++;?>
+        var pChecked_<?=$counter;?> = $("#package_<?=$package_id;?>").prop("checked");
+    <?php endforeach;?>
+
+    $("#example tbody tr").each(function() {
+      var row = $(this);
+      var textMatch = row.text().toLowerCase().indexOf(value) > -1;
+      var pk1 = row.find("td:nth-child(5) i.fa.fa-check").length > 0;
+      var pk2 = row.find("td:nth-child(6) i.fa.fa-check").length > 0;
+      var pk3 = row.find("td:nth-child(7) i.fa.fa-check").length > 0;
+
+      var showRow = true; // Default to show
+
+      if (value && !textMatch) { // If search input has text, filter by text
+        showRow = false;
+      }
+
+      if (pChecked_1 && !pk1) { // If "Paid" checkbox is checked, filter by paid
+        showRow = false;
+      }
+
+      if (pChecked_2 && !pk2) { // If "Paid" checkbox is checked, filter by paid
+        showRow = false;
+      }
+
+      if (pChecked_3 && !pk3) { // If "Paid" checkbox is checked, filter by paid
+        showRow = false;
+      }
+
+      if (showRow) {
+        row.show();
+      } else {
+        row.hide();
+      }
+    });
+  }
+});
+
 function load_box(me){
 
     if(me == 'new'){
@@ -198,27 +248,30 @@ function delete_data(){
         <div class="box">
             <div class="col-lg-10 col-lg-offset-1">
 
-                
+                Search: <?php foreach($total as $package_id => $t):?>
+                <label><input name='package' class='searchFilter' type="radio" id="package_<?=$package_id;?>"> <?= $package[$package_id]['package_name'];?></label>
+                <?php endforeach;?>
+                <input type="text" id="searchInput" placeholder="Search...">
                 <table id="example" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
                     <thead>
                         <tr class="info">
-                            <td rowspan=2><b>名字<br /><small>** 點擊可查看 / 更新資料 **</small></b></td>
-                            <td rowspan=2><b>登記日期</b></td>
-                            <td rowspan=2><b>聯絡</b></td>
-                            <td rowspan=2><b>來源</b></td>
-                            <td colspan=<?=sizeof($total);?>><b>功德主方案</b></td>
-                            <td rowspan=2><b>已發贈品</b></td>
-                            <td rowspan=2><b>完成付款</b></td>
-                            <td rowspan=2><b>報-訂</b></td>
-                            <td rowspan=2><b>報-送</b></td>
-                            <td rowspan=2><b>燃-訂</b></td>
-                            <td rowspan=2><b>燃-送</b></td>
-                            <td rowspan=3><b>一次/分期</b></td>
-                            <td rowspan=3><b><?=$year;?>年<br />報名表格</b></td>
+                            <th rowspan=2><b>名字<br /><small>** 點擊可查看 / 更新資料 **</small></b></td>
+                            <th rowspan=2><b>登記日期</b></td>
+                            <th rowspan=2><b>聯絡</b></td>
+                            <th rowspan=2><b>來源</b></td>
+                            <th colspan=<?=sizeof($total);?>><b>功德主方案</b></td>
+                            <th rowspan=2><b>已發贈品</b></td>
+                            <th rowspan=2><b>完成付款</b></td>
+                            <th rowspan=2><b>報-訂</b></td>
+                            <th rowspan=2><b>報-送</b></td>
+                            <th rowspan=2><b>燃-訂</b></td>
+                            <th rowspan=2><b>燃-送</b></td>
+                            <th rowspan=3><b>一次/分期</b></td>
+                            <th rowspan=3><b><?=$year;?>年<br />報名表格</b></td>
                         </tr>
                         <tr class="info">
                             <?php foreach($total as $package_id => $t):?>
-                            <td><b><?= $package[$package_id]['package_name'].'<br />(RM '.$package[$package_id]['package_amount'].')'; ?></b></td>
+                            <th><b><?= $package[$package_id]['package_name'].'<br />(RM '.$package[$package_id]['package_amount'].')'; ?></b></td>
                             <?php endforeach;?>
                         </tr>
                         <tr class="success">

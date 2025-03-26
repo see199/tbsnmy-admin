@@ -310,7 +310,7 @@ function delete_data(){
                             <?php else: ?><tr>
                             <?php endif; ?>
                                 <td><textarea style="display:none;"><?= json_encode($c); ?></textarea>
-                                    <a href='javascript:void(0)' onclick="load_box($(this).prev().val())" data-toggle="modal" data-target="#myModal"><?= $c['wenxuan_name']; ?></a></td>
+                                    <a href='javascript:void(0)' onclick="load_box($(this).prev().val())" data-toggle="modal" data-target="#myModal"><?= $c['wenxuan_name']; ?></a> (<?= $c['wenxuan_name_receiver']; ?>)</td>
                                 <td><?= $c['package'][$year]['create_date']; ?></td>
                                 <td><?= $c['wenxuan_contact']; ?></td>
                                 <td><?= $source[$c['package'][$year]['source']]; ?></td>

@@ -12,13 +12,13 @@
 	},
 	"require": {
 		"php": ">=5.3.7",
-		"endroid/qr-code": "^4.6"
+		"endroid/qr-code": "^4.6",
+		"phpunit/phpunit": "^9.0"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
 	},
 	"require-dev": {
-		"mikey179/vfsstream": "1.1.*",
-		"phpunit/phpunit": "4.* || 5.*"
+		"mikey179/vfsstream": "1.1.*"
 	}
 }

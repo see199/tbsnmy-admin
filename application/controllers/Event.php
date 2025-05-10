@@ -473,6 +473,46 @@ class Event extends CI_Controller {
         echo $this->email->print_debugger();
     }
 
+    public function db($event_id=0){
+        $this->db = $this->load->database('local', TRUE);
+        $this->db->where('event_id', $event_id);
+        $data['events'] = $this->db->get('zwh_event_reg')->result();
+        $this->load->view('event/db_view', $data);
+    }
+
+    public function update_db(){
+        if ($this->input->post()) {
+            $id = $this->input->post('id');
+            $data = $this->input->post();
+            unset($data['id']); // Remove the ID from the update data
+
+            $this->db = $this->load->database('local', TRUE);
+            $this->db->where('reg_id', $id);
+            $res = $this->db->update('zwh_event_reg', $data);
+
+            if ($res) {
+                $this->session->set_flashdata('success', 'Event updated successfully.');
+            } else {
+                $this->session->set_flashdata('error', 'Failed to update event.');
+            }
+        }
+        redirect('event/db/'.$data['event_id']);
+    }
+
+    public function delete_db($id,$event_id) {
+        
+        $this->db = $this->load->database('local', TRUE);
+        $this->db->where('reg_id', $id);
+        $res = $this->db->delete('zwh_event_reg');
+
+        if ($res) {
+            $this->session->set_flashdata('success', 'Event deleted successfully.');
+        } else {
+            $this->session->set_flashdata('error', 'Failed to delete event.');
+        }
+        redirect('event/db/'.$event_id);
+    }
+
 
 }
 

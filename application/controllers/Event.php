@@ -29,6 +29,12 @@ class Event extends CI_Controller {
                 ->result_array()[0];
         //print_pre($event);
 
+        // Calculate Due Date
+        $due_date = new DateTime($event['date_end']);
+        $today    = new DateTime();
+        $event['due_date'] = ($today->format('Y-m-d') >= $due_date->format('Y-m-d'));
+        if($event['due_date']) $this->msg = '活動報名已經截止。截止日期：'.$due_date->format('Y-m-d');
+
         // Load view
         $this->load->view('event/'.$event['event_view'].$lang, array(
             'event' => $event,

@@ -65,9 +65,9 @@ iframe{
             <div class="col-lg-12">
                 <nav>
                   <ul class="pager">
-                    <?php if($previous_issue): ?><li class="previous"><a href="<?= 'http://news.tbsn.my/'.$previous_issue; ?>"><span aria-hidden="true">&larr;</span> 大馬增版第 <?= $previous_issue; ?> 期 </a></li><?php endif; ?>
-                    <li><a href='<?= 'http://news.tbsn.my/year/'.$year ?>'>返回大馬增版 <?= $year; ?> 年目錄</a></li>
-                    <?php if($next_issue): ?><li class="next"><a href="<?= 'http://news.tbsn.my/'.$next_issue; ?>"> 大馬增版第 <?= $next_issue; ?> 期 <span aria-hidden="true">&rarr;</span> </a></li><?php endif; ?>
+                    <?php if($previous_issue): ?><li class="previous"><a href="<?= 'https://news.tbsn.my/'.$previous_issue; ?>"><span aria-hidden="true">&larr;</span> 大馬增版第 <?= $previous_issue; ?> 期 </a></li><?php endif; ?>
+                    <li><a href='<?= 'https://news.tbsn.my/year/'.$year ?>'>返回大馬增版 <?= $year; ?> 年目錄</a></li>
+                    <?php if($next_issue): ?><li class="next"><a href="<?= 'https://news.tbsn.my/'.$next_issue; ?>"> 大馬增版第 <?= $next_issue; ?> 期 <span aria-hidden="true">&rarr;</span> </a></li><?php endif; ?>
                   </ul>
                 </nav>
             </div>

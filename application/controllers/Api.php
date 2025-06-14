@@ -189,9 +189,100 @@ class Api extends CI_Controller {
 		
 	}
 
+	private function check_remote_file_exists($fileurl){
+		$headers = @get_headers($fileurl);
+		return (stripos($headers[0], '200 OK')) ? 1 : 0;
+	}
+
+	private function getTotalTbsNewsPages($year, $issue) {
+	    $logFile = 'application/logs/tbs_news_page_log.txt';
+	    $logKey = "{$year}_{$issue}";
+
+	    // Check log file (same as before)
+	    if (file_exists($logFile)) {
+	        $lines = file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+	        foreach ($lines as $line) {
+	            if (strpos($line, "{$logKey}:") === 0) {
+	                $parts = explode(":", $line, 2);
+	                return (int) trim($parts[1]);
+	            }
+	        }
+	    }
+
+	    // Perform check using curl_multi
+	    $pageToCheck = 1;
+	    $lastExistingPage = 0;
+	    $maxPossiblePage = 100;
+
+	    while ($pageToCheck <= $maxPossiblePage) {
+	        $mh = curl_multi_init();
+	        $handles = [];
+	        $currentBatchUrls = [];
+	        $existsInBatch = false;
+
+	        for ($i = 0; $i < 4; $i++) {
+	            $currentPage = $pageToCheck + $i;
+	            if ($currentPage > $maxPossiblePage) break;
+
+	            $imageUrl = "https://storage.googleapis.com/tbs-news/" . $year . "/WTBN" . $issue . "_page-" . sprintf("%04d", $currentPage) . ".jpg";
+	            $currentBatchUrls[$currentPage] = $imageUrl;
+
+	            $ch = curl_init($imageUrl);
+	            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'HEAD');
+	            curl_setopt($ch, CURLOPT_NOBODY, true);
+	            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+	            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+
+	            curl_multi_add_handle($mh, $ch);
+	            $handles[$currentPage] = $ch;
+	        }
+
+	        // Execute the batch
+	        $running = null;
+	        do {
+	            curl_multi_exec($mh, $running);
+	            curl_multi_select($mh);
+	        } while ($running > 0);
+
+	        // Check results of the batch
+	        foreach ($handles as $page => $ch) {
+	            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	            if ($httpCode == 200) {
+	                $lastExistingPage = max($lastExistingPage, $page);
+	                $existsInBatch = true;
+	            }
+	            curl_multi_remove_handle($mh, $ch);
+	            curl_close($ch);
+	        }
+
+	        curl_multi_close($mh);
+
+	        if (!$existsInBatch && $lastExistingPage > 0) {
+	            break;
+	        }
+
+	        $pageToCheck += 4;
+	    }
+
+	    // Log the result
+	    file_put_contents($logFile, "{$logKey}: {$lastExistingPage}\n", FILE_APPEND);
+
+	    return $lastExistingPage;
+	}
+
+	private function getTbsNewsImageUrlsFromLog($year, $issue, $totalPages) {
+	    $imageUrls = [];
+	    for ($i = 1; $i <= $totalPages; $i++) {
+	        $imageUrls[] = "https://storage.googleapis.com/tbs-news/" . $year . "/WTBN" . $issue . "_page-" . sprintf("%04d", $i) . ".jpg";
+	    }
+	    return $imageUrls;
+	}
+
 	public function viewtbsnews($issue,$download=false){
 		$data = $this->data;
-		
+$start = hrtime(1);
+//$end = hrtime(1); $timer[] = ($end - $start) / 10000; $start = $end;
 		// Logging for statistics
 		$type = ($download) ? "_download_" : "_view_";
 		write_file("application/logs/tbsnews".$type.date('Y').'.log', $issue."\t".date('YmdHis')."\n", "a");
@@ -204,7 +295,7 @@ class Api extends CI_Controller {
 
 		$data['year'] = $year = date('Y',$datetime);
 		$data['date'] = $date = date('Y年m月d日',$datetime);
-
+		
 		// File Location
 		$location = '/asset/img/tbsnews/'.$year;
 		$file_location = $this->config->item('site_loc','siteinfo') . $location;
@@ -234,27 +325,22 @@ class Api extends CI_Controller {
 		}
 
 		// Load images file - for mobile that can't view PDF
+		$totalPages = $this->getTotalTbsNewsPages($year, $issue);
 		$image_page = 0;
-		$data['images'] = array();
-		do{
-			$image_page++;
-			$image_url = "https://storage.googleapis.com/tbs-news/".$year."/WTBN".$issue."_page-".sprintf("%04d", $image_page).".jpg";
-			@$a = file_get_contents($image_url);
-			if($a) $data['images'][] = $image_url;
-		}while($a);
+		$data['images'] = $this->getTbsNewsImageUrlsFromLog($year, $issue, $totalPages);
 
-		$data['issue'] = $issue;
+		$data['issue']  = $issue;
 		$meta_image_url = "https://storage.googleapis.com/tbs-news/".$year."/WTBN".$issue.".jpg";
 		$data['meta_fb'] = array(
 			'og:title'       => sprintf(lang('viewtbsnews_fb_like_title'),$issue),
 			'og:site_name'   => lang('viewtbsnews_fb_like_site_name'),
 			'og:description' => sprintf(lang('viewtbsnews_fb_like_description'),$issue,$issue,$date,$issue),
 			//'og:image'       => file_exists($file_location.'/WTBN'.$issue.'.jpg') ? $url_location.'/WTBN'.$issue.'.jpg' : lang('viewtbsnews_fb_like_image'),
-			'og:image'       => @file_get_contents($meta_image_url) ? $meta_image_url : lang('viewtbsnews_fb_like_image'),
+			'og:image'       => $this->check_remote_file_exists($meta_image_url) ? $meta_image_url : lang('viewtbsnews_fb_like_image'),
 			'og:image:width'  => '1080',
 			'og:image:height' => '567',
 		);
-
+//$end = hrtime(1); $timer[] = ($end - $start) / 10000; $start = $end;print_pre($timer);exit;
 		$this->load->view('api/viewtbsnews',$data);
 	}
 
@@ -300,7 +386,7 @@ class Api extends CI_Controller {
 			}else{
 
 				// if file not exists, check google console & create fake file
-				@$a = file_get_contents("https://storage.googleapis.com/tbs-news/".$year."/WTBN".$issue.".pdf");
+				@$a = $this->check_remote_file_exists("https://storage.googleapis.com/tbs-news/".$year."/WTBN".$issue.".pdf");
 				if($a){
 					file_put_contents($file_location.'/WTBN'.$issue.'.pdf',"");
 					$data['tbsnews'][$issue] = array(

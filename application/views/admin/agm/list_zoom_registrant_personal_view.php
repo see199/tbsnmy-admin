@@ -94,6 +94,7 @@
                                     <br /><?= $m['name_malay']; ?>
                                     <br /><?= $m['nric']; ?>
                                     <br />會員編號：<?= $m['membership_id'];?>
+                                    <br />電話：<?= isset($r['phone_mobile']) ? anchor("https://wa.me/".substr($r['phone_mobile'],1) ,$r['phone_mobile'],array("target" => 'wa_msg')) : "";?>
                                     <small><br /><br />登記：<?= $r['reg_date']; ?></small>
                                     <?php if(isset($r['qr'])) echo "<br /><img src='".base_url('asset/img/qr_contact/').$r['qr'].".png' height=100>"; ?>
                                 </td>

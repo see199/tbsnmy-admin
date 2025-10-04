@@ -30,9 +30,9 @@
         <?php if ($this->session->flashdata('error')): ?>
             <div class="alert alert-danger"><?php echo $this->session->flashdata('error'); ?></div>
         <?php endif; ?>
-        <table class="table table-bordered table-sm">
+        <table class="table table-bordered table-sm table-hover table-striped">
             <thead>
-                <tr>
+                <tr class='table-primary'>
                     <?php if (!empty($events)): ?>
                         <?php foreach (array_keys((array)$events[0]) as $column): ?>
                             <?php if ($column != 'reg_id'): ?>
@@ -55,8 +55,8 @@
                                 <?php endforeach; ?>
                                 <td nowrap>
                                     <input type="hidden" name="id" value="<?php echo $event->reg_id; ?>">
-                                    <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-save"></i> Save</button>
-                                    <button class="btn btn-danger btn-sm delete-btn" data-regid="<?php echo $event->reg_id; ?>" data-eventid="<?php echo $event->event_id; ?>"><i class="fas fa-trash"></i> Delete</button>
+                                    <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-save"></i> </button>
+                                    <button class="btn btn-danger btn-sm delete-btn" data-regid="<?php echo $event->reg_id; ?>" data-eventid="<?php echo $event->event_id; ?>"><i class="fas fa-trash"></i> </button>
                                 </form>
                                 </td>
                         </tr>

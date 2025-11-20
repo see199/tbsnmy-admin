@@ -450,4 +450,16 @@ class Contact_model extends CI_Model {
 		$i = $this->db->query($query);
 		return ($i->num_rows() > 0) ? $i->result_array() : array();
 	}
+
+	public function get_contact_by_card_id($card_id){
+		$this->db = $this->load->database('local', TRUE);
+		$this->db->select('nric')
+				->where('tbf_card_id', $card_id);
+		$res = $this->db->get('tbs_contact');
+		if ($res->num_rows() > 0) {
+			return $res->row()->nric;
+		} else {
+			return false;
+		}
+	}
 }

@@ -609,7 +609,7 @@ class Agm extends CI_Controller {
     public function ajax_scan_qr(){
     	$data = $this->data;
 
-    	$nric = $this->qr_decrypt($this->input->post('qrdata'));
+    	$nric = $this->resolve_nric_from_qr($this->input->post('qrdata'));
     	if($nric == 'err'){
 			echo json_encode(['error' => '二维码扫不正確，無法掃描。']);
     	}else{
@@ -619,14 +619,19 @@ class Agm extends CI_Controller {
 	    	if($userData) {
 	            echo json_encode($userData);
 	        } else {
-	            echo json_encode(['error' => '【會員尚未登記】 -- '.$nric.'尚未在我们的 AGM 系统中注册。请先完成注册后，才能进行二维码扫描以记录出席。']);
+	            echo json_encode(['error' => '【會員尚未登記】 -- '.$nric.'尚未在我们的 AGM 系统中注册。请先完成注册后，才能進行二维码扫描以记录出席。']);
 	        }
     	}
 
     }
 
     public function ajax_log_attendance() {
-        $nric = $this->qr_decrypt($this->input->post('qrdata'));
+        $nric = $this->resolve_nric_from_qr($this->input->post('qrdata'));
+
+        if($nric == 'err'){
+            echo json_encode(['error' => '二维码扫不正確，無法掃描。']);
+            return;
+        }
 
         // Logic to log attendance
         $this->agm_model->login_on_site($nric);
@@ -668,6 +673,35 @@ class Agm extends CI_Controller {
     	}
 
     	return $nric;
+	}
+
+	private function resolve_nric_from_qr($qrdata){
+		$this->load->model('contact_model');
+
+		// 1. Check if URL
+		if (strpos($qrdata, 'http') !== false) {
+			$parts = parse_url($qrdata);
+			if(isset($parts['query'])){
+				parse_str($parts['query'], $query);
+				if(isset($query['ref'])){
+					$nric = $this->contact_model->get_contact_by_card_id($query['ref']);
+					if($nric) return $nric;
+				}
+			}
+			// If URL but no ref or ref not found, it's invalid for our purpose
+			return 'err';
+		}
+
+		// 2. Try Decrypt (Priority to encrypted NRIC as it is the current standard)
+		$decrypted = $this->qr_decrypt($qrdata);
+		if($decrypted != 'err') return $decrypted;
+
+		// 3. Try as Card ID directly
+		$nric = $this->contact_model->get_contact_by_card_id($qrdata);
+		if($nric) return $nric;
+
+		// 4. Fallback: Assume it is a plain NRIC
+		return $qrdata;
 	}
 
 	private function qr_encrypt($data){

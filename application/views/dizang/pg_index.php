@@ -101,7 +101,19 @@ $(document).ready(function() {
     $('#date_from').on('change',get_data);
     $('#date_to').on('change',get_data);
 
-} );
+    $('#checkAll').on('click',function(){
+        const allCheckbox = document.querySelectorAll('.cbox');
+        console.log(allCheckbox);
+        allCheckbox.forEach(checkbox => {
+            checkbox.checked = true;}
+        );
+    });
+
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+
+});
 </script>
 <?php 
 //Others can only view & search, cannot edit & save
@@ -146,7 +158,7 @@ $admin_email = array('see199@gmail.com','tandy@tbsn.my','ahlian76@gmail.com','bo
                             <td><b>類別</b></td>
                             <td><b>安奉</b></td>
                             <td><b>安奉日期</b></td>
-                            <td><b></b></td>
+                            <td><b><a href="#" id="checkAll">全選</a></b></td>
                         </tr>
                     </thead>
                 </table>

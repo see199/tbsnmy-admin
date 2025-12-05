@@ -28,10 +28,10 @@ class Dizang_model extends CI_Model {
 		$this->db->update('tbs_dizang_user',array('last_login' => date('Y-m-d H:i:s')));
 	}
 
-	public function get_dizang_details($ids){
+	public function get_dizang_details($ids,$order='date'){
 		$this->db = $this->load->database('local', TRUE);
 		
-		$res = $this->db->where_in('dizang_id', $ids)->from('tbs_dizang')->get();
+		$res = $this->db->where_in('dizang_id', $ids)->from('tbs_dizang')->order_by($order)->get();
 		return $res->result_array();
 	}
 

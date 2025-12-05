@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
 <?php 
 //Others can only view & search, cannot edit & save
 //$cs_email = array('cs@tbsn.my','share@tbsn.my');
-$admin_email = array('see199@gmail.com','tandy@tbsn.my','ahlian76@gmail.com','boyeone@gmail.com','xuan.lianxuan@gmail.com');
+$admin_email = array('see199@gmail.com','tandy@tbsn.my','lianmei76@gmail.com','boyeone@gmail.com','xuan.lianxuan@gmail.com');
 ?>
 
 <div id="page-wrapper">

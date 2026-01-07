@@ -39,6 +39,7 @@
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-bar-chart"></i> Statistics <span class="caret"></span></a>
                   <ul class="dropdown-menu" role="menu">
                     <li><a href="<?= base_url(); ?>wenxuan/lists/stats_tbsnews"><i class="fa fa-newspaper-o"></i> 真佛報</a></li>
+                    <li><a href="<?= base_url(); ?>wenxuan/lists/stats_analytics"><i class="fa fa-line-chart"></i> 真佛報 Analytics</a></li>
                   </ul>
                 </li>
 

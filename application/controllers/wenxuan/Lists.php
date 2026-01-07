@@ -445,6 +445,15 @@ class Lists extends CI_Controller {
 		
 	}
 
+	public function stats_analytics(){
+		$data = $this->data;
+
+		$this->load->view('wenxuan/header', $data);
+		$this->load->view('wenxuan/navigation', $data);
+		$this->load->view('wenxuan/stats_analytics_view',$data);
+		$this->load->view('wenxuan/footer');
+	}
+
 }
 
 ?>

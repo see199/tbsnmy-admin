@@ -101,8 +101,18 @@ class Lists extends CI_Controller {
 				@$stats['package_id'][$package_id][] = ($package[$package_id]) ? $package[$package_id] : 0;
 		}
 		ksort($stats['package_id']);
-		//print_pre($stats);
-		//print_pre($list);
+		$package = $this->wenxuan_model->get_package();
+		//print_pre($total);
+		//print_pre($package);
+
+		// Fill empty package in year
+		foreach($package as $package_id => $p){
+			if($p['year'] == $year){
+				@$total[$package_id] += 0;
+			}
+		}
+		//print_pre($total);
+		//print_pre($package);
 
 
 		//Sort Users based on package create date instead of user create date
@@ -118,7 +128,7 @@ class Lists extends CI_Controller {
 		$data['stats'] = $stats;
 		$data['gift_sent']    = $gift_sent;
 		$data['payment_done'] = $payment_done;
-		$data['package']      = $this->wenxuan_model->get_package();
+		$data['package']      = $package;
 		$data['form_url']     = $this->config->item('url_wenxuan_form').'/viewform/';
 
 		$this->load->view('wenxuan/header', $data);

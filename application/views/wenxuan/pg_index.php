@@ -91,7 +91,7 @@ $(document).ready(function() {
                   <tbody>
                     <?php foreach($wenxuan_snapshot['package'] as $y => $k): ?>
                     <tr>
-                      <td><b><?= $y; ?></b></td>
+                      <td><b><a href="<?= base_url(); ?>wenxuan/lists/subscriber/<?= $y; ?>"><?= $y; ?></a></b></td>
                       <td>
                         <table class="table table-bordered">
                           <tr class='success'>

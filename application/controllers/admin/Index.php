@@ -101,7 +101,7 @@ class Index extends CI_Controller {
 		$file = '';
 
 		@$upload = $_FILES['userfile'];
-		if(!$upload['error']){
+		if(isset($upload['error']) && !$upload['error']){
 			$file = $upload['tmp_name'];
 		}
 

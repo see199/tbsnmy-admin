@@ -177,6 +177,20 @@ function delete_data(){
 
 }
 
+function update_tracking(wenxuan_id, package_id, pos_tracking){
+    $.ajax({
+        type:"POST",
+        url: "<?= base_url('wenxuan/lists/ajax_tracking_update'); ?>",
+        data:{
+            wenxuan_id : wenxuan_id,
+            package_id : package_id,
+            pos_tracking : pos_tracking
+        }
+    }).done(function(data) {
+        console.log("Tracking updated: " + pos_tracking);
+    });
+}
+
 </script>
 <?php $source = ['web' => '<i class="fa fa-globe" aria-hidden="true"></i>', 'desk' => '<i class="fa fa-phone" aria-hidden="true"></i>']; ?>
 
@@ -260,18 +274,19 @@ function delete_data(){
                             <th rowspan=2><b>聯絡</b></td>
                             <th rowspan=2><b>來源</b></td>
                             <th colspan=<?=sizeof($total);?>><b>功德主方案</b></td>
-                            <th rowspan=2><b>已發贈品</b></td>
-                            <th rowspan=2><b>完成付款</b></td>
-                            <th rowspan=2><b>報-訂</b></td>
+                            <th rowspan=2><b>已發<br />贈品</b></td>
+                            <th rowspan=2><b>完成<br />付款</b></td>
+                            <!--th rowspan=2><b>報-訂</b></td>
                             <th rowspan=2><b>報-送</b></td>
                             <th rowspan=2><b>燃-訂</b></td>
-                            <th rowspan=2><b>燃-送</b></td>
+                            <th rowspan=2><b>燃-送</b></td -->
                             <th rowspan=3><b>一次/分期</b></td>
+                            <th rowspan=3><b>Tracking<br />Number</b></td>
                             <th rowspan=3><b><?=$year;?>年<br />報名表格</b></td>
                         </tr>
                         <tr class="info">
                             <?php foreach($total as $package_id => $t):?>
-                            <th><b><?= $package[$package_id]['package_name'].'<br />(RM '.$package[$package_id]['package_amount'].')'; ?></b></td>
+                            <th><b><?= $package[$package_id]['package_name'].'<br />('.$package[$package_id]['package_amount'].')'; ?></b></td>
                             <?php endforeach;?>
                         </tr>
                         <tr class="success">
@@ -281,16 +296,16 @@ function delete_data(){
                             <?php endforeach;?>
                             <td><b><?= $gift_sent; ?></b></td>
                             <td><b><?= $payment_done; ?></b></td>
-                            <?php $tbtotal = array();foreach($list as $c):
+                            <?php /*$tbtotal = array();foreach($list as $c):
                                 @$tbtotal['tbnews_free'] += $c['tbnews_free'];
                                 @$tbtotal['tbnews_paid'] += $c['tbnews_paid'];
                                 @$tbtotal['randeng_free'] += $c['randeng_free'];
                                 @$tbtotal['randeng_paid'] += $c['randeng_paid'];
-                            endforeach;?>
-                            <td><b><?= $tbtotal['tbnews_free']; ?></b></td>
+                            endforeach; */?>
+                            <!--td><b><?= $tbtotal['tbnews_free']; ?></b></td>
                             <td><b><?= $tbtotal['tbnews_paid']; ?></b></td>
                             <td><b><?= $tbtotal['randeng_free']; ?></b></td>
-                            <td><b><?= $tbtotal['randeng_paid']; ?></b></td>
+                            <td><b><?= $tbtotal['randeng_paid']; ?></b></td-->
                         </tr>
                     </thead>
                     <tbody>
@@ -319,11 +334,18 @@ function delete_data(){
                                 <?php endforeach;?>
                                 <td><b><?= $c['package'][$year]['gift_taken'] ? 'Sent' : ""; ?></b></td>
                                 <td><b><?= $c['package'][$year]['payment_done'] ? '<i class="fa fa-check" aria-hidden="true"></i>' : "" ?></b></td>
-                                <td><?= $c['tbnews_free'];?></td>
+                                <!--td><?= $c['tbnews_free'];?></td>
                                 <td><?= $c['tbnews_paid'];?></td>
                                 <td><?= $c['randeng_free'];?></td>
-                                <td><?= $c['randeng_paid'];?></td>
+                                <td><?= $c['randeng_paid'];?></td-->
                                 <td><b><?= $c['package'][$year]['fullpayment'] ? '一次付清' : "分期付款" ?></b></td>
+                                <td style="padding:0px;">
+                                    <input class="form-control" style="width:150px" 
+                                           onfocus="this.select()" 
+                                           onblur="update_tracking(<?=$c['wenxuan_id'];?>, <?=$c['package'][$year]['package_id'];?>, this.value)" 
+                                           value="<?= $c['package'][$year]['pos_tracking'];?>" 
+                                           placeholder="Tracking #"/>
+                                </td>
                                 <td><?php foreach($c['package'] as $pyear => $p):?>
                                         <?php $form_full_url = ($pyear == $year ) ? $form_url.$p['md5_id'] : "" ?>
                                         <a href="<?= $form_full_url; ?>" target="_blank">view</a>

@@ -202,6 +202,12 @@ class Lists extends CI_Controller {
 		echo 1;
 	}
 
+	public function ajax_tracking_update(){
+		$post_data = $this->input->post();
+		$this->wenxuan_model->update_tracking($post_data['wenxuan_id'],$post_data['package_id'],$post_data['pos_tracking']);
+		echo 1;
+	}
+
 	public function ajax_delete_contact(){
 		$post_data = $this->input->post();
 		$this->wenxuan_model->delete_contact($post_data['wenxuan_id']);

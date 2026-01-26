@@ -196,4 +196,12 @@ class Wenxuan_model extends CI_Model {
 
 
 	}
+
+	public function update_tracking($wenxuan_id,$package_id,$pos_tracking){
+		$this->db = $this->load->database('local', TRUE);
+
+		$this->db->where('wenxuan_id',$wenxuan_id)
+			->where('package_id',$package_id)
+			->update('tbs_wenxuan_subscriber_year',array('pos_tracking' => $pos_tracking));
+	}
 }

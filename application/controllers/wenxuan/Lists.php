@@ -345,9 +345,7 @@ class Lists extends CI_Controller {
 		//echo'<pre>';print_r($list);
 
 		// Preset Value
-		$header_args = array('No','Category','Parcel Content','Parcel Value','Weight','Pickup Date','Sender Name','Sender Contact','Sender Address','Sender Postcode','Sender City','Receiver Name','Receiver Contact','Receiver Address','Receiver Postcode','Receiver City');
-		$preset_data = array('Fashion And Accessories','Gift and Wallet','100','1',date('Y-m-d',strtotime('+1 day')),'PABT Chen Foh Chong Malaysia','\'0333749399','1A, Jalan Perawas, Lebuh Setaka, Taman Chi Liung','41200','Klang');
-
+		$header_args = array('No','Category','Parcel Content','Parcel Value','Weight','Pickup Date','Sender Name','Sender Company','Sender Contact','Sender Alt Contact','Sender Email','Sender Address','Sender Postcode','Sender City','Receiver Name','Receiver Company','Receiver Contact','Receiver Alt Contact','Receiver Email','Receiver Address','Receiver Postcode','Receiver City','Courier Company');
 
 		$counter = 0;
 		foreach($list as $wenxuan_id => $subscriber){
@@ -359,12 +357,29 @@ class Lists extends CI_Controller {
 				//print_pre($package);
 
 				$counter++;
-				$package_data[] = array_merge(array($counter),$preset_data,array(
+				$package_data[] = array_merge(array($counter), array(
+					'Fashion And Accessories',
+					$package['parcel_content'] ? $package['parcel_content'] : 'Gift and Wallet',
+					$package['parcel_value'] ? $package['parcel_value'] : '100',
+					$package['weight_in_kg'] ? $package['weight_in_kg'] : '1',
+					date('Y-m-d',strtotime('+1 day')),
+					'PABT Wenxuan',
+					'PABT Chen Foh Chong Malaysia',
+					'\'0333749399',
+					'',
+					'info@tbsn.my',
+					'1A, Jalan Perawas, Lebuh Setaka, Taman Chi Liung',
+					'41200',
+					'Klang',
 					$package['wenxuan_name_receiver'],
-					$package['wenxuan_contact'],
+					'',
+					str_replace(' ', '', $package['wenxuan_contact']),
+					'',
+					'',
 					$package['wenxuan_address1'].' '.$package['wenxuan_address2'],
 					$package['wenxuan_postcode'],
 					$package['wenxuan_city'],
+					'CityLink',
 				));
 			}
 		}

@@ -12,6 +12,10 @@ function load_box(me){
         $('#package_name').val('');
         $('#package_amount').val('');
         $('#package_description').val('');
+        $('#parcel_content').val('');
+        $('#parcel_value').val('');
+        $('#weight_in_kg').val('');
+
 
     }else{
         package = jQuery.parseJSON(me);
@@ -24,6 +28,10 @@ function load_box(me){
         $('#package_name').val(package.package_name);
         $('#package_amount').val(package.package_amount);
         $('#package_description').val(package.package_description);
+        $('#parcel_content').val(package.parcel_content);
+        $('#parcel_value').val(package.parcel_value);
+        $('#weight_in_kg').val(package.weight_in_kg);
+
     }
 }
 
@@ -34,7 +42,11 @@ function post_data(refresh_page){
         year                : $('#year').val(),
         package_name        : $('#package_name').val(),
         package_amount      : $('#package_amount').val(),
-        package_description : $('#package_description').val()
+        package_description : $('#package_description').val(),
+        parcel_content      : $('#parcel_content').val(),
+        parcel_value        : $('#parcel_value').val(),
+        weight_in_kg        : $('#weight_in_kg').val()
+
     };
 
     //$('#btn_modal_update').hide();
@@ -120,6 +132,10 @@ function post_data(refresh_page){
                     <tr><td>簡介</td><td>
                         <textarea rows=5 class="form-control" id="package_description"></textarea>
                     </td></tr>
+                    <tr><td>包裹內容 (EasyParcel)</td><td><input class="form-control" id="parcel_content"/></td></tr>
+                    <tr><td>包裹價值 (EasyParcel)</td><td><input class="form-control" id="parcel_value"/></td></tr>
+                    <tr><td>重量 (kg) (EasyParcel)</td><td><input class="form-control" id="weight_in_kg"/></td></tr>
+
                 </table>
             </div>
             <div class="modal-footer">

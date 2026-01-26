@@ -87,7 +87,7 @@ class Wenxuan_model extends CI_Model {
 		}
 
 		// Get Subscriber
-		$this->db->select('s.*, y.wenxuan_id, y.package_id, y.fullpayment, y.status, y.gift_taken, y.md5_id, y.start_date, y.end_date, y.remarks, p.year, y.create_date, y.register_blessing, y.pos_tracking, y.self_pickup, y.source')
+		$this->db->select('s.*, y.wenxuan_id, y.package_id, y.fullpayment, y.status, y.gift_taken, y.md5_id, y.start_date, y.end_date, y.remarks, p.year, y.create_date, y.register_blessing, y.pos_tracking, y.self_pickup, y.source, p.parcel_content, p.parcel_value, p.weight_in_kg')
 			->from('tbs_wenxuan_subscriber_year y')
 			->join('tbs_wenxuan_subscriber_package p','y.package_id = p.package_id', 'left')
 			->join('tbs_wenxuan_subscriber s','s.wenxuan_id = y.wenxuan_id')

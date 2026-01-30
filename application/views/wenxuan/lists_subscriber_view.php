@@ -15,12 +15,34 @@ $(document).ready(function() {
         var pChecked_<?=$counter;?> = $("#package_<?=$package_id;?>").prop("checked");
     <?php endforeach;?>
 
+    var fGiftSent = $("#f_gift_sent").prop("checked");
+    var fGiftUnsent = $("#f_gift_unsent").prop("checked");
+    var fPaid = $("#f_paid").prop("checked");
+    var fUnpaid = $("#f_unpaid").prop("checked");
+    var fSelfPickup = $("#f_self_pickup").prop("checked");
+    var fMailing = $("#f_mailing").prop("checked");
+
     $("#example tbody tr").each(function() {
       var row = $(this);
       var textMatch = row.text().toLowerCase().indexOf(value) > -1;
+      
+      // Get data from columns
+      // Package checks are in td index 4, 5, 6 (nth-child 5, 6, 7)
       var pk1 = row.find("td:nth-child(5) i.fa.fa-check").length > 0;
       var pk2 = row.find("td:nth-child(6) i.fa.fa-check").length > 0;
       var pk3 = row.find("td:nth-child(7) i.fa.fa-check").length > 0;
+
+      // New columns (using relative indices from the end might be safer if indices change)
+      // Current structure:
+      // ... Package Columns ...
+      // Gift Sent (td index 4+sizeof(total))
+      // Paid (td index 5+sizeof(total))
+      // Self Pickup (td index 6+sizeof(total))
+      var colGiftValue = row.find("td:nth-child(<?= 5 + sizeof($total); ?>)").text().trim();
+      var isGiftSent = colGiftValue === "Sent";
+      
+      var isPaid = row.find("td:nth-child(<?= 6 + sizeof($total); ?>) i.fa.fa-check").length > 0;
+      var isSelfPickup = row.find("td:nth-child(<?= 7 + sizeof($total); ?>) i.fa.fa-check").length > 0;
 
       var showRow = true; // Default to show
 
@@ -28,16 +50,39 @@ $(document).ready(function() {
         showRow = false;
       }
 
-      if (pChecked_1 && !pk1) { // If "Paid" checkbox is checked, filter by paid
+      if (pChecked_1 && !pk1) {
         showRow = false;
       }
 
-      if (pChecked_2 && !pk2) { // If "Paid" checkbox is checked, filter by paid
+      if (pChecked_2 && !pk2) {
         showRow = false;
       }
 
-      if (pChecked_3 && !pk3) { // If "Paid" checkbox is checked, filter by paid
+      if (pChecked_3 && !pk3) {
         showRow = false;
+      }
+
+      // New Filters logic: If at least one in a pair is checked, the row must match at least one checked option.
+      
+      // Gift Sent / Unsent pair
+      if (fGiftSent || fGiftUnsent) {
+        if (!((fGiftSent && isGiftSent) || (fGiftUnsent && !isGiftSent))) {
+          showRow = false;
+        }
+      }
+
+      // Paid / Unpaid pair
+      if (fPaid || fUnpaid) {
+        if (!((fPaid && isPaid) || (fUnpaid && !isPaid))) {
+          showRow = false;
+        }
+      }
+
+      // Self Pickup / Mailing pair
+      if (fSelfPickup || fMailing) {
+        if (!((fSelfPickup && isSelfPickup) || (fMailing && !isSelfPickup))) {
+          showRow = false;
+        }
       }
 
       if (showRow) {
@@ -263,9 +308,21 @@ function update_tracking(wenxuan_id, package_id, pos_tracking){
             <div class="col-lg-10 col-lg-offset-1">
 
                 Search: <?php foreach($total as $package_id => $t):?>
-                <label><input name='package' class='searchFilter' type="radio" id="package_<?=$package_id;?>"> <?= $package[$package_id]['package_name'];?></label>
+                <label style="margin-right: 15px;"><input name='package' class='searchFilter' type="radio" id="package_<?=$package_id;?>"> <?= $package[$package_id]['package_name'];?></label>
                 <?php endforeach;?>
-                <input type="text" id="searchInput" placeholder="Search...">
+                <br>
+                Options: 
+                <label style="margin-right: 15px;"><input type="checkbox" class="searchFilter" id="f_gift_sent"> 已發贈品</label>
+                <label style="margin-right: 15px;"><input type="checkbox" class="searchFilter" id="f_gift_unsent"> 未發贈品</label>
+                <label style="margin-right: 15px;"><input type="checkbox" class="searchFilter" id="f_paid"> 完成付款</label>
+                <label style="margin-right: 15px;"><input type="checkbox" class="searchFilter" id="f_unpaid"> 未完成付款</label>
+                <label style="margin-right: 15px;"><input type="checkbox" class="searchFilter" id="f_self_pickup"> 自行領取</label>
+                <label style="margin-right: 15px;"><input type="checkbox" class="searchFilter" id="f_mailing"> 郵寄</label>
+                <br>
+                <div class="form-inline">
+                    Search: <input type="text" id="searchInput" placeholder="Search..." class="form-control" style="width: auto; vertical-align: middle;">
+                </div>
+                <br>
                 <table id="example" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
                     <thead>
                         <tr class="info">
@@ -276,6 +333,7 @@ function update_tracking(wenxuan_id, package_id, pos_tracking){
                             <th colspan=<?=sizeof($total);?>><b>功德主方案</b></td>
                             <th rowspan=2><b>已發<br />贈品</b></td>
                             <th rowspan=2><b>完成<br />付款</b></td>
+                            <th rowspan=2><b>自行<br />領取</b></td>
                             <!--th rowspan=2><b>報-訂</b></td>
                             <th rowspan=2><b>報-送</b></td>
                             <th rowspan=2><b>燃-訂</b></td>
@@ -296,6 +354,7 @@ function update_tracking(wenxuan_id, package_id, pos_tracking){
                             <?php endforeach;?>
                             <td><b><?= $gift_sent; ?></b></td>
                             <td><b><?= $payment_done; ?></b></td>
+                            <td></td>
                             <?php /*$tbtotal = array();foreach($list as $c):
                                 @$tbtotal['tbnews_free'] += $c['tbnews_free'];
                                 @$tbtotal['tbnews_paid'] += $c['tbnews_paid'];
@@ -334,6 +393,7 @@ function update_tracking(wenxuan_id, package_id, pos_tracking){
                                 <?php endforeach;?>
                                 <td><b><?= $c['package'][$year]['gift_taken'] ? 'Sent' : ""; ?></b></td>
                                 <td><b><?= $c['package'][$year]['payment_done'] ? '<i class="fa fa-check" aria-hidden="true"></i>' : "" ?></b></td>
+                                <td><b><?= $c['package'][$year]['self_pickup'] ? '<i class="fa fa-check" aria-hidden="true"></i>' : "" ?></b></td>
                                 <!--td><?= $c['tbnews_free'];?></td>
                                 <td><?= $c['tbnews_paid'];?></td>
                                 <td><?= $c['randeng_free'];?></td>

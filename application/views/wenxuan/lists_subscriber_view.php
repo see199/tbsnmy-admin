@@ -91,6 +91,44 @@ $(document).ready(function() {
         row.hide();
       }
     });
+
+    updateTotals();
+  }
+
+  function updateTotals() {
+    var packageCounts = {};
+    <?php foreach($total as $package_id => $t): ?>
+    packageCounts[<?= $package_id; ?>] = 0;
+    <?php endforeach; ?>
+    var giftSentCount = 0;
+    var paymentDoneCount = 0;
+    var totalVisible = 0;
+
+    $("#example tbody tr:visible").each(function() {
+      var row = $(this);
+      totalVisible++;
+
+      <?php $idx = 5; foreach($total as $package_id => $t): ?>
+      if (row.find("td:nth-child(<?= $idx++; ?>)").text().indexOf("✔") > -1) {
+        packageCounts[<?= $package_id; ?>]++;
+      }
+      <?php endforeach; ?>
+
+      if (row.find("td:nth-child(<?= 5 + sizeof($total); ?>)").text().trim() === "Sent") {
+        giftSentCount++;
+      }
+
+      if (row.find("td:nth-child(<?= 6 + sizeof($total); ?>)").text().indexOf("✔") > -1) {
+        paymentDoneCount++;
+      }
+    });
+
+    $("#total_visible").text(totalVisible);
+    <?php foreach($total as $package_id => $t): ?>
+    $(".total_package_<?= $package_id; ?>").text(packageCounts[<?= $package_id; ?>]);
+    <?php endforeach; ?>
+    $("#total_gift_sent").text(giftSentCount);
+    $("#total_payment_done").text(paymentDoneCount);
   }
 });
 
@@ -348,12 +386,12 @@ function update_tracking(wenxuan_id, package_id, pos_tracking){
                             <?php endforeach;?>
                         </tr>
                         <tr class="success">
-                            <td colspan=4><b>總數</b></td>
+                            <td colspan=4><b>總數 (<span id="total_visible"><?= count($list); ?></span>)</b></td>
                             <?php foreach($total as $package_id => $t):?>
-                            <td><b><?= $t; ?></b></td>
+                            <td><b class="total_package_<?= $package_id; ?>"><?= $t; ?></b></td>
                             <?php endforeach;?>
-                            <td><b><?= $gift_sent; ?></b></td>
-                            <td><b><?= $payment_done; ?></b></td>
+                            <td><b id="total_gift_sent"><?= $gift_sent; ?></b></td>
+                            <td><b id="total_payment_done"><?= $payment_done; ?></b></td>
                             <td></td>
                             <?php /*$tbtotal = array();foreach($list as $c):
                                 @$tbtotal['tbnews_free'] += $c['tbnews_free'];

@@ -28,9 +28,9 @@ $(document).ready(function() {
       
       // Get data from columns
       // Package checks are in td index 4, 5, 6 (nth-child 5, 6, 7)
-      var pk1 = row.find("td:nth-child(5) i.fa.fa-check").length > 0;
-      var pk2 = row.find("td:nth-child(6) i.fa.fa-check").length > 0;
-      var pk3 = row.find("td:nth-child(7) i.fa.fa-check").length > 0;
+      var pk1 = row.find("td:nth-child(5)").text().indexOf("✔") > -1;
+      var pk2 = row.find("td:nth-child(6)").text().indexOf("✔") > -1;
+      var pk3 = row.find("td:nth-child(7)").text().indexOf("✔") > -1;
 
       // New columns (using relative indices from the end might be safer if indices change)
       // Current structure:
@@ -41,8 +41,8 @@ $(document).ready(function() {
       var colGiftValue = row.find("td:nth-child(<?= 5 + sizeof($total); ?>)").text().trim();
       var isGiftSent = colGiftValue === "Sent";
       
-      var isPaid = row.find("td:nth-child(<?= 6 + sizeof($total); ?>) i.fa.fa-check").length > 0;
-      var isSelfPickup = row.find("td:nth-child(<?= 7 + sizeof($total); ?>) i.fa.fa-check").length > 0;
+      var isPaid = row.find("td:nth-child(<?= 6 + sizeof($total); ?>)").text().indexOf("✔") > -1;
+      var isSelfPickup = row.find("td:nth-child(<?= 7 + sizeof($total); ?>)").text().indexOf("✔") > -1;
 
       var showRow = true; // Default to show
 
@@ -389,11 +389,11 @@ function update_tracking(wenxuan_id, package_id, pos_tracking){
                                 <td><?= $c['wenxuan_contact']; ?></td>
                                 <td><?= $source[$c['package'][$year]['source']]; ?></td>
                                 <?php foreach($total as $package_id => $t):?>
-                                <td><b><?= ($package_id == $c['package'][$year]['package_id']) ? '<i class="fa fa-check" aria-hidden="true"></i>' : ""; ?></b></td>
+                                <td><b><?= ($package_id == $c['package'][$year]['package_id']) ? '&#10004;' : ""; ?></b></td>
                                 <?php endforeach;?>
                                 <td><b><?= $c['package'][$year]['gift_taken'] ? 'Sent' : ""; ?></b></td>
-                                <td><b><?= $c['package'][$year]['payment_done'] ? '<i class="fa fa-check" aria-hidden="true"></i>' : "" ?></b></td>
-                                <td><b><?= $c['package'][$year]['self_pickup'] ? '<i class="fa fa-check" aria-hidden="true"></i>' : "" ?></b></td>
+                                <td><b><?= $c['package'][$year]['payment_done'] ? '&#10004;' : "" ?></b></td>
+                                <td><b><?= $c['package'][$year]['self_pickup'] ? '&#10004;' : "" ?></b></td>
                                 <!--td><?= $c['tbnews_free'];?></td>
                                 <td><?= $c['tbnews_paid'];?></td>
                                 <td><?= $c['randeng_free'];?></td>

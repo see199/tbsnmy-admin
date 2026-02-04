@@ -274,6 +274,38 @@ function update_tracking(wenxuan_id, package_id, pos_tracking){
     });
 }
 
+function check_tracking(tracking_no){
+    if(!tracking_no || tracking_no == "自取") return;
+    
+    $.ajax({
+        type:"POST",
+        url: "<?= base_url('wenxuan/lists/ajax_check_tracking'); ?>",
+        data:{ tracking_no : tracking_no }
+    }).done(function(data) {
+        try {
+            var res = jQuery.parseJSON(data);
+            if(res.api_status == 'Success'){
+                var result = res.result[0];
+                var status_desc = result.status_list.status;
+                var latest = result.latest_status;
+                var latest_date = result.latest_update;
+                
+                var msg = "Tracking #: " + tracking_no + "\nStatus: " + status_desc;
+                if(latest){
+                    msg += "\nLatest: " + latest + " (" + latest_date + ")";
+                }
+                alert(msg);
+            }else{
+                alert("EasyParcel Error: " + res.error_remark);
+            }
+        } catch (e) {
+            alert("Unexpected response from server.");
+        }
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        alert("Request failed: " + textStatus);
+    });
+}
+
 </script>
 <?php $source = ['web' => '<i class="fa fa-globe" aria-hidden="true"></i>', 'desk' => '<i class="fa fa-phone" aria-hidden="true"></i>']; ?>
 
@@ -438,11 +470,18 @@ function update_tracking(wenxuan_id, package_id, pos_tracking){
                                 <td><?= $c['randeng_paid'];?></td-->
                                 <td><b><?= $c['package'][$year]['fullpayment'] ? '一次付清' : "分期付款" ?></b></td>
                                 <td style="padding:0px;">
-                                    <input class="form-control" style="width:150px" 
-                                           onfocus="this.select()" 
-                                           onblur="update_tracking(<?=$c['wenxuan_id'];?>, <?=$c['package'][$year]['package_id'];?>, this.value)" 
-                                           value="<?= $c['package'][$year]['pos_tracking'];?>" 
-                                           placeholder="Tracking #"/>
+                                    <div style="display: flex; align-items: center; width: 150px;">
+                                        <input class="form-control" style="flex: 1;" 
+                                               onfocus="this.select()" 
+                                               onblur="update_tracking(<?=$c['wenxuan_id'];?>, <?=$c['package'][$year]['package_id'];?>, this.value)" 
+                                               value="<?= $c['package'][$year]['pos_tracking'];?>" 
+                                               placeholder="Tracking #"/>
+                                        <?php if($c['package'][$year]['pos_tracking'] && $c['package'][$year]['pos_tracking'] != "自取"): ?>
+                                        <a href="javascript:void(0)" onclick="check_tracking('<?= $c['package'][$year]['pos_tracking'];?>')" title="Check Status" style="margin-left: 5px; padding-right: 5px;">
+                                            <i class="fa fa-truck" aria-hidden="true"></i>
+                                        </a>
+                                        <?php endif; ?>
+                                    </div>
                                 </td>
                                 <td><?php foreach($c['package'] as $pyear => $p):?>
                                         <?php $form_full_url = ($pyear == $year ) ? $form_url.$p['md5_id'] : "" ?>

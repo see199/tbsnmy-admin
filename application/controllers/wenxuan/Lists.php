@@ -208,6 +208,43 @@ class Lists extends CI_Controller {
 		echo 1;
 	}
 
+	public function ajax_check_tracking(){
+		$tracking_no = $this->input->post('tracking_no');
+		$api_key = $this->config->item('easyparcel_api_key');
+		$url = "https://connect.easyparcel.my/?ac=EPTrackingBulk";
+
+		$post_data = array(
+			'api' => $api_key,
+			'bulk' => array(
+				array('awb_no' => $tracking_no)
+			)
+		);
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // Some environments have SSL cert issues
+		$response = curl_exec($ch);
+		
+		if (curl_errno($ch)) {
+			$error_msg = curl_error($ch);
+			curl_close($ch);
+			echo json_encode(array('api_status' => 'Error', 'error_remark' => 'CURL Error: ' . $error_msg));
+			return;
+		}
+		
+		curl_close($ch);
+
+		if (empty($response)) {
+			echo json_encode(array('api_status' => 'Error', 'error_remark' => 'Empty response from EasyParcel.'));
+			return;
+		}
+
+		echo $response;
+	}
+
 	public function ajax_delete_contact(){
 		$post_data = $this->input->post();
 		$this->wenxuan_model->delete_contact($post_data['wenxuan_id']);

@@ -309,6 +309,7 @@ function generateMenuTitle($menuText){
                 ['admin/api/verify_list','','Verify List'],
                 ['divider'],
                 ['admin/event/tbf','fa fa-calendar','宗委會活動'],
+                ['admin/zwhsearch','fa fa-search','宗務網站搜尋工具'],
               ];
               foreach($menu as $m) echo generateMenuItem($m);
             ?>

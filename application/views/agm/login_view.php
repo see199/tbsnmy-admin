@@ -13,10 +13,10 @@
 
         <!-- jQuery -->
         <script src="<?php echo base_url(); ?>assets/js/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+        <!--script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script-->
         <script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/js/jquery.js"></script>
-        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/jquery-1.10.2.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/jquery-ui.js"></script>
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -26,9 +26,12 @@
         <![endif]-->
 
         <style>
+            html {
+                height: 100%;
+            }
             body {
                 background-color: #E6E6E6;
-                background: url(<?php echo base_url(); ?>asset/img/lotus-2528454_1920.jpg);
+                background-image: url(<?php echo base_url(); ?>asset/img/lotus-2528454_1920.jpg);
                 background-size: cover;
             }
 
@@ -84,8 +87,19 @@
                 <div class='row text-center'>
                     <div class='col-md-12' style='padding:30px;'>
                         <img src="https://storage.googleapis.com/stateless-info-tbsn-my-2/2021/02/91c74a77-logo.png" width="100%" />
-                        <h2 class='text-center' style='color:#600'>第8屆<?= date('Y'); ?>年度<br />常年會員代表大會<br />登入處</h2>
+                        <h2 class='text-center' style='color:#600'>第<?= $setting['session']; ?>屆<?= $setting['year']; ?>年度<br />常年會員代表大會<br />登入處</h2>
                         <?php if(@$error == 'user_not_found'): ?><div class='alert alert-danger'>您並未申請登記。請先註冊登記！</div><?php endif; ?>
+                        
+                        <center><table style='font-size: 16px;'>
+                            <tr>
+                                <td>日期：</td>
+                                <td><?= $setting['date']; ?></td>
+                            </tr>
+                            <tr>
+                                <td>時間：</td>
+                                <td><?= $setting['time']; ?></td>
+                            </tr>
+                        </table></center>
                     </div>
 
                     <form class='form-horizontal' id="upload_form" method="post" action="<?= base_url('agm/zoom_login');?>">
@@ -95,14 +109,14 @@
                         <div class='row row-data col-xs-10 col-xs-offset-1'>
                             <div class='col-xs-3 strong_txt'>身份證號碼 IC No:</div>
                                 <div class='col-xs-9'>
-                                    <div class='form form-group'><input type='text' class='form-control col-xs-8' name='nric' id='nric' maxlength="14" /></div>
+                                    <div class='form form-group'><input type='text' class='form-control col-xs-8' name='nric' id='nric' maxlength="14" placeholder="身份證號碼 IC No" /></div>
                                 </div>
                             </div>
 
 
                             <div class='row row-data col-xs-10 col-xs-offset-1'>
                                 <div class='col-xs-2 col-xs-offset-1'></div>
-                                <div class='col-xs-9'>
+                                <div class='col-xs-12'>
                                     <div class='form form-group text-right'>
                                         <button id="btn-check" class="btn btn-success">
                                             登入 Login

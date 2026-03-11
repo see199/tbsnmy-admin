@@ -101,8 +101,25 @@ $(document).ready(function() {
     $('#date_from').on('change',get_data);
     $('#date_to').on('change',get_data);
 
-} );
+    $('#checkAll').on('click',function(){
+        const allCheckbox = document.querySelectorAll('.cbox');
+        console.log(allCheckbox);
+        allCheckbox.forEach(checkbox => {
+            checkbox.checked = true;}
+        );
+    });
+
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+
+});
 </script>
+<?php 
+//Others can only view & search, cannot edit & save
+//$cs_email = array('cs@tbsn.my','share@tbsn.my');
+$admin_email = array('see199@gmail.com','tandy@tbsn.my','lianmei76@gmail.com','boyeone@gmail.com','xuan.lianxuan@gmail.com');
+?>
 
 <div id="page-wrapper">
 
@@ -118,10 +135,12 @@ $(document).ready(function() {
         <div class="box">
             <div class="col-lg-10 col-lg-offset-1">
 
+                <?php if(in_array($google_email,$admin_email)): ?>
                 <div class='text-right'>
                     <a href="javascript:void(0)" onclick="load_box()" data-toggle="modal" data-target="#myModal" class='btn btn-success'><i class="fa fa-plus" aria-hidden="true"></i> 新增</a>
                 </div>
                 <hr />
+                <?php endif; ?>
                 
                 <form method="post" class="form-inline">
                     安奉日期：<input class='form-control' type="date" id="date_from" name="date_from" value="<?= $date_from; ?>"> 至
@@ -139,15 +158,19 @@ $(document).ready(function() {
                             <td><b>類別</b></td>
                             <td><b>安奉</b></td>
                             <td><b>安奉日期</b></td>
-                            <td><b></b></td>
+                            <td><b><a href="#" id="checkAll">全選</a></b></td>
                         </tr>
                     </thead>
                 </table>
+
+                <?php if(in_array($google_email,$admin_email)): ?>
                 打印：
                 <input type="submit" class='btn btn-success' name="action" value="儀軌">
                 <input type="submit" class='btn btn-success' name="action" value="備錄">
                 <input type="submit" class='btn btn-success' name="action" value="牌位">
                 <input type="submit" class='btn btn-success' name="action" value="地址">
+                <?php endif; ?>
+                
                 </form>
             </div>
         </div>
@@ -185,10 +208,13 @@ $(document).ready(function() {
                     </td></tr>
                 </table>
             </div>
+            
+            <?php if(in_array($google_email,$admin_email)): ?>
             <div class="modal-footer">
                 <button type="button" id="btn_modal_update" class="btn btn-success" onclick="post_data(0);" data-dismiss="modal"><i class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></i> Update</button>
                 <button type="button" id="btn_modal_cancel" class="btn btn-warning" data-dismiss="modal"><i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Cancel</button>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>

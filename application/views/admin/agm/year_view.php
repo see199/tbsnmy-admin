@@ -21,6 +21,13 @@
     function changeYear(value){
         window.location = '<?= base_url('admin/agm/year');?>/'+value;
     }
+
+    $(document).ready(function() {
+        $(".sbox").hide(); // Hide the select box initially
+        $("#edt_btn").click(function() {
+            $(".sbox").toggle(); // Toggle the display of the select box when the button is clicked
+        });
+    });
 </script>
 
 <div id="page-wrapper">
@@ -32,6 +39,7 @@
                 <br />出席道場： <?= $total['chapter']; ?>
                 <br />出席人數： <?= $total['chapter_member']; ?>
             </div>
+            <div class="col-lg-8 col-lg-offset-2 text-right form-inline"><button id='edt_btn' class="btn btn-info">Edit</button></div>
         </div>
     </div>
 
@@ -54,9 +62,9 @@
                             <tr>
                                 <td><?= $c['membership_id'];?></td>
                                 <td><?= $c['name_chinese'];?></td>
-                                <td><?= form_dropdown('',$c['ajk'],(@$c['agm']['cm_id_1'])?"id_".@$c['agm']['cm_id_1']:"","class='form-control' onChange='updateAttendance(".$c['chapter_id'].",1,this.value)'");?></td>
-                                <td><?= form_dropdown('',$c['ajk'],(@$c['agm']['cm_id_2'])?"id_".@$c['agm']['cm_id_2']:"","class='form-control' onChange='updateAttendance(".$c['chapter_id'].",2,this.value)'");?></td>
-                                <td><?= form_dropdown('',$c['ajk'],(@$c['agm']['cm_id_3'])?"id_".@$c['agm']['cm_id_3']:"","class='form-control' onChange='updateAttendance(".$c['chapter_id'].",3,this.value)'");?></td>
+                                <td><?= @isset($c['ajk']['id_'.$c['agm']['cm_id_1']])?$c['ajk']['id_'.$c['agm']['cm_id_1']]: '-';?><?= form_dropdown('',$c['ajk'],(@$c['agm']['cm_id_1'])?"id_".@$c['agm']['cm_id_1']:"","class='sbox form-control' onChange='updateAttendance(".$c['chapter_id'].",1,this.value)'");?></td>
+                                <td><?= @isset($c['ajk']['id_'.$c['agm']['cm_id_2']])?$c['ajk']['id_'.$c['agm']['cm_id_2']]: '-';?><?= form_dropdown('',$c['ajk'],(@$c['agm']['cm_id_2'])?"id_".@$c['agm']['cm_id_2']:"","class='sbox form-control' onChange='updateAttendance(".$c['chapter_id'].",2,this.value)'");?></td>
+                                <td><?= @isset($c['ajk']['id_'.$c['agm']['cm_id_3']])?$c['ajk']['id_'.$c['agm']['cm_id_3']]: '-';?><?= form_dropdown('',$c['ajk'],(@$c['agm']['cm_id_3'])?"id_".@$c['agm']['cm_id_3']:"","class='sbox form-control' onChange='updateAttendance(".$c['chapter_id'].",3,this.value)'");?></td>
                             </tr>
                         <?php endforeach;?>
                     </tbody>

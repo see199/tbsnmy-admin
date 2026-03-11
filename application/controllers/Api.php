@@ -6,7 +6,7 @@ class Api extends CI_Controller {
 
 		parent::__construct();
 		$this->load->model('api_model');
-		$this->load->helper(array('url','language','file','common_helper'));
+		$this->load->helper(array('url','language','file','common_helper','form'));
 		$this->lang->load('api', 'english');
 		$this->config->load('siteinfo', TRUE);
 		$this->data['meta'] = array();
@@ -160,7 +160,7 @@ class Api extends CI_Controller {
 	public function tbsnews_stats($year = ''){
 		if(!$year) $year = date('Y');
 
-		$data = array('view','download');
+		$data = array('view'/*,'download'*/);
 		$res  = array(
 			'year' => $year,
 			'view'     => array('total' => 0),
@@ -189,9 +189,100 @@ class Api extends CI_Controller {
 		
 	}
 
+	private function check_remote_file_exists($fileurl){
+		$headers = @get_headers($fileurl);
+		return (stripos($headers[0], '200 OK')) ? 1 : 0;
+	}
+
+	private function getTotalTbsNewsPages($year, $issue) {
+	    $logFile = 'application/logs/tbs_news_page_log.txt';
+	    $logKey = "{$year}_{$issue}";
+
+	    // Check log file (same as before)
+	    if (file_exists($logFile)) {
+	        $lines = file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+	        foreach ($lines as $line) {
+	            if (strpos($line, "{$logKey}:") === 0) {
+	                $parts = explode(":", $line, 2);
+	                return (int) trim($parts[1]);
+	            }
+	        }
+	    }
+
+	    // Perform check using curl_multi
+	    $pageToCheck = 1;
+	    $lastExistingPage = 0;
+	    $maxPossiblePage = 100;
+
+	    while ($pageToCheck <= $maxPossiblePage) {
+	        $mh = curl_multi_init();
+	        $handles = [];
+	        $currentBatchUrls = [];
+	        $existsInBatch = false;
+
+	        for ($i = 0; $i < 4; $i++) {
+	            $currentPage = $pageToCheck + $i;
+	            if ($currentPage > $maxPossiblePage) break;
+
+	            $imageUrl = "https://storage.googleapis.com/tbs-news/" . $year . "/WTBN" . $issue . "_page-" . sprintf("%04d", $currentPage) . ".jpg";
+	            $currentBatchUrls[$currentPage] = $imageUrl;
+
+	            $ch = curl_init($imageUrl);
+	            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'HEAD');
+	            curl_setopt($ch, CURLOPT_NOBODY, true);
+	            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+	            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+
+	            curl_multi_add_handle($mh, $ch);
+	            $handles[$currentPage] = $ch;
+	        }
+
+	        // Execute the batch
+	        $running = null;
+	        do {
+	            curl_multi_exec($mh, $running);
+	            curl_multi_select($mh);
+	        } while ($running > 0);
+
+	        // Check results of the batch
+	        foreach ($handles as $page => $ch) {
+	            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	            if ($httpCode == 200) {
+	                $lastExistingPage = max($lastExistingPage, $page);
+	                $existsInBatch = true;
+	            }
+	            curl_multi_remove_handle($mh, $ch);
+	            curl_close($ch);
+	        }
+
+	        curl_multi_close($mh);
+
+	        if (!$existsInBatch && $lastExistingPage > 0) {
+	            break;
+	        }
+
+	        $pageToCheck += 4;
+	    }
+
+	    // Log the result
+	    file_put_contents($logFile, "{$logKey}: {$lastExistingPage}\n", FILE_APPEND);
+
+	    return $lastExistingPage;
+	}
+
+	private function getTbsNewsImageUrlsFromLog($year, $issue, $totalPages) {
+	    $imageUrls = [];
+	    for ($i = 1; $i <= $totalPages; $i++) {
+	        $imageUrls[] = "https://storage.googleapis.com/tbs-news/" . $year . "/WTBN" . $issue . "_page-" . sprintf("%04d", $i) . ".jpg";
+	    }
+	    return $imageUrls;
+	}
+
 	public function viewtbsnews($issue,$download=false){
 		$data = $this->data;
-		
+$start = hrtime(1);
+//$end = hrtime(1); $timer[] = ($end - $start) / 10000; $start = $end;
 		// Logging for statistics
 		$type = ($download) ? "_download_" : "_view_";
 		write_file("application/logs/tbsnews".$type.date('Y').'.log', $issue."\t".date('YmdHis')."\n", "a");
@@ -204,7 +295,7 @@ class Api extends CI_Controller {
 
 		$data['year'] = $year = date('Y',$datetime);
 		$data['date'] = $date = date('Y年m月d日',$datetime);
-
+		
 		// File Location
 		$location = '/asset/img/tbsnews/'.$year;
 		$file_location = $this->config->item('site_loc','siteinfo') . $location;
@@ -234,27 +325,22 @@ class Api extends CI_Controller {
 		}
 
 		// Load images file - for mobile that can't view PDF
+		$totalPages = $this->getTotalTbsNewsPages($year, $issue);
 		$image_page = 0;
-		$data['images'] = array();
-		do{
-			$image_page++;
-			$image_url = "https://storage.googleapis.com/tbs-news/".$year."/WTBN".$issue."_page-".sprintf("%04d", $image_page).".jpg";
-			@$a = file_get_contents($image_url);
-			if($a) $data['images'][] = $image_url;
-		}while($a);
+		$data['images'] = $this->getTbsNewsImageUrlsFromLog($year, $issue, $totalPages);
 
-		$data['issue'] = $issue;
+		$data['issue']  = $issue;
 		$meta_image_url = "https://storage.googleapis.com/tbs-news/".$year."/WTBN".$issue.".jpg";
 		$data['meta_fb'] = array(
 			'og:title'       => sprintf(lang('viewtbsnews_fb_like_title'),$issue),
 			'og:site_name'   => lang('viewtbsnews_fb_like_site_name'),
 			'og:description' => sprintf(lang('viewtbsnews_fb_like_description'),$issue,$issue,$date,$issue),
 			//'og:image'       => file_exists($file_location.'/WTBN'.$issue.'.jpg') ? $url_location.'/WTBN'.$issue.'.jpg' : lang('viewtbsnews_fb_like_image'),
-			'og:image'       => @file_get_contents($meta_image_url) ? $meta_image_url : lang('viewtbsnews_fb_like_image'),
+			'og:image'       => $this->check_remote_file_exists($meta_image_url) ? $meta_image_url : lang('viewtbsnews_fb_like_image'),
 			'og:image:width'  => '1080',
 			'og:image:height' => '567',
 		);
-
+//$end = hrtime(1); $timer[] = ($end - $start) / 10000; $start = $end;print_pre($timer);exit;
 		$this->load->view('api/viewtbsnews',$data);
 	}
 
@@ -274,7 +360,7 @@ class Api extends CI_Controller {
 		$first_issue  = $this->cal_first_issue(); // server: 792910800; // local: 792892800;
 		$one_week_sec = 604800;
 		$data['year'] = $year = ($this->uri->segment(2)) ? $this->uri->segment(2) : date('Y');
-		$data['year'] = $year = ($this->uri->segment(3)) ? $this->uri->segment(3) : date('Y');
+		//$data['year'] = $year = ($this->uri->segment(3)) ? $this->uri->segment(3) : date('Y');
 
 		// File Location
 		$location = '/asset/img/tbsnews/'.$year;
@@ -300,7 +386,7 @@ class Api extends CI_Controller {
 			}else{
 
 				// if file not exists, check google console & create fake file
-				@$a = file_get_contents("https://storage.googleapis.com/tbs-news/".$year."/WTBN".$issue.".pdf");
+				@$a = $this->check_remote_file_exists("https://storage.googleapis.com/tbs-news/".$year."/WTBN".$issue.".pdf");
 				if($a){
 					file_put_contents($file_location.'/WTBN'.$issue.'.pdf',"");
 					$data['tbsnews'][$issue] = array(
@@ -418,6 +504,134 @@ class Api extends CI_Controller {
         $data['chapter'] = $this->api_model->get_member_meeting_list();
         $this->load->view('meeting_view',$data);
     }
+
+    public function qnaEmail($email){
+
+    	$email = urldecode($email);
+
+    	$this->load->library('email');
+    	$this->email->from('info@tbsn.org','互動就是力量');
+
+    	$this->email->to($email);
+    	$this->email->subject('RE:互動就是力量');
+    	$this->email->message('阿彌陀佛，您的提問已收到，工作人員在處理中。');
+    	$this->email->send();
+    }
+
+    public function sendList(){
+
+    	$array = array(
+    	);
+
+    	foreach($array as $lucky_no => $email) $this->eventemail($email,$lucky_no);
+    }
+
+    public function eventemail($email,$lucky_no){
+
+    	$email = urldecode($email);
+
+    	$this->load->library('email');
+    	$this->email->from('wenxuan@tbsn.org','宗委會文宣處');
+
+    	$this->email->to($email);
+    	$this->email->subject('【2022年真佛宗全球道場薈供主題壇城佈置比賽Zoom頒獎禮】邀請函');
+    	$this->email->message('阿彌陀佛，
+
+感謝您參與【2022年真佛宗全球道場薈供主題壇城佈置比賽】的投票！宗委會文宣處至誠邀請您來參與台灣時間2022年6月25日晚上8點【Zoom頒獎禮】，我們將在當晚揭曉得獎者，同時也會進行TBSN投票會員抽獎哦！
+
+歡迎您出席，可先在這鏈接 https://bit.ly/3tVaOnX 註冊，然後您的郵箱將會收到Zoom鏈接，到時候可以直接登錄！同時也歡迎將這鏈接分享給其他想出席的同門。
+
+為了方便抽獎，您的抽獎號碼為 【 '.$lucky_no.' 】號，您可先記住這些號碼，然後在頒獎禮上期待中獎！21份【大吉祥天女普及版宣影布畫作】將在當晚抽獎。
+
+期待您的出席！
+
+感恩
+宗委會文宣處合十
+
+Amitabha,
+
+You are cordially invited to join the Awards and Lucky Draw Ceremony for the Feast Offering Themed Shrine Decoration Contest via Zoom on 2022-6-25 8pm (Taiwan Time).
+
+Kindly register at https://bit.ly/3tVaOnX  to obtain the zoom link for the ceremony, you are welcome to share the link to other True Buddha Disciples who are interested in joining the event.
+
+Your lucky number for the Lucky Draw Ceremony is [ '.$lucky_no.'  ] .');
+    	$this->email->send();
+    	echo "\r\nSent: $email";
+    }
+
+    public function unicode(){
+
+    	$txt = $this->input->post('txt');
+    	$str = "";
+
+    	$list = mb_str_split($txt);
+    	foreach(mb_str_split($txt) as $chr){
+    		$str .= "{U+".dechex(mb_ord($chr, "UTF-8"))."}";
+    	}
+
+    	echo "<form action='unicode' method='post'><table><tr><td><textarea rows=5 cols=30 name=txt>{$txt}</textarea></td><td><textarea rows=5 cols=30>{$str}</textarea></td></tr><tr><td colspan=2><input type=submit></td></tr></table></form>";
+    }
+
+    private function pppp($postdata){
+
+    	$ch =  curl_init();
+    	curl_setopt( $ch, CURLOPT_URL, 'https://ch.tbsn.org/control/vote_item/add_post' );
+    	curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+    	curl_setopt( $ch, CURLOPT_POSTFIELDS, $postdata);
+    	curl_setopt( $ch, CURLOPT_COOKIE,  '_ga=GA1.2.877555084.1626956499; _fbp=fb.1.1626956499275.2053884064; __stripe_mid=09837832-b112-445d-9bd4-dda9932bb2d32ccd03; _fbc=fb.1.1645275145279.IwAR1y7eJ-tXwfwqFRKsBHWLBrnsQXFnMtOTozA-8cW3EiAIIZ4f__nnzkQGk; _gid=GA1.2.710024376.1655192308; ci_session=f35f131885d4a3dd92442f3320176db730ac4b5b');
+
+    	$result = curl_exec( $ch );
+    	curl_close( $ch );
+
+    	//print_r($result);
+    }
+
+    private function hitme(){
+    	$me = array(
+    		array("096-新加坡獅城雷藏寺"	,"新加坡 <a href='https://ch.tbsn.org/page/index.html?id=121' target='_d'> 更多圖片及影片</a>","新加坡獅城雷藏寺","34197"),
+    		array("099-印尼本願雷藏寺"	,"印尼 <a href='https://ch.tbsn.org/page/index.html?id=122' target='_d'> 更多圖片及影片</a>","印尼本願雷藏寺","34202"),
+    	);
+
+    	foreach($me as $list => $data){
+    		$hitdata = array(
+    			'vote_id' => '2',
+    			'title' => $data[0],
+    			'active' => '1',
+    			'place' => $data[1],
+    			'memo' => $data[2],
+    			'nums' => '',
+    			'youtube' => '',
+    			'img_id' => $data[3],
+    		);
+    		echo "\r\nPosting ".$data[0];
+    		$this->pppp($hitdata);
+
+    	}
+    }
+
+    public function verify(){
+    	$data = $this->data;
+    	$data['updated'] = false;
+
+    	$post_data = $this->input->post();
+
+    	// Check if email exists
+    	$exists = false;
+    	if(isset($post_data['email']))
+    		$exists = $this->api_model->check_verified_user($post_data['email']);
+
+    	if($exists){
+    		$post_data['verified_date'] = date('Y-m-d H:i:s');
+    		$this->api_model->update_verified_user($post_data);
+    		$data['updated'] = true;
+    	}
+
+    	$this->load->view('api/base_header', $data);
+		$this->load->view('api/verify_view', $data);
+		$this->load->view('api/base_footer');
+    }
+
+
 
 }
 

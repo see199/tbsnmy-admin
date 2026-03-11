@@ -62,7 +62,7 @@ class Backend_model extends CI_Model {
 	public function get_all_member_email(){
 		$this->db = $this->load->database('local', TRUE);
 
-		$this->db->select('m.membership_id, c.contact_id, c.name_dharma, email')
+		$this->db->select('m.membership_id, c.contact_id, c.name_dharma, email, c.phone_mobile')
 				->where('m.status','A')
 				->from('tbs_member m')
 				->join('tbs_contact c','c.contact_id = m.member_id', 'left')
@@ -240,5 +240,30 @@ class Backend_model extends CI_Model {
 		$query = "SELECT te.*, CONCAT(tm.name,tm.position) AS master_name, tc.name_chinese as chapter_name FROM tbs_event te LEFT JOIN tbs_master tm ON te.master_1 = tm.master_id LEFT JOIN tbs_chapter tc ON te.chapter_url = tc.url_name WHERE te.start_date BETWEEN '".$date['start']."' AND '".$date['end']."' ORDER BY te.start_date";
 		$i = $this->db->query($query);
 		return ($i->num_rows() > 0) ? $i->result_array() : array();
+	}
+
+	public function get_event_tbf_list(){
+		$this->db = $this->load->database('local', TRUE);
+
+		// Get All Contact
+		$this->db->select('*')
+			->from('zwh_event');
+		$i = $this->db->get();
+		return ($i->num_rows() > 0) ? $i->result_array() : array();
+	}
+
+	public function replace_tbf_event($event,$event_id){
+		$this->db = $this->load->database('local', TRUE);
+		$this->db->replace('zwh_event',array_merge(array('event_id' => $event_id),$event));
+
+		return ($this->db->affected_rows() != 1) ? false : true;
+	}
+
+	public function delete_tbf_event($event_id){
+
+		$this->db = $this->load->database('local', TRUE);
+		$this->db->delete('zwh_event', array('event_id' => $event_id));
+
+
 	}
 }

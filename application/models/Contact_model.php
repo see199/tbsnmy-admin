@@ -75,15 +75,46 @@ class Contact_model extends CI_Model {
 		return $result;
 	}
 
-	public function get_contact_by_nric($nric = ''){
+	public function get_contact_by_email($email = ''){
 		$this->db = $this->load->database('local', TRUE);
 
-		$this->db->select('c.name_chinese, c.name_malay, c.nric, c.email, c.contact_id, m.position')
-				->where('c.nric',$nric)
+		$this->db->select('c.name_chinese, c.name_malay, c.nric, c.email, c.contact_id, m.position, c.name_dharma, c.phone_mobile, cp.name_chinese as chapter_name')
+				->where('c.email',$email)
 				->where('m.chapter_id <>','1') // 不顯示馬密總
 				->where('m.position <> ','會員') // 不顯示會員
 				->from('tbs_contact c')
+				->join('tbs_chapter_member m','c.contact_id = m.contact_id', 'left')
+				->join('tbs_chapter cp','cp.chapter_id = m.chapter_id', 'left');
+		$res = $this->db->get();
+
+		if($res->result_array()) return $res->result_array()[0];
+		else return array();
+	}
+
+	public function get_contact_by_nric($nric = '', $get_all = false){
+		$this->db = $this->load->database('local', TRUE);
+
+		$this->db->select('c.name_chinese, c.name_malay, c.nric, c.email, c.contact_id, m.position, c.name_dharma, c.phone_mobile, m.cm_id, m.chapter_id')
+				->where('c.nric',$nric)
+				->from('tbs_contact c')
 				->join('tbs_chapter_member m','c.contact_id = m.contact_id', 'left');
+		$res = $this->db->get();
+
+		if($get_all === false){
+			$this->db->where('m.chapter_id <>','1') // 不顯示馬密總
+				->where('m.position <> ','會員'); // 不顯示會員
+		}
+
+		if($res->result_array()) return $res->result_array()[0];
+		else return array();
+	}
+
+	public function get_contact_by_nric_agm_personal($nric = ''){
+		$this->db = $this->load->database('local', TRUE);
+
+		$this->db->select('c.name_chinese, c.name_malay, c.nric, c.email, c.contact_id, c.name_dharma, c.phone_mobile')
+				->where('c.nric',$nric)
+				->from('tbs_contact c');
 		$res = $this->db->get();
 
 		if($res->result_array()) return $res->result_array()[0];
@@ -418,5 +449,17 @@ class Contact_model extends CI_Model {
 		$query = "SELECT te.*, CONCAT(tm.name,tm.position) AS master_name, tc.name_chinese as chapter_name FROM tbs_event te LEFT JOIN tbs_master tm ON te.master_1 = tm.master_id LEFT JOIN tbs_chapter tc ON te.chapter_url = tc.url_name WHERE te.start_date BETWEEN '".$date['start']."' AND '".$date['end']."' ORDER BY te.start_date";
 		$i = $this->db->query($query);
 		return ($i->num_rows() > 0) ? $i->result_array() : array();
+	}
+
+	public function get_contact_by_card_id($card_id){
+		$this->db = $this->load->database('local', TRUE);
+		$this->db->select('nric')
+				->where('tbf_card_id', $card_id);
+		$res = $this->db->get('tbs_contact');
+		if ($res->num_rows() > 0) {
+			return $res->row()->nric;
+		} else {
+			return false;
+		}
 	}
 }

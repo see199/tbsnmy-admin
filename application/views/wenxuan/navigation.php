@@ -27,11 +27,21 @@
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">文宣功德主 <span class="caret"></span></a>
                   <ul class="dropdown-menu" role="menu">
                     <li><a href="<?= base_url(); ?>wenxuan/lists/package"><i class="fa fa-book fa-fw"></i> 文宣方案</a></li>
-                    <li><a href="<?= base_url(); ?>wenxuan/lists/subscriber"><i class="fa fa-users fa-fw"></i> 功德主 (今年)</a></li>
-                    <li><a href="<?= base_url(); ?>wenxuan/lists/subscriber/<?=date('Y') -1;?>"><i class="fa fa-users fa-fw"></i> 功德主 (去年)</a></li>
+                    <?php if(date('m') > 10):?><li><a href="<?= base_url(); ?>wenxuan/lists/subscriber/<?=date('Y') +1;?>"><i class="fa fa-users fa-fw"></i> 功德主 (<?= date('Y') +1; ?>)</a></li><?php endif; ?>
+                    <li><a href="<?= base_url(); ?>wenxuan/lists/subscriber/<?=date('Y');?>"><i class="fa fa-users fa-fw"></i> 功德主 (<?= date('Y'); ?>)</a></li>
+                    <li><a href="<?= base_url(); ?>wenxuan/lists/subscriber/<?=date('Y') -1;?>"><i class="fa fa-users fa-fw"></i> 功德主 (<?= date('Y') -1; ?>)</a></li>
+                    <li><a href="<?= base_url(); ?>wenxuan/lists/subscriber/<?=date('Y') -2;?>"><i class="fa fa-users fa-fw"></i> 功德主 (<?= date('Y') -2; ?>)</a></li>
+                    <li><a href="<?= base_url(); ?>wenxuan/lists/subscriber/<?=date('Y') -3;?>"><i class="fa fa-users fa-fw"></i> 功德主 (<?= date('Y') -3; ?>)</a></li>
                   </ul>
                 </li>
 
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-bar-chart"></i> Statistics <span class="caret"></span></a>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="<?= base_url(); ?>wenxuan/lists/stats_tbsnews"><i class="fa fa-newspaper-o"></i> 真佛報</a></li>
+                    <li><a href="<?= base_url(); ?>wenxuan/lists/stats_analytics"><i class="fa fa-line-chart"></i> 真佛報 Analytics</a></li>
+                  </ul>
+                </li>
 
 
                 <li><a href="http://form.tbsn.my/wenxuan" target="_form"><i class="fa fa-book fa-fw"></i> 文宣方案表格</a></li>

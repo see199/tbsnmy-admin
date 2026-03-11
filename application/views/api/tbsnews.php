@@ -57,7 +57,7 @@
                 <?php foreach($tbsnews as $issue => $data): ?>
                     <tr><td class='col-lg-10'><?= $data['date']; ?> - 大馬增版第 <?= $issue; ?> 期 </a></td>
                         <td class='col-lg-2'><!--a class="btn btn-primary btn-xs" href="http://news.tbsn.my/download/<?= $issue; ?>" role="button">下載 / Download</a-->
-                            <a class="btn btn-xs xxx" href="http://news.tbsn.my/<?= $issue; ?>" role="button">瀏覽 / View</a>
+                            <a class="btn btn-xs xxx" href="https://news.tbsn.my/<?= $issue; ?>" role="button">瀏覽 / View</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

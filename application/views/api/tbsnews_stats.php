@@ -6,12 +6,12 @@
 	<div class='row'>
 		<div class='col-md-offset-1 col-md-10'>
 			<div class='row text-center'>
-				<div class='h4'>Year <?= $year; ?></div>
+				<div class='h4'><a href='<?=base_url('api/tbsnews_stats/'.($year-1)); ?>'>&lt;<?= $year-1;?>&lt;</a>  | Year <?= $year; ?> <?php if(date('Y') > $year): ?>| <a href='<?=base_url('api/tbsnews_stats/'.($year+1)); ?>'>&gt;<?= $year+1;?>&gt;</a><?php endif;?></div>
 			</div>
 
-			<div class='row'>
+			<div class='row text-center'>
 
-				<div class='col-md-6'>
+				<div class='col-md-offset-1 col-md-10'>
 					<div class='h4 text-center'>Total View: <?= $view['total']; ?></div>
 
 					<table class='table table-hover table-bordered table-striped'>
@@ -27,7 +27,7 @@
 					</table>
 				</div>
 
-
+				<?php /* 
 				<div class='col-md-6'>
 					<div class='h4 text-center'>Total Download: <?= $download['total']; ?></div>
 
@@ -43,6 +43,7 @@
 						</tbody>
 					</table>
 				</div>
+				*/ ?>
 			</div>
 
 

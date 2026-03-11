@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
+<html lang="zh-tw">
+
+<head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>馬密總網頁 API</title>
+        <title>馬密總網路系統</title>
         <link rel="shortcut icon" href="<?php echo base_url(); ?>assets/images/icon/tab-icon.png" type="image/x-icon">
 
         <!-- Bootstrap -->
@@ -18,15 +19,12 @@
         <![endif]-->
 
         <style>
+            html {
+                height: 100%;
+            }
             body {
                 background-color: #E6E6E6;
-                background: url(<?php echo base_url(); ?>asset/img/lotus-2528454_1920.jpg);
-                background-size: cover;
-            }
-
-            .backcolor-replace {
-                background-color: #E6E6E6;
-                background: url(<?php echo base_url(); ?>asset/img/lotus-2528454_1920.jpg);
+                background-image: url(<?php echo base_url(); ?>asset/img/lotus-2528454_1920.jpg);
                 background-size: cover;
             }
 
@@ -49,14 +47,15 @@
         </style>
     </head>
     <body>
-        <div class="jumbotron vertical-center backcolor-replace">
+        <div class="vertical-center">
             <div class="col-xs-12 col-sm-8 col-md-4 col-lg-4 col-sm-offset-2 col-md-offset-4 col-lg-offset-4">
-                <h2 class='text-center'>馬密總網頁 API</h2>
+                <h2 class='text-center'>馬密總網路系統</h2>
                 <div class="panel panel-default drop-shadow">
                     <div class="panel-body">
                         <div class='row text-center'>
                             <div class='col-md-12' style='padding:30px;'><img src="http://admin.tbsn.my/asset/img/tbsn-my-logo.jpg" /></div>
-                            <div class='col-md-12'><a href="<?php echo $authUrl; ?>"><img class='col-md-6 col-md-offset-3' id="google_signin" src="<?=base_url()?>assets/img/icon-google.png"></a></div>
+                            <div class='col-md-12'><a href="<?php echo $authUrl; ?>"><img class='col-md-6 col-md-offset-3' id="google_signin" src="<?=base_url()?>assets/img/icon-google.png" style="max-width:100%"></a></div>
+                            <a href="<?=base_url()?>admin/login/logout">Reload</a>
                         </div>
                     </div>
                 </div>

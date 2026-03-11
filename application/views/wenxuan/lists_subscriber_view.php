@@ -1,4 +1,137 @@
 <script>
+$(document).ready(function() {
+  $("#searchInput").on("keyup", function() {
+    filterTable(); // Call filterTable() on keyup
+  });
+
+  $(".searchFilter").on("change", function() {
+    filterTable(); // Call filterTable() on checkbox change
+  });
+
+  function filterTable() {
+    var value = $("#searchInput").val().toLowerCase();
+
+    <?php $counter = 0; foreach($total as $package_id => $t): $counter++;?>
+        var pChecked_<?=$counter;?> = $("#package_<?=$package_id;?>").prop("checked");
+    <?php endforeach;?>
+
+    var fGiftSent = $("#f_gift_sent").prop("checked");
+    var fGiftUnsent = $("#f_gift_unsent").prop("checked");
+    var fPaid = $("#f_paid").prop("checked");
+    var fUnpaid = $("#f_unpaid").prop("checked");
+    var fSelfPickup = $("#f_self_pickup").prop("checked");
+    var fMailing = $("#f_mailing").prop("checked");
+
+    $("#example tbody tr").each(function() {
+      var row = $(this);
+      var textMatch = row.text().toLowerCase().indexOf(value) > -1;
+      
+      // Get data from columns
+      // Package checks are in td index 4, 5, 6 (nth-child 5, 6, 7)
+      var pk1 = row.find("td:nth-child(5)").text().indexOf("✔") > -1;
+      var pk2 = row.find("td:nth-child(6)").text().indexOf("✔") > -1;
+      var pk3 = row.find("td:nth-child(7)").text().indexOf("✔") > -1;
+
+      // New columns (using relative indices from the end might be safer if indices change)
+      // Current structure:
+      // ... Package Columns ...
+      // Gift Sent (td index 4+sizeof(total))
+      // Paid (td index 5+sizeof(total))
+      // Self Pickup (td index 6+sizeof(total))
+      var colGiftValue = row.find("td:nth-child(<?= 5 + sizeof($total); ?>)").text().trim();
+      var isGiftSent = colGiftValue === "Sent";
+      
+      var isPaid = row.find("td:nth-child(<?= 6 + sizeof($total); ?>)").text().indexOf("✔") > -1;
+      var isSelfPickup = row.find("td:nth-child(<?= 7 + sizeof($total); ?>)").text().indexOf("✔") > -1;
+
+      var showRow = true; // Default to show
+
+      if (value && !textMatch) { // If search input has text, filter by text
+        showRow = false;
+      }
+
+      if (pChecked_1 && !pk1) {
+        showRow = false;
+      }
+
+      if (pChecked_2 && !pk2) {
+        showRow = false;
+      }
+
+      if (pChecked_3 && !pk3) {
+        showRow = false;
+      }
+
+      // New Filters logic: If at least one in a pair is checked, the row must match at least one checked option.
+      
+      // Gift Sent / Unsent pair
+      if (fGiftSent || fGiftUnsent) {
+        if (!((fGiftSent && isGiftSent) || (fGiftUnsent && !isGiftSent))) {
+          showRow = false;
+        }
+      }
+
+      // Paid / Unpaid pair
+      if (fPaid || fUnpaid) {
+        if (!((fPaid && isPaid) || (fUnpaid && !isPaid))) {
+          showRow = false;
+        }
+      }
+
+      // Self Pickup / Mailing pair
+      if (fSelfPickup || fMailing) {
+        if (!((fSelfPickup && isSelfPickup) || (fMailing && !isSelfPickup))) {
+          showRow = false;
+        }
+      }
+
+      if (showRow) {
+        row.show();
+      } else {
+        row.hide();
+      }
+    });
+
+    updateTotals();
+  }
+
+  function updateTotals() {
+    var packageCounts = {};
+    <?php foreach($total as $package_id => $t): ?>
+    packageCounts[<?= $package_id; ?>] = 0;
+    <?php endforeach; ?>
+    var giftSentCount = 0;
+    var paymentDoneCount = 0;
+    var totalVisible = 0;
+
+    $("#example tbody tr:visible").each(function() {
+      var row = $(this);
+      totalVisible++;
+
+      <?php $idx = 5; foreach($total as $package_id => $t): ?>
+      if (row.find("td:nth-child(<?= $idx++; ?>)").text().indexOf("✔") > -1) {
+        packageCounts[<?= $package_id; ?>]++;
+      }
+      <?php endforeach; ?>
+
+      if (row.find("td:nth-child(<?= 5 + sizeof($total); ?>)").text().trim() === "Sent") {
+        giftSentCount++;
+      }
+
+      if (row.find("td:nth-child(<?= 6 + sizeof($total); ?>)").text().indexOf("✔") > -1) {
+        paymentDoneCount++;
+      }
+    });
+
+    $("#total_visible").text(totalVisible);
+    <?php foreach($total as $package_id => $t): ?>
+    $(".total_package_<?= $package_id; ?>").text(packageCounts[<?= $package_id; ?>]);
+    <?php endforeach; ?>
+    $("#total_gift_sent").text(giftSentCount);
+    $("#total_payment_done").text(paymentDoneCount);
+  }
+});
+
 function load_box(me){
 
     if(me == 'new'){
@@ -38,6 +171,7 @@ function load_box(me){
 
         $('#wenxuan_id').val(subscriber.wenxuan_id);
         $('#wenxuan_name').val(subscriber.wenxuan_name);
+        $('#wenxuan_name_receiver').val(subscriber.wenxuan_name_receiver);
         $('#wenxuan_contact').val(subscriber.wenxuan_contact);
         $('#wenxuan_email').val(subscriber.wenxuan_email);
         $('#address1').val(subscriber.wenxuan_address1);
@@ -70,6 +204,7 @@ function post_data(refresh_page){
     var data = {
         wenxuan_id       : $('#wenxuan_id').val(),
         wenxuan_name     : $('#wenxuan_name').val(),
+        wenxuan_name_receiver : $('#wenxuan_name_receiver').val(),
         wenxuan_contact  : $('#wenxuan_contact').val(),
         wenxuan_email    : $('#wenxuan_email').val(),
         wenxuan_address1 : $('#address1').val(),
@@ -92,6 +227,11 @@ function post_data(refresh_page){
         $(this).find(':input[type=checkbox]').each(function(){
             data['package_'+$(this).attr("id")] = $(this).prop('checked');
         });
+        $(this).find(':input[type=dropdown]').each(function(){
+            data['package_'+$(this).attr("id")] = $(this).val();
+        });
+        
+
     });
     
     $.ajax({
@@ -120,13 +260,101 @@ function delete_data(){
 
 }
 
+function update_tracking(wenxuan_id, package_id, pos_tracking){
+    $.ajax({
+        type:"POST",
+        url: "<?= base_url('wenxuan/lists/ajax_tracking_update'); ?>",
+        data:{
+            wenxuan_id : wenxuan_id,
+            package_id : package_id,
+            pos_tracking : pos_tracking
+        }
+    }).done(function(data) {
+        console.log("Tracking updated: " + pos_tracking);
+    });
+}
+
+function check_tracking(tracking_no){
+    if(!tracking_no || tracking_no == "自取") return;
+    
+    $.ajax({
+        type:"POST",
+        url: "<?= base_url('wenxuan/lists/ajax_check_tracking'); ?>",
+        data:{ tracking_no : tracking_no }
+    }).done(function(data) {
+        try {
+            var res = jQuery.parseJSON(data);
+            if(res.api_status == 'Success'){
+                var result = res.result[0];
+                var status_desc = result.status_list.status;
+                var latest = result.latest_status;
+                var latest_date = result.latest_update;
+                
+                var msg = "Tracking #: " + tracking_no + "\nStatus: " + status_desc;
+                if(latest){
+                    msg += "\nLatest: " + latest + " (" + latest_date + ")";
+                }
+                alert(msg);
+            }else{
+                alert("EasyParcel Error: " + res.error_remark);
+            }
+        } catch (e) {
+            alert("Unexpected response from server.");
+        }
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        alert("Request failed: " + textStatus);
+    });
+}
+
 </script>
+<?php $source = ['web' => '<i class="fa fa-globe" aria-hidden="true"></i>', 'desk' => '<i class="fa fa-phone" aria-hidden="true"></i>']; ?>
 
 <div id="page-wrapper">
 
+    <!-- Statistic Chart -->
     <div class="row">
         <div class="box">
-            <div class="col-lg-8 col-lg-offset-2 text-center">
+            <div class="col-lg-6 col-lg-offset-3 text-center">
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+        <!-- Statistic Library at https://www.chartjs.org/ -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+          const ctx = document.getElementById('myChart');
+
+          var bgcolor = ["#B30000","#1A53FF","#5AD45A"];
+
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: <?= json_encode($stats['date']); ?>,
+              datasets: [<?php $k=0;foreach($stats['package_id'] as $package_id => $package_total): ?>
+              {
+                label: '<?= $package[$package_id]['package_name'].' (RM '.$package[$package_id]['package_amount'].')'; ?>',
+                data: <?= json_encode($package_total); ?>,
+                backgroundColor: bgcolor[<?= $k%3; ?>]
+              },
+              <?php $k++;endforeach; ?>]
+            },
+            options:{
+                plugins:{title:{
+                    display: true,
+                    text: "功德主統計"
+                }},
+                scales:{
+                    x:{stacked: true},
+                    y:{stacked: true}
+                }
+            }
+          });
+        </script>
+    </div>
+
+
+    <div class="row">
+        <div class="box">
+            <div class="col-lg-10 col-lg-offset-1 text-center">
                 <h1>文宣功德主名單（ <?=$year;?> 年）</h1>
             </div>
         </div>
@@ -135,41 +363,126 @@ function delete_data(){
 
     <div class="row">
         <div class="box">
-            <div class="col-lg-8 col-lg-offset-2">
+            <div class="col-lg-10 col-lg-offset-1 text-right">
+                <a class="btn btn-info" href="<?= base_url('wenxuan/lists/export_csv_unsent_package/'.$year); ?>"><i class="fa fa-download" aria-hidden="true"></i> Export CSV (EasyParcel)</a>
 
-                
+                <a class="btn btn-info" href="<?= base_url('wenxuan/lists/export_csv_blessing/'.$year); ?>"><i class="fa fa-download" aria-hidden="true"></i> Export CSV (報名法會)</a>
+            </div>
+            <br /><br />
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="box">
+            <div class="col-lg-10 col-lg-offset-1">
+
+                Search: <?php foreach($total as $package_id => $t):?>
+                <label style="margin-right: 15px;"><input name='package' class='searchFilter' type="radio" id="package_<?=$package_id;?>"> <?= $package[$package_id]['package_name'];?></label>
+                <?php endforeach;?>
+                <br>
+                Options: 
+                <label style="margin-right: 15px;"><input type="checkbox" class="searchFilter" id="f_gift_sent"> 已發贈品</label>
+                <label style="margin-right: 15px;"><input type="checkbox" class="searchFilter" id="f_gift_unsent"> 未發贈品</label>
+                <label style="margin-right: 15px;"><input type="checkbox" class="searchFilter" id="f_paid"> 完成付款</label>
+                <label style="margin-right: 15px;"><input type="checkbox" class="searchFilter" id="f_unpaid"> 未完成付款</label>
+                <label style="margin-right: 15px;"><input type="checkbox" class="searchFilter" id="f_self_pickup"> 自行領取</label>
+                <label style="margin-right: 15px;"><input type="checkbox" class="searchFilter" id="f_mailing"> 郵寄</label>
+                <br>
+                <div class="form-inline">
+                    Search: <input type="text" id="searchInput" placeholder="Search..." class="form-control" style="width: auto; vertical-align: middle;">
+                </div>
+                <br>
                 <table id="example" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
                     <thead>
                         <tr class="info">
-                            <td rowspan=2><b>名字<br /><small>** 點擊可查看 / 更新資料 **</small></b></td>
-                            <td rowspan=2><b>聯絡</b></td>
-                            <td colspan=<?=sizeof($total);?>><b>功德主方案</b></td>
-                            <td rowspan=2><b>已發贈品</b></td>
-                            <td rowspan=3><b><?=$year;?>年<br />報名表格</b></td>
+                            <th rowspan=2><b>名字<br /><small>** 點擊可查看 / 更新資料 **</small></b></td>
+                            <th rowspan=2><b>登記日期</b></td>
+                            <th rowspan=2><b>聯絡</b></td>
+                            <th rowspan=2><b>來源</b></td>
+                            <th colspan=<?=sizeof($total);?>><b>功德主方案</b></td>
+                            <th rowspan=2><b>已發<br />贈品</b></td>
+                            <th rowspan=2><b>完成<br />付款</b></td>
+                            <th rowspan=2><b>自行<br />領取</b></td>
+                            <!--th rowspan=2><b>報-訂</b></td>
+                            <th rowspan=2><b>報-送</b></td>
+                            <th rowspan=2><b>燃-訂</b></td>
+                            <th rowspan=2><b>燃-送</b></td -->
+                            <th rowspan=3><b>一次/分期</b></td>
+                            <th rowspan=3><b>Tracking<br />Number</b></td>
+                            <th rowspan=3><b><?=$year;?>年<br />報名表格</b></td>
                         </tr>
                         <tr class="info">
                             <?php foreach($total as $package_id => $t):?>
-                            <td><b><?= $package[$package_id]['package_name'].' (RM '.$package[$package_id]['package_amount'].')'; ?></b></td>
+                            <th><b><?= $package[$package_id]['package_name'].'<br />('.$package[$package_id]['package_amount'].')'; ?></b></td>
                             <?php endforeach;?>
                         </tr>
                         <tr class="success">
-                            <td colspan=2><b>總數</b></td>
+                            <td colspan=4><b>總數 (<span id="total_visible"><?= count($list); ?></span>)</b></td>
                             <?php foreach($total as $package_id => $t):?>
-                            <td><b><?= $t; ?></b></td>
+                            <td><b class="total_package_<?= $package_id; ?>"><?= $t; ?></b></td>
                             <?php endforeach;?>
-                            <td><b><?= $gift_sent; ?></b></td>
+                            <td><b id="total_gift_sent"><?= $gift_sent; ?></b></td>
+                            <td><b id="total_payment_done"><?= $payment_done; ?></b></td>
+                            <td></td>
+                            <?php /*$tbtotal = array();foreach($list as $c):
+                                @$tbtotal['tbnews_free'] += $c['tbnews_free'];
+                                @$tbtotal['tbnews_paid'] += $c['tbnews_paid'];
+                                @$tbtotal['randeng_free'] += $c['randeng_free'];
+                                @$tbtotal['randeng_paid'] += $c['randeng_paid'];
+                            endforeach; */?>
+                            <!--td><b><?= $tbtotal['tbnews_free']; ?></b></td>
+                            <td><b><?= $tbtotal['tbnews_paid']; ?></b></td>
+                            <td><b><?= $tbtotal['randeng_free']; ?></b></td>
+                            <td><b><?= $tbtotal['randeng_paid']; ?></b></td-->
                         </tr>
                     </thead>
                     <tbody>
+                        <?php $email_list = array('email' => array(),'name' => array()); ?>
                         <?php foreach($list as $c): ?>
-                            <tr>
+                            <?php 
+                                // For Checking Purpose
+                                if(!filter_var(rtrim($c['wenxuan_email']),FILTER_VALIDATE_EMAIL)) $email_list['name'][$c['wenxuan_email']][] = rtrim($c['wenxuan_name']); 
+                                else
+                                    $email_list['email'][$c['wenxuan_email']] = rtrim($c['wenxuan_email']);
+
+                            ?>
+                            <!-- Highlight if Payment not Fully Paid and Gift Sent -->
+                            <?php if(!$c['package'][$year]['payment_done'] && !$c['package'][$year]['fullpayment'] && $c['package'][$year]['gift_taken']): ?><tr class='danger'>
+                            <!-- Highlight if Payment Fully Paid and Gift not yet Sent -->
+                            <?php elseif($c['package'][$year]['payment_done'] && $c['package'][$year]['fullpayment'] && !$c['package'][$year]['gift_taken']): ?><tr class='success'>
+                            <?php else: ?><tr>
+                            <?php endif; ?>
                                 <td><textarea style="display:none;"><?= json_encode($c); ?></textarea>
-                                    <a href='javascript:void(0)' onclick="load_box($(this).prev().val())" data-toggle="modal" data-target="#myModal"><?= $c['wenxuan_name']; ?></a></td>
+                                    <a href='javascript:void(0)' onclick="load_box($(this).prev().val())" data-toggle="modal" data-target="#myModal"><?= $c['wenxuan_name']; ?></a> (<?= $c['wenxuan_name_receiver']; ?>)</td>
+                                <td><?= $c['package'][$year]['create_date']; ?></td>
                                 <td><?= $c['wenxuan_contact']; ?></td>
+                                <td><?= $source[$c['package'][$year]['source']]; ?></td>
                                 <?php foreach($total as $package_id => $t):?>
-                                <td><b><?= ($package_id == $c['package'][$year]['package_id']) ? '<i class="fa fa-check" aria-hidden="true"></i>' : ""; ?></b></td>
+                                <td><b><?= ($package_id == $c['package'][$year]['package_id']) ? '&#10004;' : ""; ?></b></td>
                                 <?php endforeach;?>
-                                <td><b><?= $c['package'][$year]['gift_taken'] ? '<i class="fa fa-check" aria-hidden="true"></i>' : ""; ?></b></td>
+                                <td><b><?= $c['package'][$year]['gift_taken'] ? 'Sent' : ""; ?></b></td>
+                                <td><b><?= $c['package'][$year]['payment_done'] ? '&#10004;' : "" ?></b></td>
+                                <td><b><?= $c['package'][$year]['self_pickup'] ? '&#10004;' : "" ?></b></td>
+                                <!--td><?= $c['tbnews_free'];?></td>
+                                <td><?= $c['tbnews_paid'];?></td>
+                                <td><?= $c['randeng_free'];?></td>
+                                <td><?= $c['randeng_paid'];?></td-->
+                                <td><b><?= $c['package'][$year]['fullpayment'] ? '一次付清' : "分期付款" ?></b></td>
+                                <td style="padding:0px;">
+                                    <div style="display: flex; align-items: center; width: 150px;">
+                                        <input class="form-control" style="flex: 1;" 
+                                               onfocus="this.select()" 
+                                               onblur="update_tracking(<?=$c['wenxuan_id'];?>, <?=$c['package'][$year]['package_id'];?>, this.value)" 
+                                               value="<?= $c['package'][$year]['pos_tracking'];?>" 
+                                               placeholder="Tracking #"/>
+                                        <?php if($c['package'][$year]['pos_tracking'] && $c['package'][$year]['pos_tracking'] != "自取"): ?>
+                                        <a href="javascript:void(0)" onclick="check_tracking('<?= $c['package'][$year]['pos_tracking'];?>')" title="Check Status" style="margin-left: 5px; padding-right: 5px;">
+                                            <i class="fa fa-truck" aria-hidden="true"></i>
+                                        </a>
+                                        <?php endif; ?>
+                                    </div>
+                                </td>
                                 <td><?php foreach($c['package'] as $pyear => $p):?>
                                         <?php $form_full_url = ($pyear == $year ) ? $form_url.$p['md5_id'] : "" ?>
                                         <a href="<?= $form_full_url; ?>" target="_blank">view</a>
@@ -179,6 +492,18 @@ function delete_data(){
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="box">
+            <div class="col-lg-8 col-lg-offset-2 form-group">
+                <h2>Email List -- <small>to copy to <a href="https://app.mailjet.com/contacts/lists/edit/YL" target="eml">MailJet subscription</a></small></h2>
+                <?php if($google_email == 'see199@gmail.com') print_pre($email_list['name']);?>
+                <textarea class="form-control w-100" rows="5"><?php echo implode("\n",$email_list['email']); ?></textarea>
+                <br /><br />
             </div>
         </div>
     </div>
@@ -198,6 +523,7 @@ function delete_data(){
                 <div class="text-right"><small><b>Last update:</b> <span id="update_date"></span> by <span id="update_by"></span></small></div>
                 <table class="table display">
                     <tr><td>聯絡人</td><td><input class="form-control" id="wenxuan_name"/></td></tr>
+                    <tr><td>英文名字</td><td><input class="form-control" id="wenxuan_name_receiver"/></td></tr>
                     <tr><td>聯絡號碼</td><td><input class="form-control" id="wenxuan_contact"/></td></tr>
                     <tr><td>電郵</td><td><input class="form-control" id="wenxuan_email"/></td></tr>
                     <tr><td>地址</td><td>

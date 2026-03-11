@@ -43,10 +43,13 @@ class Index extends CI_Controller {
         $this->session->set_userdata(array(
             'chapter_used' => $chapter_used,
         ));
-        if($chapter_page == "chapter_page")
+        /*if($chapter_page == "chapter_page")
         	redirect(base_url("admin/chapter"),'refresh');
         else
         	redirect($this->input->server('HTTP_REFERER'),'refresh');
+        */
+        // All redirect to chapter page
+        redirect(base_url("admin/chapter"),'refresh');
 	}
 
 	public function export_db(){
@@ -58,17 +61,21 @@ class Index extends CI_Controller {
 
 		$prefs = array(
 			'tables'        => array(
+				'tbs_agm_attendance',
+				'tbs_agm_zoom_reg',
 				'tbs_chapter',
+				'tbs_chapter_contact',
+				'tbs_chapter_member',
 				'tbs_contact',
 				'tbs_dharma_staff',
-				'tbs_chapter_member',
+				'tbs_dizang',
+				'tbs_dizang_user',
 				'tbs_member',
 				'tbs_dharma_insurance',
 				'tbs_wenxuan_subscriber',
 				'tbs_wenxuan_subscriber_package',
 				'tbs_wenxuan_subscriber_year',
-				'tbs_wenxuan_user',
-				'tbs_agm_attendance'
+				'tbs_wenxuan_user'
 			),   // Array of tables to backup.
 			'ignore'        => array(),                     // List of tables to omit from the backup
 			'format'        => 'txt',                       // gzip, zip, txt
@@ -94,7 +101,7 @@ class Index extends CI_Controller {
 		$file = '';
 
 		@$upload = $_FILES['userfile'];
-		if(!$upload['error']){
+		if(isset($upload['error']) && !$upload['error']){
 			$file = $upload['tmp_name'];
 		}
 

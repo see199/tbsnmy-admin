@@ -15,8 +15,8 @@
         <script src="<?php echo base_url(); ?>assets/js/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
         <script type="text/javascript" language="javascript" src="<?php echo base_url(); ?>assets/js/jquery.js"></script>
-        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/jquery-1.10.2.js"></script>
+        <script src="<?php echo base_url(); ?>assets/js/jquery-ui.js"></script>
 
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -26,9 +26,12 @@
         <![endif]-->
 
         <style>
+            html {
+                height: 100%;
+            }
             body {
                 background-color: #E6E6E6;
-                background: url(<?php echo base_url(); ?>asset/img/lotus-2528454_1920.jpg);
+                background-image: url(<?php echo base_url(); ?>asset/img/lotus-2528454_1920.jpg);
                 background-size: cover;
             }
 
@@ -68,7 +71,7 @@ function check_empty(){
         alert("請選擇通過 ZOOM 出席或現場出席！Please choose within attendance via ZOOM or on site!");
         return false;
     }
-    if(!$('#name_chinese').val() || !$('#name_malay').val() || !$('#email').val()){
+    if(!$('#name_chinese').val() || !$('#name_malay').val() || !$('#email').val() || !$('#phone_mobile').val()){
         alert("請填寫所有資料！Please fill in all information!");
         return false;
     }
@@ -101,16 +104,17 @@ $(document).ready(function(){
         $('#page-check').show();
 
         $.ajax({
-            url: '<?= base_url('agm/get_contact_by_nric'); ?>/'+$('#nric').val(),
+            url: '<?= base_url('agm/get_contact_by_nric_agm_personal'); ?>/'+$('#nric').val(),
             type: 'get',
             success: function( data, textStatus, jQxhr ){
                 me = JSON.parse(data);
                 console.log(me);
-                $('#name_chinese').val(me.name_chinese);
+                $('#name_chinese').val(me.name_dharma);
                 $('#name_malay').val(me.name_malay);
                 $('#email').val(me.email);
                 $('#online').val(me.online);
                 $('#contact_id').val(me.contact_id);
+                $('#phone_mobile').val(me.phone_mobile);
                 $('#page-check').hide();
             }
         });
@@ -127,7 +131,18 @@ $(document).ready(function(){
                 <div class='row text-center'>
                     <div class='col-md-12' style='padding:30px;'>
                         <img src="https://storage.googleapis.com/stateless-info-tbsn-my-2/2021/02/91c74a77-logo.png" width="100%" />
-                        <h2 class='text-center' style='color:#600'>第8屆<?= date('Y'); ?>年度<br />常年會員代表大會<br />登記表 (個人)</h2>
+                        <h2 class='text-center' style='color:#600'>第<?= $setting['session']; ?>屆<?= $setting['year']; ?>年度<br />常年會員代表大會<br />登記表 (個人)</h2>
+                        
+                        <center><table style='font-size: 16px;'>
+                            <tr>
+                                <td>日期：</td>
+                                <td><?= $setting['date']; ?></td>
+                            </tr>
+                            <tr>
+                                <td>時間：</td>
+                                <td><?= $setting['time']; ?></td>
+                            </tr>
+                        </table></center>
 
                         <?php if($msg_code == 'success_reg'): ?>
                             <div class='alert alert-success'><?= $msg; ?></div>
@@ -192,6 +207,13 @@ $(document).ready(function(){
                                 <div class='col-md-3 strong_txt'>電郵 Email:</div>
                                 <div class='col-md-9'>
                                     <div class='form form-group'><input type='text' class='form-control col-xs-8' name='email' id='email' /></div>
+                                </div>
+                            </div>
+
+                            <div class='row row-data col-xs-10 col-xs-offset-1'>
+                                <div class='col-md-3 strong_txt'>電話 Phone No:</div>
+                                <div class='col-md-9'>
+                                    <div class='form form-group'><input type='text' class='form-control col-xs-8' name='phone_mobile' id='phone_mobile' /></div>
                                 </div>
                             </div>
 

@@ -71,20 +71,65 @@ class Lists extends CI_Controller {
 		if(!$year) $year = date('Y');
 
 		$data = $this->data;
-		$gift_sent = 0;
+		$gift_sent = $payment_done = 0;
+		$total = $sorted_list = $sorting = $stats = array();
 
 		$list = $this->wenxuan_model->get_subscriber_list($year);
 		//echo'<pre>';print_r($list);
 		foreach($list as $wenxuan_id => $subscriber){
-			@$total[$subscriber['package'][$year]['package_id']] += 1;
+			$package_id   = $subscriber['package'][$year]['package_id'];
+			$package_date = $subscriber['package'][$year]['create_date'];
+			@$total[$package_id] += 1;
 			$gift_sent += $subscriber['package'][$year]['gift_taken'];
+			//$payment_done_temp = ($subscriber['package'][$year]['status'] + $subscriber['package'][$year]['fullpayment'] > 0) ? 1 : 0;
+			$payment_done_temp = $subscriber['package'][$year]['status'];
+			$payment_done += $payment_done_temp;
+			$list[$wenxuan_id]['package'][$year]['payment_done'] = $payment_done_temp;
+			$sorting[$package_date][$wenxuan_id] = $wenxuan_id;
+
+			@$stats['raw_data'][substr($package_date, 0, 7)][$package_id] += 1;
+			@$stats['packages'][$package_id] = $package_id;
 		}
-		$data['list']  = $list;
+		ksort($total);
+		ksort($sorting);
+
+		// Statistic Sorting
+		ksort($stats['raw_data']);
+		foreach($stats['raw_data'] as $date => $package){
+			@$stats['date'][] = $date;
+			foreach($stats['packages'] as $package_id)
+				@$stats['package_id'][$package_id][] = ($package[$package_id]) ? $package[$package_id] : 0;
+		}
+		ksort($stats['package_id']);
+		$package = $this->wenxuan_model->get_package();
+		//print_pre($total);
+		//print_pre($package);
+
+		// Fill empty package in year
+		foreach($package as $package_id => $p){
+			if($p['year'] == $year){
+				@$total[$package_id] += 0;
+			}
+		}
+		//print_pre($total);
+		//print_pre($package);
+
+
+		//Sort Users based on package create date instead of user create date
+		foreach($sorting as $create_date => $subscribers){
+			foreach($subscribers as $wenxuan_id => $s){
+				$sorted_list[$wenxuan_id] = $list[$wenxuan_id];
+			}
+		}
+
+		$data['list']  = $sorted_list;//$list;
 		$data['total'] = $total;
 		$data['year']  = $year;
-		$data['gift_sent'] = $gift_sent;
-		$data['package']   = $this->wenxuan_model->get_package();
-		$data['form_url']  = $this->config->item('url_wenxuan_form').'/viewform/';
+		$data['stats'] = $stats;
+		$data['gift_sent']    = $gift_sent;
+		$data['payment_done'] = $payment_done;
+		$data['package']      = $package;
+		$data['form_url']     = $this->config->item('url_wenxuan_form').'/viewform/';
 
 		$this->load->view('wenxuan/header', $data);
 		$this->load->view('wenxuan/navigation', $data);
@@ -155,6 +200,49 @@ class Lists extends CI_Controller {
 		$post_data = $this->input->post();
 		$this->wenxuan_model->replace_package($post_data,$post_data['package_id']);
 		echo 1;
+	}
+
+	public function ajax_tracking_update(){
+		$post_data = $this->input->post();
+		$this->wenxuan_model->update_tracking($post_data['wenxuan_id'],$post_data['package_id'],$post_data['pos_tracking']);
+		echo 1;
+	}
+
+	public function ajax_check_tracking(){
+		$tracking_no = $this->input->post('tracking_no');
+		$api_key = $this->config->item('easyparcel_api_key');
+		$url = "https://connect.easyparcel.my/?ac=EPTrackingBulk";
+
+		$post_data = array(
+			'api' => $api_key,
+			'bulk' => array(
+				array('awb_no' => $tracking_no)
+			)
+		);
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data));
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // Some environments have SSL cert issues
+		$response = curl_exec($ch);
+		
+		if (curl_errno($ch)) {
+			$error_msg = curl_error($ch);
+			curl_close($ch);
+			echo json_encode(array('api_status' => 'Error', 'error_remark' => 'CURL Error: ' . $error_msg));
+			return;
+		}
+		
+		curl_close($ch);
+
+		if (empty($response)) {
+			echo json_encode(array('api_status' => 'Error', 'error_remark' => 'Empty response from EasyParcel.'));
+			return;
+		}
+
+		echo $response;
 	}
 
 	public function ajax_delete_contact(){
@@ -288,6 +376,150 @@ class Lists extends CI_Controller {
 				));
 		}
 
+	}
+
+	public function export_csv_unsent_package($year=''){
+		if(!$year) $year = date('Y');
+
+		$data  = $this->data;
+		$package_data = array();
+
+		$list = $this->wenxuan_model->get_subscriber_list($year);
+		//echo'<pre>';print_r($list);
+
+		// Preset Value
+		$header_args = array('No','Category','Parcel Content','Parcel Value','Weight','Pickup Date','Sender Name','Sender Company','Sender Contact','Sender Alt Contact','Sender Email','Sender Address','Sender Postcode','Sender City','Receiver Name','Receiver Company','Receiver Contact','Receiver Alt Contact','Receiver Email','Receiver Address','Receiver Postcode','Receiver City','Courier Company');
+
+		$counter = 0;
+		foreach($list as $wenxuan_id => $subscriber){
+
+			$package = $subscriber['package'][$year];
+
+			// Only sent package that full payment is made & gift not taken
+			if(!$package['gift_taken'] && $package['status'] == 1){
+				//print_pre($package);
+
+				$counter++;
+				$package_data[] = array_merge(array($counter), array(
+					'Fashion And Accessories',
+					$package['parcel_content'] ? $package['parcel_content'] : 'Gift and Wallet',
+					$package['parcel_value'] ? $package['parcel_value'] : '100',
+					$package['weight_in_kg'] ? $package['weight_in_kg'] : '1',
+					date('Y-m-d',strtotime('+1 day')),
+					'PABT Wenxuan',
+					'PABT Chen Foh Chong Malaysia',
+					'\'0333749399',
+					'',
+					'info@tbsn.my',
+					'1A, Jalan Perawas, Lebuh Setaka, Taman Chi Liung',
+					'41200',
+					'Klang',
+					$package['wenxuan_name_receiver'],
+					'',
+					str_replace(' ', '', $package['wenxuan_contact']),
+					'',
+					'',
+					$package['wenxuan_address1'].' '.$package['wenxuan_address2'],
+					$package['wenxuan_postcode'],
+					$package['wenxuan_city'],
+					'CityLink',
+				));
+			}
+		}
+
+		//print_pre($package_data);
+		$this->generate_csv($header_args,$package_data);
+	}
+
+	public function export_csv_blessing($year=''){
+		if(!$year) $year = date('Y');
+
+		$data  = $this->data;
+		$blessing_data = array();
+
+		$list = $this->wenxuan_model->get_subscriber_list($year);
+		//echo'<pre>';print_r($list);
+
+		// Preset Value
+		$header_args = array('姓名','年齡','地址','祈願');
+
+		foreach($list as $wenxuan_id => $subscriber){
+			$package = $subscriber['package'][$year];
+			foreach(json_decode($package['register_blessing'],1) as $v){
+				$blessing_data[] = $v;
+			}
+		}
+
+		//print_pre($blessing_data);
+		$this->generate_csv($header_args,$blessing_data,'blessing_list');
+	}
+
+	private function generate_csv($header_args,$data,$filename='csv_export'){
+
+		ob_start();
+		header('Content-Type: text/csv; charset=utf-8');
+		header('Content-Disposition: attachment; filename='.$filename.'.csv');
+		ob_end_clean();
+
+		$output = fopen( 'php://output', 'w' );
+		fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
+		fputcsv( $output, $header_args );
+
+		foreach( $data as $data_item ){
+			fputcsv( $output, $data_item );
+		}
+
+		fclose( $output );
+		exit;
+
+	}
+
+	public function stats_tbsnews($year = ''){
+		$data = $this->data;
+
+		if(!$year) $year = date('Y');
+
+		$stat = array('view'/*,'download'*/);
+		$res  = array(
+			'year' => $year,
+			'view'     => array('total' => 0),
+			'download' => array('total' => 0),
+		);
+
+
+		foreach($stat as $type){
+			foreach(explode("\n",read_file("application/logs/tbsnews_".$type."_".$year.".log")) as $row){
+
+				if($row){
+					list($issue,$date) = explode("\t",$row);
+					list($y1,$y2,$mm,$dd,,,) = str_split($date,2);
+
+					@$res[$type]['total'] += 1;
+					@$res[$type]['details'][(int)$mm]['total'] += 1;
+					@$res[$type]['details'][(int)$mm]['details'][(int)$dd] += 1;
+					@$res['issue'][$issue]['total'] += 1;
+					if(!isset($res['issue'][$issue]['date']))
+						@$res['issue'][$issue]['date'] = date('Y-m-d',calculate_tbsnews_date($issue));
+				}
+			}
+		}
+		krsort($res['issue']);
+		$data = array_merge($data,$res);
+
+		$this->load->view('wenxuan/header', $data);
+		$this->load->view('wenxuan/navigation', $data);
+		$this->load->view('wenxuan/tbsnews_stats',$data);
+		$this->load->view('wenxuan/footer');
+		
+	}
+
+	public function stats_analytics(){
+		$data = $this->data;
+
+		$this->load->view('wenxuan/header', $data);
+		$this->load->view('wenxuan/navigation', $data);
+		$this->load->view('wenxuan/stats_analytics_view',$data);
+		$this->load->view('wenxuan/footer');
 	}
 
 }

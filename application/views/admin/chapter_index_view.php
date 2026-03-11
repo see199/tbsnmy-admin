@@ -225,10 +225,31 @@ function toggle_form(){
                         </div>
                     </div>
                     <div class='row row-data col-xs-10 col-xs-offset-1'>
+                        <div class='col-xs-3 strong_txt'>NAS Location:</div>
+                        <div class='col-xs-9'>
+                            <div class='display'><input type='text' class='form-control col-xs-8' value='<?= $chapter['nas_location']; ?>' /></div>
+                            <div class='form form-group'><input type='text' class='form-control col-xs-8' value='<?= $chapter['nas_location']; ?>' /></div>
+                        </div>
+                    </div>
+                    <div class='row row-data col-xs-10 col-xs-offset-1'>
+                        <div class='col-xs-3 strong_txt'>產業:</div>
+                        <div class='col-xs-9'>
+                            <div class='display'><?= $this->config->item('tbs')['properties'][$chapter['properties']]; ?></div>
+                            <div class='form form-group'><?= form_dropdown("chapter[properties]",$this->config->item('tbs')['properties'],($chapter['properties']) ? $chapter['properties'] : "U",array("class"=>"form-control")); ?></div>
+                        </div>
+                    </div>
+                    <div class='row row-data col-xs-10 col-xs-offset-1'>
+                        <div class='col-xs-3 strong_txt'>產業備註:</div>
+                        <div class='col-xs-9'>
+                            <div class='display'><textarea class='form-control col-xs-8'readonly rows=3><?= $chapter['properties_remarks']; ?></textarea></div>
+                            <div class='form form-group'><textarea class='form-control col-xs-8' rows=3 name='chapter[properties_remarks]'><?= $chapter['properties_remarks']; ?></textarea></div>
+                        </div>
+                    </div>
+                    <div class='row row-data col-xs-10 col-xs-offset-1'>
                         <div class='col-xs-3 strong_txt'><?= lang('col_remarks'); ?>:</div>
                         <div class='col-xs-9'>
-                            <div class='display'><?= $chapter['remarks']; ?></div>
-                            <div class='form form-group'><textarea class='form-control col-xs-8' name='chapter[remarks]'><?= $chapter['remarks']; ?></textarea></div>
+                            <div class='display'><textarea class='form-control col-xs-8'readonly rows=5><?= $chapter['remarks']; ?></textarea></div>
+                            <div class='form form-group'><textarea class='form-control col-xs-8' rows=5 name='chapter[remarks]'><?= $chapter['remarks']; ?></textarea></div>
                         </div>
                     </div>
 
@@ -357,6 +378,37 @@ function toggle_form(){
                     <div class='row'>&nbsp;</div>
 
                     <div class='row col-xs-10 col-xs-offset-1'>
+                        <div class='h3 strong_txt'>宗委會相關</div>
+                    </div>
+
+                    <div class='row row-data col-xs-10 col-xs-offset-1'>
+                        <div class='col-xs-3 strong_txt'>真佛編號:</div>
+                        <div class='col-xs-9'>
+                            <div class='display'><?= $chapter['tb_id']; ?></div>
+                            <div class='form form-group'><input type='text' class='form-control col-xs-8' name='chapter[tb_id]' value='<?= $chapter['tb_id']; ?>' /></div>
+                        </div>
+                    </div>
+
+                    <div class='row row-data col-xs-10 col-xs-offset-1'>
+                        <div class='col-xs-3 strong_txt'>分堂代碼:</div>
+                        <div class='col-xs-9'>
+                            <div class='display'><?= $chapter['tb_chapter_id']; ?></div>
+                            <div class='form form-group'><input type='text' class='form-control col-xs-8' name='chapter[tb_chapter_id]' value='<?= $chapter['tb_chapter_id']; ?>' /></div>
+                        </div>
+                    </div>
+
+                    <div class='row row-data col-xs-10 col-xs-offset-1'>
+                        <div class='col-xs-3 strong_txt'>續證截止:</div>
+                        <div class='col-xs-9'>
+                            <div class='display'><?= $chapter['tb_cert_renew']; ?></div>
+                            <div class='form form-group'><input type='text' class='form-control col-xs-8' name='chapter[tb_cert_renew]' value='<?= $chapter['tb_cert_renew']; ?>' /></div>
+                        </div>
+                    </div>
+
+                    <div class='row'>&nbsp;</div>
+                    <div class='row'>&nbsp;</div>
+
+                    <div class='row col-xs-10 col-xs-offset-1'>
                         <div class='h3 strong_txt'><?= lang('col_title_chapter_member'); ?></div>
                     </div>
 
@@ -371,17 +423,17 @@ function toggle_form(){
                     <div class='row row-data col-xs-10 col-xs-offset-1'>
                         <table class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
                             <thead><tr class='info'>
+                                <td><?= lang('col_contact_position');?></td>
                                 <td><?= lang('col_contact_name');?></td>
                                 <td><?= lang('col_contact_contact');?></td>
-                                <td><?= lang('col_contact_position');?></td>
                                 <td><?= lang('col_contact_mizong_agm');?></td>
                                 <td><?= lang('col_contact_view');?></td>
                             </tr></thead>
                             <tbody><?php foreach($chapter_member as $c):?>
                                 <tr>
+                                    <td><?= $c['position']; ?><?= isset($c['bday_cal'])?$c['bday_cal']:""; ?></td>
                                     <td><?= $c['name_chinese'] . "<br />" . $c['name_dharma']; ?></td>
                                     <td><?= $c['phone_mobile']."<br />".$c['email']; ?></td>
-                                    <td><?= $c['position']; ?><?= isset($c['bday_cal'])?$c['bday_cal']:""; ?></td>
                                     <td><?= ($c['mizong_agm']) ? "是" : "否"; ?></td>
                                     <td><a href="<?= base_url("admin/contact/details/".$c['contact_id']); ?>"><?= lang('col_contact_view');?></a></td>
                                 </tr>

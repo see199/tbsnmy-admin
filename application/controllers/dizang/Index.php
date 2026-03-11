@@ -63,7 +63,7 @@ class Index extends CI_Controller {
 
                     $r['deceased_type'] = isset($this->data['deceased_type'][$r['deceased_type']]) ? $this->data['deceased_type'][$r['deceased_type']] : "<font color=red>".$r['deceased_type']."<font>";
 
-                    $r['$']['viewmodal'] = '<input type="checkbox" name="print['.$r['dizang_id'].']"> | <a href="javascript:void(0)" onclick="load_box('.$r['dizang_id'].')" data-toggle="modal" data-target="#myModal">詳情</a>';
+                    $r['$']['viewmodal'] = '<input type="checkbox" class="cbox" name="print['.$r['dizang_id'].']"> | <a href="javascript:void(0)" onclick="load_box('.$r['dizang_id'].')" data-toggle="modal" data-target="#myModal">詳情</a>';
                 }
             }
         );
@@ -81,14 +81,19 @@ class Index extends CI_Controller {
             return;
         }
 
+        $action = $this->input->post('action');
+
         $ids = array();
         foreach($this->input->post('print') as $id => $val) $ids[] = $id;
 
-        $list = $this->dizang_model->get_dizang_details($ids);
+        if($action == '備錄')
+            $list = $this->dizang_model->get_dizang_details($ids,'reg_loc,date');
+        else
+            $list = $this->dizang_model->get_dizang_details($ids);
         $data = $this->data;
         $data['list'] = $list;
 
-        switch($this->input->post('action')){
+        switch($action){
             case '儀軌':
                 $this->load->view('dizang/print_yigui',$data);
                 break;

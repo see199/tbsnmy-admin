@@ -9,6 +9,9 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
+    <link rel="icon" href="<?= base_url(); ?>assets/img/favicon_dizang.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="<?= base_url(); ?>assets/img/favicon_dizang.ico" type="image/x-icon">
+
     <title><?= lang('glb_nav_title'); ?></title>
 
     <!-- Bootstrap Core CSS -->

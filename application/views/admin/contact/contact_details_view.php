@@ -72,12 +72,18 @@ $( document ).ready(function() {
                         </div>
                         
                         <?php $loop = array("name_chinese","name_malay","name_dharma","nric","phone_mobile","phone_home","phone_office","email"); ?>
-                        <?php foreach($loop as $col_name): ?>
+                        <?php foreach($loop as $col_name):
+                                $input_box = form_input(array(
+                                    'name' => "contact[${col_name}]",
+                                    'value' => $contact[$col_name],
+                                    'class' => 'form-control col-xs-8' . ($col_name == 'nric' ? ' nric-input' : ''),
+                                ));
+                        ?>
                         <div class='row row-data col-xs-10 col-xs-offset-1'>
                             <div class='col-xs-3 strong_txt'><?= lang('col_'.$col_name);?>:</div>
                             <div class='col-xs-9'>
                                 <div class='display'><?= $contact[$col_name]; ?></div>
-                                <div class='form form-group'><input type='text' class='form-control col-xs-8' name='contact[<?=$col_name;?>]' value='<?= $contact[$col_name]; ?>' /></div>
+                                <div class='form form-group'><?= $input_box; ?></div>
                             </div>
                         </div>
                         <?php endforeach;?>

@@ -12,6 +12,7 @@ function load_box(me){
         $('#wenxuan_id').val('');
         $('#wenxuan_name').val('');
         $('#wenxuan_contact').val('');
+        $('#wenxuan_email').val('');
         $('#address1').val('');
         $('#address2').val('');
         $('#city').val('');
@@ -38,6 +39,7 @@ function load_box(me){
         $('#wenxuan_id').val(subscriber.wenxuan_id);
         $('#wenxuan_name').val(subscriber.wenxuan_name);
         $('#wenxuan_contact').val(subscriber.wenxuan_contact);
+        $('#wenxuan_email').val(subscriber.wenxuan_email);
         $('#address1').val(subscriber.wenxuan_address1);
         $('#address2').val(subscriber.wenxuan_address2);
         $('#city').val(subscriber.wenxuan_city);
@@ -69,6 +71,7 @@ function post_data(refresh_page){
         wenxuan_id       : $('#wenxuan_id').val(),
         wenxuan_name     : $('#wenxuan_name').val(),
         wenxuan_contact  : $('#wenxuan_contact').val(),
+        wenxuan_email    : $('#wenxuan_email').val(),
         wenxuan_address1 : $('#address1').val(),
         wenxuan_address2 : $('#address2').val(),
         wenxuan_city     : $('#city').val(),
@@ -210,6 +213,7 @@ function delete_data(){
                 <table class="table display">
                     <tr><td>聯絡人</td><td><input class="form-control" id="wenxuan_name"/></td></tr>
                     <tr><td>聯絡號碼</td><td><input class="form-control" id="wenxuan_contact"/></td></tr>
+                    <tr><td>電郵</td><td><input class="form-control" id="wenxuan_email"/></td></tr>
                     <tr><td>地址</td><td>
                         <input type="hidden" id="wenxuan_id"/>
                         <input type="hidden" id="chapter_id"/>

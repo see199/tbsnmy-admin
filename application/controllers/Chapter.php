@@ -48,7 +48,9 @@ class Chapter extends CI_Controller {
     private function get_chapter_details($url_name){
         
         $response = $this->api_model->get_chapter_details($url_name);
-        $chapter = json_decode($response,1);
+        $chapter = array();
+        if($response)
+            $chapter = json_decode($response,1);
 
         if(isset($chapter['dharma_staff']))
         preg_replace('@,@',', ',$chapter['dharma_staff']);

@@ -49,6 +49,7 @@ class AGM extends CI_Controller {
         }
 
         // Zoom 登入
+        $this->update_online_attendance();
         $data_online = $this->read_attendance($this->config->item('file_attendance_online'));
         $online_chapter = $online_chapter_member = $online_member = 0;
         foreach($data_online as $type => $v){
@@ -65,6 +66,7 @@ class AGM extends CI_Controller {
                         // 如果現場 + Zoom >= 3人，Zoom 人數 = 3 - 現場人數
                         // 如果不是的話， Zoom 人數直接加上去
                         // Cater for: 現場沒人 / 現場全部出席 / 部分現場 + 部分Zoom
+                        if(!isset($data['chapter'][$id])) $data['chapter'][$id] = 0;
                         $to_add = (($data['chapter'][$id] + $total) >= 3) ? 3-$data['chapter'][$id] : $total;
                         $online_chapter_member += $to_add;
 
@@ -106,6 +108,7 @@ class AGM extends CI_Controller {
     }
 
     private function read_attendance($file){
+        $attendance = array();
     	$data = explode("\n",read_file($file));
     	foreach($data as $v){
     		if($v){
@@ -124,13 +127,15 @@ class AGM extends CI_Controller {
         $sorted_list = array();
         foreach($list as $l){
 
-            // 團體會員
-            if($l['membership_id'] > 5000){
-                @$sorted_list['chapter'][$l['chapter_id']] += 1;
-            }
-            // 個人會員
-            elseif($l['membership_id'] > 1000){
-                @$sorted_list['member'][$l['contact_id']] += 1;
+            if($l['zoom_link'] != '現場出席'){
+                // 團體會員
+                if($l['membership_id'] > 5000){
+                    @$sorted_list['chapter'][$l['chapter_id']] += 1;
+                }
+                // 個人會員
+                elseif($l['membership_id'] > 1000){
+                    @$sorted_list['member'][$l['contact_id']] += 1;
+                }
             }
         }
 
@@ -181,6 +186,7 @@ class AGM extends CI_Controller {
             'states'           => $states,
             'msg_code'         => $msg_code,
             'msg'              => $msg,
+            'setting'          => json_decode(read_file('application/logs/agm_setting.txt'),1),
         ));
     }
 
@@ -191,12 +197,26 @@ class AGM extends CI_Controller {
         $this->load->view('agm/register_personal_view',array(
             'msg_code'         => $msg_code,
             'msg'              => $msg,
+            'setting'          => json_decode(read_file('application/logs/agm_setting.txt'),1),
         ));
     }
 
     public function get_contact_by_nric($nric){
         $this->load->model('contact_model');
         $contact = $this->contact_model->get_contact_by_nric($nric);
+
+        //Only show 1 email
+        @$contact['email'] = explode(",",$contact['email'])[0];
+
+        echo json_encode($contact);
+    }
+
+    public function get_contact_by_nric_agm_personal($nric){
+        $this->load->model('contact_model');
+        $contact = $this->contact_model->get_contact_by_nric_agm_personal($nric);
+
+        //Only show 1 email
+        @$contact['email'] = explode(",",$contact['email'])[0];
 
         echo json_encode($contact);
     }
@@ -212,20 +232,51 @@ class AGM extends CI_Controller {
                 header('Location: '.$res['zoom_link']);
             }
             else{
-                $this->load->view('agm/login_view',array('error' => 'user_not_found'));
+                $this->load->view('agm/login_view',array('error' => 'user_not_found','setting' => json_decode(read_file('application/logs/agm_setting.txt'),1),));
             }
 
         }else{
-            $this->load->view('agm/login_view',array());
+            $this->load->view('agm/login_view',array('setting' => json_decode(read_file('application/logs/agm_setting.txt'),1),));
         }
 
         
     }
 
     public function add_registrant(){
+        
+        $post = $this->input->post();
+        $msg  = '';
+        $res_code  = 'success_reg';
+
+        for($i=1;$i<=3;$i++){
+            if($post['nric'.$i] != ''){
+                $registrant = array(
+                    'state'        => $post['state'],
+                    'chapter'      => $post['chapter'],
+                    'chapter_id'   => $post['chapter_id'],
+                    'contact_id'   => $post['contact_id'.$i],
+                    'nric'         => $post['nric'.$i],
+                    'name_chinese' => $post['name_chinese'.$i],
+                    'name_malay'   => $post['name_malay'.$i],
+                    'email'        => $post['email'.$i],
+                    'phone_mobile' => $post['phone_mobile'.$i],
+                    'position'     => $post['position'.$i],
+                    'online'       => $post['online'.$i],
+                );
+                $res = $this->process_add_registrant($registrant);
+                if($res[0] != 'success_reg') $res_code = $res[0];
+                $msg .= $res[1].'<br />';
+            }
+        }
+        $msg .= '<a href="'.base_url('agm/check_registered_chapter/'.$post['chapter_id']).'">點擊查詢登記名單</a>';
+        $this->register($res_code,$msg);
+
+        
+    }
+
+    private function process_add_registrant($post){
         $this->load->model('agm_model');
 
-        $post    = $this->input->post();
         $chapter = $this->api_model->get_chapter_details_by_id($post['chapter_id']);
 
         // Check if Email exists or not, if exists, display error
@@ -237,9 +288,7 @@ class AGM extends CI_Controller {
                 $new_email1 = $e1.'+1@'.$e2;
                 $new_email2 = $e1.'+2@'.$e2;
 
-                $this->register('error',"Error: 此電郵已登記！請使用其他電郵。<br />建議修改： ".$post['email']." 改成 $new_email1 或 $new_email2");
-    
-                return;
+                return array('error',"Error: 此電郵已登記！請使用其他電郵。<br />建議修改： ".$post['email']." 改成 $new_email1 或 $new_email2");
             }
         }
 
@@ -250,12 +299,12 @@ class AGM extends CI_Controller {
         }
 
         // Submit to Zoom API
-        $post['first_name'] = $chapter['membership_id'] . '-' . preg_replace(array('/真佛宗/','/同修會/','/雷藏寺/','/堂/','/（籌委會）/'),'',$chapter['name_chinese']) .'-';
+        $post['first_name'] = $chapter['membership_id'] . '-' . preg_replace(array('/真佛宗/','/同修會/','/雷藏寺/','/堂/','/（籌委會）/','/北干那那/','/大山腳/','/居林/','/亞羅士打/','/淡馬魯/','/根地咬/','/古晉/','/居鑾/','/關丹/','/和豐/','/永平新港/','/永平/','/檳城/','/峇株吧轄/','/詩巫/','/霹靂怡保/','/亞庇/','/古來/','/馬六甲/','/美羅/'),'',$chapter['name_chinese']) .'-';
 
         // If choose ZOOM only call ZOOM API
-        
         if($post['online']){
-            $registrant = $this->agm_model->api_add_zoom_registrant("89065666966",array(
+            $setting = json_decode(read_file('application/logs/agm_setting.txt'),1);
+            $registrant = $this->agm_model->api_add_zoom_registrant($setting['zoom_id'],array(
                 "email"      => $post['email'],
                 "first_name" => $post['first_name'],
                 "last_name"  => $post['name_chinese'],
@@ -263,8 +312,11 @@ class AGM extends CI_Controller {
 
             // If Zoom return empty
             if(!isset($registrant['registrant_id'])){
-                $this->register('error',"暫時無法登記，ZOOM 暫無回應，請稍後再試。 Failed to register due to empty response from ZOOM! Please try again later. Error code: EMPTY_RESPONSE");
-                return ;
+                $err_code = "TB01";
+                $err_msg  = "EMPTY_RESPONSE";
+                if($registrant['code']) $err_code = $registrant['code'];
+                if($registrant['message']) $err_msg = $registrant['message'];
+                return array('error',"暫時無法登記，ZOOM 暫無回應，請稍後再試。 Failed to register due to empty response from ZOOM! Please try again later. Error code: $err_code : $err_msg");
             }
 
         }else{
@@ -277,9 +329,7 @@ class AGM extends CI_Controller {
         // if Error, Display ERROR to contact admin
         if(isset($registrant['code']) && $post['online']){
 
-            $this->register('error',"無法登記！請聯絡馬密總秘書處。 Failed to register! Please contact secretary. Error Message: " . $registrant['code'].":".$registrant['message']);
-
-            return ;
+            return array('error',"無法登記！請聯絡馬密總秘書處。 Failed to register! Please contact secretary. Error Message: " . $registrant['code'].":".$registrant['message']);
         }
 
 
@@ -292,6 +342,7 @@ class AGM extends CI_Controller {
             'name_chinese' => $post['name_chinese'],
             'name_malay'   => $post['name_malay'],
             'membership_id'=> $chapter['membership_id'],
+            'phone_mobile' => $post['phone_mobile'],
             'position'     => $post['position'],
             'email'        => $post['email'],
             'first_name'   => $post['first_name'],
@@ -301,8 +352,7 @@ class AGM extends CI_Controller {
         );
         $this->agm_model->add_registrant($registrant_primary,$registrant_value);
 
-        $this->register('success_reg',"成功登記！Registration Success!");
-        return;
+        return array('success_reg',$post['name_chinese'].": 成功登記！Registration Success!");
     }
 
     public function add_registrant_personal(){
@@ -327,17 +377,36 @@ class AGM extends CI_Controller {
             }
         }
 
+        // 非個人會員
+        if(!isset($contact['membership_id'])){
+
+            $this->register_personal('error',"無法登記！請確保您是個人會員（弘法人員或連續2屆的中央理事）。 Failed to register! Please make sure you are Personal Membership (Dharma Personal or AJK for 2 session. <br /><a href='".base_url('agm/register')."'>點擊登記道場代表 Click to Register as Group</a>");
+
+            return ;
+        }
+
         // Submit to Zoom API
         $post['first_name'] = $contact['membership_id'] .'-';
 
         // If choose ZOOM only call ZOOM API
         
         if($post['online']){
-            $registrant = $this->agm_model->api_add_zoom_registrant("89065666966",array(
+            $setting = json_decode(read_file('application/logs/agm_setting.txt'),1);
+            $registrant = $this->agm_model->api_add_zoom_registrant($setting['zoom_id'],array(
                 "email"      => $post['email'],
                 "first_name" => $post['first_name'],
                 "last_name"  => $post['name_chinese'],
             ));
+
+            // If Zoom return empty
+            if(!isset($registrant['registrant_id'])){
+                $err_code = "TB01";
+                $err_msg  = "EMPTY_RESPONSE";
+                if(isset($registrant['code'])) $err_code = $registrant['code'];
+                if(isset($registrant['message'])) $err_msg = $registrant['message'];
+                $this->register('error',"暫時無法登記，ZOOM 暫無回應，請稍後再試。 Failed to register due to empty response from ZOOM! Please try again later. Error code: $err_code : $err_msg");
+                return ;
+            }
         }else{
             $registrant = array(
                 'registrant_id' => '',
@@ -363,6 +432,7 @@ class AGM extends CI_Controller {
             'name_chinese' => $post['name_chinese'],
             'name_malay'   => $post['name_malay'],
             'membership_id'=> $contact['membership_id'],
+            'phone_mobile' => $post['phone_mobile'],
             'position'     => "",
             'email'        => $post['email'],
             'first_name'   => $post['first_name'],
@@ -374,6 +444,75 @@ class AGM extends CI_Controller {
 
         $this->register_personal('success_reg',"成功登記！Registration Success!");
         return;
+    }
+
+    public function vote() {
+        // Load form helper to set form validation rules
+        $this->load->library('form_validation');
+        $this->load->model('agm_model');
+        
+        // Load AGM Settings
+        $data['setting'] = json_decode(read_file('application/logs/agm_setting.txt'),1);
+        $data['setting']['gform'] = '1FAIpQLSdj9KEURkmamwtFYT6Kn9CJZStVNbR8MKRmlDLKW6NVD405AA';
+
+        // Check if form has been submitted
+        if(count($this->input->post())){
+
+            // Set form validation rules
+            $this->form_validation->set_rules('nric', 'NRIC', 'required');
+
+            // Check if form validation passed
+            if ($this->form_validation->run() == FALSE) {
+                // If form validation failed, reload the view with error message
+                $data['error'] = 'Please enter your NRIC.';
+                $this->load->view('agm/vote_form', $data);
+            } else {
+                // If form validation passed, check if NRIC exists in database
+                $nric = $this->input->post('nric');
+                $result = $this->agm_model->get_registrant($nric);
+
+                if (empty($result)) {
+                    // If NRIC is not found, reload the view with error message
+                    $data['error'] = 'Sorry, you are not allowed to vote.';
+                } elseif ($result['voted'] == 1) {
+                    // If user has already voted, reload the view with error message
+                    $data['error'] = 'Sorry, you have already voted.';
+                } else {
+                    // If NRIC is found and user has not voted, load Google form
+                    $google_form_url = 'https://docs.google.com/forms/d/e/'.$data['setting']['gform'].'/viewform';
+                    $data['google_form_url'] = $google_form_url;
+
+                    // Update voted field in database
+                    //$this->agm_model->update_voted($nric);
+
+                }
+            }
+        } 
+
+        $this->load->view('agm/vote_form', $data);
+
+        
+    }
+
+    public function check_registered_chapter($chapter_id){
+
+        $this->load->model('agm_model');
+        $registrant = $this->agm_model->count_same_chapter($chapter_id);
+
+        $chapter = $this->api_model->get_chapter_details_by_id($chapter_id);
+
+        // Hide NRIC, only show last 4 digit
+        foreach($registrant as $k => $v){
+            $nric = $v['nric'];
+            $registrant[$k]['masked_nric'] = 'XXXXXX-XX-' . substr($nric, -4);
+        }
+
+        $this->load->view('agm/check_registered_chapter_view', array(
+            'setting'    => json_decode(read_file('application/logs/agm_setting.txt'),1),
+            'chapter'    => $chapter,
+            'registrant' => $registrant,
+        ));
+
     }
 
 }

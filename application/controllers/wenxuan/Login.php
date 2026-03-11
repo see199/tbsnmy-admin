@@ -57,7 +57,7 @@ class Login extends CI_Controller {
             $res = $this->wenxuan_model->check_login($userData->email);
             if(sizeof($res) == 0){
                 echo "<script>alert('You are not allowed to login');
-                window.location='".site_url()."wenxuan/login/logout';
+                window.location='".site_url()."/wenxuan/login/logout';
                 </script>";
             }
             else{

@@ -128,9 +128,17 @@ class Index extends CI_Controller {
         // Remove empty field
         foreach($post as $k => $v) if($v == "null" || $v == "") unset($post[$k]);
 
-        $this->dizang_model->$process($post);
-        
-        echo json_encode(array("success" => 1));
+        try {
+            $this->dizang_model->$process($post);
+            echo json_encode(array("success" => 1));
+        } catch (Exception $e) {
+            $msg = $e->getMessage();
+            if (strpos($msg, 'Duplicate entry') !== false) {
+                echo json_encode(array("success" => 0, "message" => "資料重複 (Duplicate entry)！請檢查牌位號碼是否已經存在。\n\n詳細錯誤: " . $msg));
+            } else {
+                echo json_encode(array("success" => 0, "message" => "資料庫錯誤：" . $msg));
+            }
+        }
     }
 
 }

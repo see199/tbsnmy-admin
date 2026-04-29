@@ -48,9 +48,16 @@ function post_data(){
     $.ajax({
         type:"POST",
         url: "<?= base_url('dizang/index/ajax_update'); ?>",
-        data:data
+        data:data,
+        dataType: "json"
     }).done(function(data) {
-        get_data();
+        if(data && data.success === 0) {
+            alert(data.message);
+        } else {
+            get_data();
+        }
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        alert("發生錯誤：" + textStatus + " - " + errorThrown);
     });
     
 }

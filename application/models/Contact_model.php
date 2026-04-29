@@ -37,33 +37,64 @@ class Contact_model extends CI_Model {
 
 	public function get_dharma_contact_list($filter_data, $where){
 
-		$this->db->where('dharma_position',$where['dharma_position'])
+		$this->db->select('c.*, ds.*, m.membership_id')
+				->from('tbs_dharma_staff ds')
+				->join('tbs_contact c', 'ds.contact_id = c.contact_id', 'left');
+
+		if(isset($filter_data['f_exam_batch'])) $this->db->where('ds.exam_batch', $filter_data['f_exam_batch']);
+		if(isset($filter_data['f_status'])) $this->db->where('ds.status', $filter_data['f_status']);
+		
+		if(isset($filter_data['f_member'])) {
+			if($filter_data['f_member'] == 'Y') {
+				$this->db->join('tbs_member m', 'm.member_id = c.contact_id', 'inner');
+			} else if($filter_data['f_member'] == 'N') {
+				$this->db->join('tbs_member m', 'm.member_id = c.contact_id', 'left')
+						 ->where('m.member_id IS NULL');
+			}
+		} else {
+			$this->db->join('tbs_member m', 'm.member_id = c.contact_id', 'left');
+		}
+
+		$this->db->where('ds.dharma_position',$where['dharma_position'])
 				->group_start();
 		foreach($where as $k => $v){
-			if($k != 'dharma_position') $this->db->or_like($k,$v);
+			if($k != 'dharma_position') $this->db->or_like('c.'.$k,$v);
 		}
 		$this->db->group_end()
 				->order_by($filter_data['order_by'])
-				->limit($filter_data['l2'], $filter_data['l1'])
-				->from('tbs_dharma_staff ds')
-				->join('tbs_contact c', 'ds.contact_id = c.contact_id', 'left');
+				->limit($filter_data['l2'], $filter_data['l1']);
+		
 		$res = $this->db->get();
-		write_file('application/logs/ttt.txt',print_r($this->db,1));
+		//write_file('application/logs/ttt.txt',print_r($this->db,1));
 		return $res->result_array();
 	}
 
-	public function count_total_dharma_contact($where){
+	public function count_total_dharma_contact($where, $filter_data = array()){
 		$this->db = $this->load->database('local', TRUE);
 
+		$this->db->from('tbs_dharma_staff ds')
+				->join('tbs_contact c', 'ds.contact_id = c.contact_id', 'left');
+
+		if(isset($filter_data['f_exam_batch'])) $this->db->where('ds.exam_batch', $filter_data['f_exam_batch']);
+		if(isset($filter_data['f_status'])) $this->db->where('ds.status', $filter_data['f_status']);
+		
+		if(isset($filter_data['f_member'])) {
+			if($filter_data['f_member'] == 'Y') {
+				$this->db->join('tbs_member m', 'm.member_id = c.contact_id', 'inner');
+			} else if($filter_data['f_member'] == 'N') {
+				$this->db->join('tbs_member m', 'm.member_id = c.contact_id', 'left')
+						 ->where('m.member_id IS NULL');
+			}
+		}
+
 		$this->db->select('COUNT(*) AS count');
-		$this->db->where('dharma_position',$where['dharma_position'])
+		$this->db->where('ds.dharma_position',$where['dharma_position'])
 				->group_start();
 		foreach($where as $k => $v){
-			if($k != 'dharma_position') $this->db->or_like($k,$v);
+			if($k != 'dharma_position') $this->db->or_like('c.'.$k,$v);
 		}
-		$this->db->group_end()
-				->from('tbs_dharma_staff ds')
-				->join('tbs_contact c', 'ds.contact_id = c.contact_id', 'left');
+		$this->db->group_end();
+		
 		$query = $this->db->get();
 
 
@@ -124,7 +155,7 @@ class Contact_model extends CI_Model {
 	public function get_contact_details($id = ''){
 		$this->db = $this->load->database('local', TRUE);
 
-		$query = "SELECT tbs_contact.*, tbs_dharma_staff.chapter_id, tbs_dharma_staff.dharma_position, tbs_dharma_staff.event, tbs_dharma_staff.status FROM tbs_contact LEFT JOIN tbs_dharma_staff ON tbs_contact.contact_id = tbs_dharma_staff.contact_id WHERE tbs_contact.contact_id = '$id'";
+		$query = "SELECT tbs_contact.*, tbs_dharma_staff.chapter_id, tbs_dharma_staff.dharma_position, tbs_dharma_staff.event, tbs_dharma_staff.exam_batch, tbs_dharma_staff.status FROM tbs_contact LEFT JOIN tbs_dharma_staff ON tbs_contact.contact_id = tbs_dharma_staff.contact_id WHERE tbs_contact.contact_id = '$id'";
 		$i = $this->db->query($query);
 		$res = $i->result_array();
 		return $res[0];

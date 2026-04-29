@@ -91,6 +91,7 @@ class Contact extends CI_Controller {
 		} else {
 			$data = $this->data;
 			$data['dtype'] = $dtype;
+			$data['staff_status'] = $this->config->item('tbs')['staff_status'];
 			$data['list_column'] = join("\" },{ \"data\": \"",$this->list_column);
 
 			$this->load->view('admin/header', $data);
@@ -111,7 +112,9 @@ class Contact extends CI_Controller {
 			"nric" => $this->input->post('search')['value'],
 			"phone_mobile" => $this->input->post('search')['value'],
 		);
-		$filter_data = $this->get_filter_data(array(),'contact_id');
+
+		$this->list_column = array("c.name_chinese","c.name_malay","c.name_dharma","c.nric","c.phone_mobile","c.email","ds.status","m.membership_id","ds.contact_id");
+		$filter_data = $this->get_filter_data(array('f_exam_batch','f_status','f_member'),'contact_id');
 
 		$forms = $this->contact_model->get_dharma_contact_list($filter_data,$where);
 		foreach($forms as $k => $v){
@@ -123,6 +126,8 @@ class Contact extends CI_Controller {
 				"nric" => $v['nric'],
 				"phone_mobile" => $v['phone_mobile'],
 				"email" => $v['email'],
+				"status" => $this->config->item('tbs')['staff_status'][$v['status']],
+				"membership_id" => ($v['membership_id']) ? $v['membership_id'] : "-",
 				"contact_id" => '<a href="'.base_url('admin/contact/details/'.$v['contact_id']).'">View</a>',
 			);
 
@@ -133,8 +138,8 @@ class Contact extends CI_Controller {
 		$result = array(
 			'draw' => $this->input->post('draw'),
 			'recordsTotal' => $filter_data['l2'],
-			'recordsFiltered' => $this->contact_model->count_total_dharma_contact($where),
-			'iTotalRecords' => $this->contact_model->count_total_dharma_contact($where),
+			'recordsFiltered' => $this->contact_model->count_total_dharma_contact($where, $filter_data),
+			'iTotalRecords' => $this->contact_model->count_total_dharma_contact($where, $filter_data),
 			'data' => $data,
 		);
 		echo json_encode($result);
@@ -221,7 +226,10 @@ class Contact extends CI_Controller {
 
 		$this->contact_model->update_contact($contact);
 		//print_pre($dharma);
-		if($dharma['dharma_position']) $this->contact_model->replace_dharma_info($dharma,$contact['contact_id']);
+		if($dharma['dharma_position']){
+			if(isset($dharma['exam_batch']) && $dharma['exam_batch'] === '') $dharma['exam_batch'] = NULL;
+			$this->contact_model->replace_dharma_info($dharma,$contact['contact_id']);
+		}
 		if($contact_member['membership_id']) $this->contact_model->replace_contact_member($contact_member,$contact['contact_id']);
 
 		//Chapter Member

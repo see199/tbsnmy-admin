@@ -9,32 +9,42 @@
 $(document).ready(function() {
     select_box = 'select[name="example_length"]';
 
-    function get_data(){
-        $('#example').dataTable( {
-            "processing": true,
-            "serverSide": true,
-            "iDisplayLength": 50,//$(select_box).val(),
-            "order": [[ 0, "desc" ]],
-            "destroy":true,
-            "sDom": '<"top"lf>rt<"bottom"ip><"clear">',
-            "ajax": {
-                "url": "<?=base_url('/admin/contact/dharma/'.$dtype);?>",
-                "type": "POST",
-                "dataType": "json",
-            },
-            "columns": [
-                { "data": "<?= $list_column; ?>" }
-            ],
-            "columnDefs": [
-                { "orderable": false, "targets": [] }
-            ],
-        } );
-        $.ajax({ success:function(d){console.log(d)}});
-    }
-    get_data();
+    var table = $('#example').DataTable( {
+        "processing": true,
+        "serverSide": true,
+        "iDisplayLength": 50,
+        "order": [[ 0, "desc" ]],
+        "destroy":true,
+        "sDom": '<"top"lf>rt<"bottom"ip><"clear">',
+        "ajax": {
+            "url": "<?=base_url('/admin/contact/dharma/'.$dtype);?>",
+            "type": "POST",
+            "dataType": "json",
+            "data": function ( d ) {
+                if($('#f_exam_batch').length) d.f_exam_batch = $('#f_exam_batch').val();
+                if($('#f_status').length) d.f_status = $('#f_status').val();
+                if($('#f_member').length) d.f_member = $('#f_member').val();
+            }
+        },
+        "columns": [
+            { "data": "name_chinese" },
+            { "data": "name_malay" },
+            { "data": "name_dharma" },
+            { "data": "nric" },
+            { "data": "phone_mobile" },
+            { "data": "email" },
+            { "data": "status" },
+            { "data": "membership_id" },
+            { "data": "contact_id" }
+        ],
+        "columnDefs": [
+            { "orderable": false, "targets": [8] }
+        ],
+    } );
 
-
-
+    $('.filter_input').on('change keyup', function() {
+        table.draw();
+    });
 } );
 </script>
 
@@ -48,6 +58,48 @@ $(document).ready(function() {
         </div>
     </div>
 
+    <?php if(in_array($dtype, array('js','zj', 'ss', 'jss', 'fs'))): ?>
+    <div class="row">
+        <div class="box">
+            <div class="col-lg-10 col-lg-offset-1">
+                <div class="well">
+                    <div class="row">
+                        <?php if(in_array($dtype, array('js','zj'))): ?>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>第幾屆考取</label>
+                                <input type="number" id="f_exam_batch" class="form-control filter_input" placeholder="Batch Number">
+                            </div>
+                        </div>
+                        <?php endif; ?>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>狀態</label>
+                                <select id="f_status" class="form-control filter_input">
+                                    <option value="">- All -</option>
+                                    <?php foreach($staff_status as $k => $v): ?>
+                                    <option value="<?= $k; ?>"><?= $v; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>馬密總會員</label>
+                                <select id="f_member" class="form-control filter_input">
+                                    <option value="">- All -</option>
+                                    <option value="Y">Yes</option>
+                                    <option value="N">No</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
     <div class="row">
         <div class="box">
             <div class="col-lg-10 col-lg-offset-1">
@@ -60,6 +112,8 @@ $(document).ready(function() {
                             <td><b>NRIC</b></td>
                             <td><b>聯絡</b></td>
                             <td><b>電郵</b></td>
+                            <td><b>狀態</b></td>
+                            <td><b>馬密總會員</b></td>
                             <td><b></b></td>
                         </tr>
                     </thead>
@@ -67,6 +121,7 @@ $(document).ready(function() {
             </div>
         </div>
     </div>
+
     
     <!-- /.row -->
 </div>

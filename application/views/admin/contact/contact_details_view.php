@@ -242,6 +242,16 @@ $( document ).ready(function() {
                         </div>
 
                         <div class='row row-data col-xs-10 col-xs-offset-1'>
+                            <div class='col-xs-3 strong_txt'>第幾屆考取:</div>
+                            <div class='col-xs-9'>
+                                <div class='display'><?= check_return_empty($contact,'exam_batch'); ?></div>
+                                <div class='form form-group'>
+                                    <input type='number' class='form-control col-xs-8' name='dharma[exam_batch]' value='<?= check_return_empty($contact,'exam_batch'); ?>' />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='row row-data col-xs-10 col-xs-offset-1'>
                             <div class='col-xs-3 strong_txt'><?= lang('col_status');?>:</div>
                             <div class='col-xs-9'>
                                 <div class='display'><?= $this->config->item('tbs')['staff_status'][$contact['status']]; ?></div>
@@ -284,6 +294,13 @@ $( document ).ready(function() {
                             <div class='col-xs-3 strong_txt'><?= lang('col_event');?>:</div>
                             <div class='col-xs-9'>
                                 <div class='form-group'><input type='text' class='form-control col-xs-8' name='dharma[event]' /></div>
+                            </div>
+                        </div>
+
+                        <div class='form_dharma row row-data col-xs-10 col-xs-offset-1'>
+                            <div class='col-xs-3 strong_txt'>第幾屆考取:</div>
+                            <div class='col-xs-9'>
+                                <div class='form-group'><input type='number' class='form-control col-xs-8' name='dharma[exam_batch]' /></div>
                             </div>
                         </div>
 
@@ -455,7 +472,7 @@ $( document ).ready(function() {
 
                         
 
-                        <input type='hidden'name='contact[contact_id]' value='<?= $contact['contact_id']; ?>' />
+                        <input type='hidden' name='contact[contact_id]' value='<?= $contact['contact_id']; ?>' />
 
                         <div class='row'>
                             <div class='col-xs-2 col-xs-offset-1'></div>

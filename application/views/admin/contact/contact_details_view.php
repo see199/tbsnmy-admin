@@ -17,12 +17,18 @@ function confirm_delete(me){
         me.prop("checked", res);
     }
 }
-$( document ).ready(function() {
-    $( "#country" ).combobox();
-    $( ".chapter_list" ).combobox();
+    $( document ).ready(function() {
+        $( "#country" ).combobox();
+        $( ".chapter_list" ).combobox();
 
-
-});
+        $(document).on('keydown', function(e) {
+            if (e.key === 'e' || e.key === 'E') {
+                if (!$(e.target).is('input, textarea, select')) {
+                    toggle_form();
+                }
+            }
+        });
+    });
 </script>
 <style>
     .form{display:none;}

@@ -41,7 +41,16 @@ class Contact_model extends CI_Model {
 				->from('tbs_dharma_staff ds')
 				->join('tbs_contact c', 'ds.contact_id = c.contact_id', 'left');
 
-		if(isset($filter_data['f_exam_batch'])) $this->db->where('ds.exam_batch', $filter_data['f_exam_batch']);
+		if(isset($filter_data['f_exam_batch'])) {
+			if($filter_data['f_exam_batch'] == '0') {
+				$this->db->group_start()
+						 ->where('ds.exam_batch', 0)
+						 ->or_where('ds.exam_batch IS NULL')
+						 ->group_end();
+			} else {
+				$this->db->where('ds.exam_batch', $filter_data['f_exam_batch']);
+			}
+		}
 		if(isset($filter_data['f_status'])) $this->db->where('ds.status', $filter_data['f_status']);
 		
 		if(isset($filter_data['f_member'])) {
@@ -75,7 +84,16 @@ class Contact_model extends CI_Model {
 		$this->db->from('tbs_dharma_staff ds')
 				->join('tbs_contact c', 'ds.contact_id = c.contact_id', 'left');
 
-		if(isset($filter_data['f_exam_batch'])) $this->db->where('ds.exam_batch', $filter_data['f_exam_batch']);
+		if(isset($filter_data['f_exam_batch'])) {
+			if($filter_data['f_exam_batch'] == '0') {
+				$this->db->group_start()
+						 ->where('ds.exam_batch', 0)
+						 ->or_where('ds.exam_batch IS NULL')
+						 ->group_end();
+			} else {
+				$this->db->where('ds.exam_batch', $filter_data['f_exam_batch']);
+			}
+		}
 		if(isset($filter_data['f_status'])) $this->db->where('ds.status', $filter_data['f_status']);
 		
 		if(isset($filter_data['f_member'])) {

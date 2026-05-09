@@ -442,9 +442,9 @@ function check_tracking(tracking_no){
                         <?php foreach($list as $c): ?>
                             <?php 
                                 // For Checking Purpose
-                                if(!filter_var(rtrim($c['wenxuan_email']),FILTER_VALIDATE_EMAIL)) $email_list['name'][$c['wenxuan_email']][] = rtrim($c['wenxuan_name']); 
+                                if(!filter_var(rtrim($c['wenxuan_email'] ?? ''),FILTER_VALIDATE_EMAIL)) $email_list['name'][$c['wenxuan_email'] ?? ''][] = rtrim($c['wenxuan_name'] ?? ''); 
                                 else
-                                    $email_list['email'][$c['wenxuan_email']] = rtrim($c['wenxuan_email']);
+                                    $email_list['email'][$c['wenxuan_email'] ?? ''] = rtrim($c['wenxuan_email'] ?? '');
 
                             ?>
                             <!-- Highlight if Payment not Fully Paid and Gift Sent -->

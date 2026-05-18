@@ -143,6 +143,16 @@ class Agm_model extends CI_Model {
 		));
 	}
 
+	public function log_voting($nric){
+		$this->db = $this->load->database('local', TRUE);
+
+		$this->db->where('nric',$nric);
+		$this->db->update('tbs_agm_zoom_reg',array(
+			'voted' => 1,
+			'vote_time' => date('Y-m-d H:i:s')
+		));
+	}
+
 	public function check_duplicate_email_registrant($email){
 		$this->db = $this->load->database('local', TRUE);
 
@@ -347,5 +357,31 @@ class Agm_model extends CI_Model {
 				->group_by('membership_id');
 		$res = $this->db->get('tbs_agm_zoom_reg');
 		return $res->result_array();		
+	}
+
+	public function get_voting_stats(){
+		$this->db = $this->load->database('local', TRUE);
+		$this->db->select('membership_id, voted')
+				->where('voted', 1)
+				->where('membership_id <>', '列席');
+		$res = $this->db->get('tbs_agm_zoom_reg');
+		$list = $res->result_array();
+
+		$stats = array(
+			'personal' => 0,
+			'group'    => 0,
+			'total'    => 0
+		);
+
+		foreach($list as $l){
+			if((int)$l['membership_id'] > 5000){
+				$stats['group']++;
+			} else {
+				$stats['personal']++;
+			}
+			$stats['total']++;
+		}
+
+		return $stats;
 	}
 }

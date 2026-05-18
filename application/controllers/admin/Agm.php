@@ -606,6 +606,34 @@ class Agm extends CI_Controller {
 		$this->load->view('admin/footer');
     }
 
+    public function scan_voting(){
+    	$data = $this->data;
+        $data['stats'] = $this->agm_model->get_voting_stats();
+
+		$this->load->view('admin/header', $data);
+		$this->load->view('admin/navigation', $data);
+		$this->load->view('admin/agm/scan_voting_view',$data);
+		$this->load->view('admin/footer');
+    }
+
+    public function ajax_get_voting_stats(){
+        echo json_encode($this->agm_model->get_voting_stats());
+    }
+
+    public function ajax_log_voting() {
+        $nric = $this->resolve_nric_from_qr($this->input->post('qrdata'));
+
+        if($nric == 'err'){
+            echo json_encode(['error' => '二维码扫不正確，無法掃描。']);
+            return;
+        }
+
+        // Logic to log voting
+        $this->agm_model->log_voting($nric);
+
+        echo json_encode(['success' => '領票成功！']);
+    }
+
     public function ajax_scan_qr(){
     	$data = $this->data;
 

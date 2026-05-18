@@ -273,6 +273,7 @@ function generateMenuTitle($menuText){
               ['agm/register','fa fa-user','AGM 團體會員登記'],
               ['agm/register2','fa fa-user','AGM 個人會員登記'],
               ['admin/agm/scan_qr','fa-solid fa-qrcode','AGM QR 簽到'],
+              ['admin/agm/scan_voting','fa-solid fa-qrcode','AGM QR 領票'],
             ];
             foreach($menu as $m) echo generateMenuItem($m);
           ?>

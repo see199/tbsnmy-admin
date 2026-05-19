@@ -227,6 +227,246 @@ class Chapter extends CI_Controller {
 		$this->load->view('admin/footer');
 	}
 
+	public function export_excel() {
+		// Load Database
+		$db = $this->load->database('local', TRUE);
+
+		// Fetch Chapters with Status A, S, 1, 2
+		$query = "SELECT name_chinese, name_malay, address, city, postcode, state, gov_register_number 
+				  FROM tbs_chapter 
+				  WHERE status IN ('A', 'S', '1', '2')";
+		$chapters = $db->query($query)->result_array();
+
+		// Group by State
+		$grouped = array();
+		foreach ($chapters as $c) {
+			$state = trim((string)$c['state']);
+			
+			// 1. Ignore specific 3 items (Academy & Nursing Homes)
+			$name_chinese = trim((string)$c['name_chinese']);
+			if (strpos($name_chinese, '大德佛學院') !== false ||
+				strpos($name_chinese, '平和養老院') !== false ||
+				strpos($name_chinese, '祥安養老院') !== false) {
+				continue;
+			}
+
+			// 2. Hide "Lain-lain" or empty states
+			if (empty($state) || strtolower($state) === 'lain-lain' || strtolower($state) === 'lain lain') {
+				continue;
+			}
+			$grouped[$state][] = $c;
+		}
+
+		// Sort by State (Selangor first, W.Persekutan second, then alphabetically)
+		uksort($grouped, function($a, $b) {
+			if ($a === 'Selangor') return -1;
+			if ($b === 'Selangor') return 1;
+			if ($a === 'W.Persekutan') return -1;
+			if ($b === 'W.Persekutan') return 1;
+			return strcmp($a, $b);
+		});
+
+		// Create Spreadsheet
+		$spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+		
+		// Set global default font to Arial
+		$spreadsheet->getDefaultStyle()->getFont()->setName('Arial');
+
+		$sheet = $spreadsheet->getActiveSheet();
+		$sheet->setTitle('Senarai PABT');
+
+		// 1. Title Row
+		$sheet->mergeCells('A1:C1');
+		$sheet->setCellValue('A1', 'Senarai Pusat Meditasi Agama Buddha Tantrayana Yang Bertaburan Di Seluruh Malaysia');
+		$sheet->getRowDimension(1)->setRowHeight(35);
+		
+		$titleStyle = [
+			'font' => [
+				'name' => 'Arial',
+				'bold' => true,
+				'underline' => true,
+				'size' => 14,
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+				'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+			],
+		];
+		$sheet->getStyle('A1:C1')->applyFromArray($titleStyle);
+
+		// 2. Header Row
+		$sheet->setCellValue('A2', 'No');
+		$sheet->setCellValue('B2', 'Nama Pertubuhan & Alamat');
+		$sheet->setCellValue('C2', 'No. Pendaftaran');
+		$sheet->getRowDimension(2)->setRowHeight(25);
+		
+		$headerStyle = [
+			'font' => [
+				'name' => 'Arial',
+				'bold' => true,
+				'size' => 10,
+			],
+			'alignment' => [
+				'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+				'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+			],
+			'borders' => [
+				'allBorders' => [
+					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+				],
+			],
+		];
+		$sheet->getStyle('A2:C2')->applyFromArray($headerStyle);
+
+		// Set column widths
+		$sheet->getColumnDimension('A')->setWidth(6);
+		$sheet->getColumnDimension('B')->setWidth(85);
+		$sheet->getColumnDimension('C')->setWidth(25);
+
+		// 3. Populate Data
+		$rowNum = 3;
+		$itemIndex = 1; // Continuous numbering across all states
+		foreach ($grouped as $state => $clist) {
+			// Map W.Persekutan to W.Persekutuan for clean display
+			$displayState = $state;
+			if ($state === 'W.Persekutan') {
+				$displayState = 'W.Persekutuan';
+			}
+
+			// Add total count to state header
+			$stateHeaderValue = $displayState . ' (' . count($clist) . ')';
+
+			// State Group Header Row
+			$sheet->mergeCells("A{$rowNum}:C{$rowNum}");
+			$sheet->setCellValue("A{$rowNum}", $stateHeaderValue);
+			$sheet->getRowDimension($rowNum)->setRowHeight(22);
+			
+			$stateStyle = [
+				'font' => [
+					'name' => 'Arial',
+					'bold' => true,
+					'size' => 10,
+				],
+				'alignment' => [
+					'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+					'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+				],
+				'borders' => [
+					'allBorders' => [
+						'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+					],
+				],
+			];
+			$sheet->getStyle("A{$rowNum}:C{$rowNum}")->applyFromArray($stateStyle);
+			$rowNum++;
+
+			foreach ($clist as $c) {
+				// No
+				$sheet->setCellValue("A{$rowNum}", $itemIndex);
+				
+				// RichText for Name (Bold) and Address (Normal)
+				$richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
+				$run1 = $richText->createTextRun(trim((string)$c['name_malay']));
+				$run1->getFont()->setBold(true);
+				$run1->getFont()->setName('Arial');
+				$run1->getFont()->setSize(10);
+				
+				// Build address beautifully
+				$address = trim((string)$c['address']);
+				$addr_parts = [];
+				if (!empty($c['city'])) {
+					$addr_parts[] = trim((string)$c['city']);
+				}
+				if (!empty($c['postcode'])) {
+					$addr_parts[] = trim((string)$c['postcode']);
+				}
+				$city_postcode = implode(' ', $addr_parts);
+				
+				$full_parts = [];
+				if (!empty($city_postcode)) {
+					$full_parts[] = $city_postcode;
+				}
+				if (!empty($c['state'])) {
+					$full_parts[] = trim((string)$c['state']);
+				}
+				$full_suffix = implode(', ', $full_parts);
+				
+				$final_address = '';
+				if (!empty($address)) {
+					$final_address .= $address;
+				}
+				if (!empty($full_suffix)) {
+					if (!empty($final_address)) {
+						$final_address .= ', ';
+					}
+					$final_address .= $full_suffix;
+				}
+				
+				$run2 = $richText->createTextRun("\n" . $final_address);
+				$run2->getFont()->setBold(false);
+				$run2->getFont()->setName('Arial');
+				$run2->getFont()->setSize(10);
+
+				$sheet->setCellValue("B{$rowNum}", $richText);
+				
+				// No. Pendaftaran
+				$sheet->setCellValue("C{$rowNum}", trim((string)$c['gov_register_number']));
+				
+				// Row height and borders
+				$sheet->getRowDimension($rowNum)->setRowHeight(45);
+				
+				$cellStyle = [
+					'font' => [
+						'name' => 'Arial',
+						'size' => 10,
+					],
+					'borders' => [
+						'allBorders' => [
+							'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+						],
+					],
+				];
+				$sheet->getStyle("A{$rowNum}:C{$rowNum}")->applyFromArray($cellStyle);
+				
+				// Alignments
+				$sheet->getStyle("A{$rowNum}")->getAlignment()->applyFromArray([
+					'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+					'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+				]);
+				
+				$sheet->getStyle("B{$rowNum}")->getAlignment()->applyFromArray([
+					'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
+					'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+					'wrapText' => true,
+				]);
+				
+				$sheet->getStyle("C{$rowNum}")->getAlignment()->applyFromArray([
+					'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+					'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+				]);
+				
+				$itemIndex++;
+				$rowNum++;
+			}
+		}
+
+		// Clean all active output buffers to prevent prepended whitespaces or warnings from corrupting the stream
+		if (ob_get_level() > 0) {
+			ob_end_clean();
+		}
+
+		// Download excel file with today's date in filename
+		$filename = 'Senarai PABT di Malaysia -' . date('Ymd') . '.xlsx';
+		
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header('Content-Disposition: attachment;filename="' . $filename . '"');
+		header('Cache-Control: max-age=0');
+		
+		$writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+		$writer->save('php://output');
+		exit;
+	}
+
 	public function list_ajk(){
 		$data = $this->data;
 

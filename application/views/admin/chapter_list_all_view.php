@@ -1,8 +1,15 @@
 <div id="page-wrapper">
     <div class="row">
         <div class="box">
-            <div class="col-lg-8 col-lg-offset-2 text-center">
-                <h1>全馬道場列表</h1>
+            <div class="col-lg-10 col-lg-offset-1">
+                <div style="text-align: center; margin-top: 15px; margin-bottom: 15px;">
+                    <h1 style="margin: 0; font-weight: bold; color: #333;">全馬道場列表</h1>
+                </div>
+                <div style="text-align: right; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
+                    <a href="<?= base_url('admin/chapter/export_excel'); ?>" class="btn btn-success">
+                        <i class="fa fa-download"></i> 匯出 Excel (政府用途)
+                    </a>
+                </div>
             </div>
         </div>
     </div>

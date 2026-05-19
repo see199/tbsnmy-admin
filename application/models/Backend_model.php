@@ -144,6 +144,12 @@ class Backend_model extends CI_Model {
 		$this->db->update('tbs_api_user', $user);
 	}
 
+	public function delete_user($user_id){
+		$this->db = $this->load->database('local', TRUE);
+		$this->db->where('user_id', $user_id);
+		$this->db->delete('tbs_api_user');
+	}
+
 	public function get_latest_activity($user_id){
 		$this->db = $this->load->database('local', TRUE);
 

@@ -57,6 +57,12 @@ $(document).ready(function() {
                         <?= $this->session->flashdata('message'); ?>
                     </div>
                 <?php endif; ?>
+                <?php if ($this->session->flashdata('error_message')): ?>
+                    <div class="alert alert-danger alert-dismissable" style="margin-top: 15px;">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <?= $this->session->flashdata('error_message'); ?>
+                    </div>
+                <?php endif; ?>
                 <div style="margin-bottom: 15px; margin-top: 15px;">
                     <a href="<?= base_url('admin/user/add'); ?>" class="btn btn-primary">
                         <i class="fa fa-user-plus"></i> <?= lang('title_add'); ?>

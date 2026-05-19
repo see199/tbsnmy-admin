@@ -50,7 +50,8 @@ class User extends CI_Controller {
 				'chapter' => join(',',$chap),
 				'last_login' => $v['last_login'],
 				'activity' => (sizeof($res) > 0) ? $res[0]['create_date'] . ': '. $res[0]['activity'] : '-N/A-',
-				'action' => '<a href="'.base_url('admin/user/edit/'.$v['user_id']).'" class="btn btn-xs btn-warning"><i class="fa-solid fa-pen-to-square"></i> 編輯</a>',
+				'action' => '<a href="'.base_url('admin/user/edit/'.$v['user_id']).'" class="btn btn-xs btn-warning" style="margin-right: 5px;"><i class="fa-solid fa-pen-to-square"></i> 編輯</a>' .
+				            '<a href="'.base_url('admin/user/delete/'.$v['user_id']).'" class="btn btn-xs btn-danger" onclick="return confirm(\'確定要刪除此用戶嗎？此操作無法撤銷。\')"><i class="fa-solid fa-trash"></i> 刪除</a>',
 			);
 		}
 
@@ -284,6 +285,33 @@ class User extends CI_Controller {
 		$this->load->view('admin/navigation', $data);
 		$this->load->view('admin/user_edit_view', $data);
 		$this->load->view('admin/footer');
+	}
+
+	public function delete($user_id) {
+		// Only "all" (Super Admin) can manage/delete users
+		$allowed = json_decode($this->session->userdata('chapter'), 1);
+		if ($allowed[0] != 'all') {
+			redirect('admin/index', 'refresh');
+		}
+
+		// Prevent deleting themselves
+		$current_user_id = $this->session->userdata('user_id');
+		if ($user_id == $current_user_id) {
+			$this->session->set_flashdata('error_message', '您不能刪除您自己的帳號！');
+			redirect('admin/user/index', 'refresh');
+		}
+
+		$user = $this->backend_model->get_user_details($user_id);
+		if (!empty($user)) {
+			$email = $user[0]['email'];
+			$this->backend_model->delete_user($user_id);
+
+			// Log activity
+			$this->backend_model->log_activity($current_user_id, 'Delete API user (ID ' . $user_id . '): ' . $email);
+			$this->session->set_flashdata('message', lang('msg_delete_success'));
+		}
+
+		redirect('admin/user/index', 'refresh');
 	}
 }
 

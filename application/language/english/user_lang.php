@@ -21,6 +21,7 @@ $lang = array(
 	'msg_add_success'            => '新增用戶成功！',
 	'title_edit'                 => '編輯用戶',
 	'msg_edit_success'           => '編輯用戶成功！',
+	'msg_delete_success'         => '刪除用戶成功！',
 	'msg_email_exists'           => '該電子郵件已存在！',
 	'msg_invalid_email'          => '無效的電子郵件格式！',
 	'msg_please_select_chapter'  => '請選擇至少一個道場！',

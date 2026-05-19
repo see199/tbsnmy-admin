@@ -17,15 +17,83 @@ class Index extends CI_Controller {
 
 	public function index()
 	{
-
 		$data = $this->data;
-		$meme = sprintf(lang('msg_1'),"this is http://www.google.com","","");
-		$data['title'] = 'News archive';
+		
+		// Load tbsparam configuration
+		$this->config->load('tbsparam', TRUE);
+		$tbs_config = $this->config->item('tbs', 'tbsparam');
+		if (empty($tbs_config)) {
+			$tbs_config = $this->config->item('tbs');
+		}
+
+		$cache_file = APPPATH . 'logs/dashboard_stats.json';
+		$stats = null;
+		$force_refresh = false;
+
+		if (file_exists($cache_file)) {
+			$cached_data = json_decode(file_get_contents($cache_file), TRUE);
+			if ($cached_data && isset($cached_data['last_updated']) && isset($cached_data['data'])) {
+				$last_updated = strtotime($cached_data['last_updated']);
+				$today_day = (int)date('j');
+				
+				// Auto-refresh threshold calculation (1st & 15th of the month)
+				if ($today_day >= 15) {
+					$threshold = strtotime(date('Y-m-15 00:00:00'));
+				} else {
+					$threshold = strtotime(date('Y-m-01 00:00:00'));
+				}
+
+				if ($last_updated < $threshold) {
+					$force_refresh = true;
+				} else {
+					$stats = $cached_data['data'];
+					$data['last_updated'] = $cached_data['last_updated'];
+				}
+			} else {
+				$force_refresh = true;
+			}
+		} else {
+			$force_refresh = true;
+		}
+
+		if ($force_refresh) {
+			$stats = $this->_rebuild_stats_cache($cache_file);
+			$data['last_updated'] = date('Y-m-d H:i:s');
+		}
+
+		$data['stats'] = $stats;
+		$data['tbs_config'] = $tbs_config;
+		$data['title'] = 'Dashboard';
 
 		$this->load->view('admin/header', $data);
 		$this->load->view('admin/navigation', $data);
 		$this->load->view('admin/pg_index', $data);
 		$this->load->view('admin/footer');
+	}
+
+	public function refresh_stats()
+	{
+		$cache_file = APPPATH . 'logs/dashboard_stats.json';
+		$this->_rebuild_stats_cache($cache_file);
+
+		$this->session->set_flashdata('success_message', 'Dashboard statistics refreshed successfully.');
+		redirect('admin/index', 'refresh');
+	}
+
+	private function _rebuild_stats_cache($file_path)
+	{
+		$stats = $this->backend_model->calculate_dashboard_stats();
+		$cache_content = array(
+			'last_updated' => date('Y-m-d H:i:s'),
+			'data' => $stats
+		);
+		// Ensure parent folder exists
+		$dir = dirname($file_path);
+		if (!is_dir($dir)) {
+			mkdir($dir, 0755, true);
+		}
+		file_put_contents($file_path, json_encode($cache_content, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+		return $stats;
 	}
 
 	public function load_joomla($raw_url){

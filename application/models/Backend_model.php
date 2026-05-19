@@ -266,4 +266,49 @@ class Backend_model extends CI_Model {
 
 
 	}
+
+	public function calculate_dashboard_stats() {
+		$this->db = $this->load->database('local', TRUE);
+		
+		// 1. Chapters count by status
+		$q_chap_status = $this->db->select('status, COUNT(*) as count')
+		                          ->group_by('status')
+		                          ->get('tbs_chapter');
+		$chap_status = $q_chap_status->result_array();
+
+		// 2. Chapters count by state
+		$q_chap_state = $this->db->select('state, COUNT(*) as count')
+		                         ->group_by('state')
+		                         ->order_by('count', 'DESC')
+		                         ->get('tbs_chapter');
+		$chap_state = $q_chap_state->result_array();
+
+		// 3. Dharma staff count by position and status
+		$q_dharma = $this->db->select('dharma_position, status, COUNT(*) as count')
+		                     ->group_by('dharma_position, status')
+		                     ->get('tbs_dharma_staff');
+		$dharma = $q_dharma->result_array();
+
+		// 4. Individual members (個人會員) count by status
+		$q_member = $this->db->select('status, COUNT(*) as count')
+		                     ->group_by('status')
+		                     ->get('tbs_member');
+		$member = $q_member->result_array();
+
+		// 5. Group members (團體會員) count by status
+		$q_group = $this->db->select('status, COUNT(*) as count')
+		                    ->where('membership_id <>', '')
+		                    ->where('membership_id IS NOT NULL')
+		                    ->group_by('status')
+		                    ->get('tbs_chapter');
+		$group = $q_group->result_array();
+
+		return array(
+			'chap_status' => $chap_status,
+			'chap_state'  => $chap_state,
+			'dharma'      => $dharma,
+			'member'      => $member,
+			'group'       => $group
+		);
+	}
 }

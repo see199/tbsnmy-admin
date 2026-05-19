@@ -17,6 +17,12 @@ class Index extends CI_Controller {
 
 	public function index()
 	{
+		// Only "all" (Super Admin) can view statistics dashboard
+		$allowed = json_decode($this->session->userdata('chapter'), 1);
+		if (empty($allowed) || $allowed[0] != 'all') {
+			redirect('admin/chapter', 'refresh');
+		}
+
 		$data = $this->data;
 		
 		// Load tbsparam configuration
@@ -73,6 +79,12 @@ class Index extends CI_Controller {
 
 	public function refresh_stats()
 	{
+		// Only "all" (Super Admin) can refresh stats
+		$allowed = json_decode($this->session->userdata('chapter'), 1);
+		if (empty($allowed) || $allowed[0] != 'all') {
+			redirect('admin/chapter', 'refresh');
+		}
+
 		$cache_file = APPPATH . 'logs/dashboard_stats.json';
 		$this->_rebuild_stats_cache($cache_file);
 

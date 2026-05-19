@@ -87,7 +87,12 @@ class Login extends CI_Controller {
                     'avatar'  => $userData->picture,
                     'user_id' => $res[0]['user_id'],
                 ));
-                redirect('admin/index','refresh');
+
+                if (isset($chapter[0]) && $chapter[0] == 'all') {
+                    redirect('admin/index', 'refresh');
+                } else {
+                    redirect('admin/chapter', 'refresh');
+                }
             }
         } else {
             $authUrl = $client->createAuthUrl();

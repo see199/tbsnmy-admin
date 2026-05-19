@@ -132,6 +132,18 @@ class Backend_model extends CI_Model {
 		return $res;
 	}
 
+	public function insert_user($user){
+		$this->db = $this->load->database('local', TRUE);
+		$this->db->insert('tbs_api_user', $user);
+		return $this->db->insert_id();
+	}
+
+	public function update_user($user_id, $user){
+		$this->db = $this->load->database('local', TRUE);
+		$this->db->where('user_id', $user_id);
+		$this->db->update('tbs_api_user', $user);
+	}
+
 	public function get_latest_activity($user_id){
 		$this->db = $this->load->database('local', TRUE);
 

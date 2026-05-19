@@ -18,7 +18,7 @@ class User extends CI_Controller {
 	}
 
 	public function index() {
-		$this->list_column = array("email","chapter","last_login","activity");
+		$this->list_column = array("email","chapter","last_login","activity","action");
 
         if ($this->input->is_ajax_request()) {
             $this->get_data_all_user();
@@ -50,6 +50,7 @@ class User extends CI_Controller {
 				'chapter' => join(',',$chap),
 				'last_login' => $v['last_login'],
 				'activity' => (sizeof($res) > 0) ? $res[0]['create_date'] . ': '. $res[0]['activity'] : '-N/A-',
+				'action' => '<a href="'.base_url('admin/user/edit/'.$v['user_id']).'" class="btn btn-xs btn-warning"><i class="fa-solid fa-pen-to-square"></i> 編輯</a>',
 			);
 		}
 
@@ -126,6 +127,164 @@ class User extends CI_Controller {
 
         return $result;
     }
+
+	public function add() {
+		// Only "all" (Super Admin) can manage users
+		$allowed = json_decode($this->session->userdata('chapter'), 1);
+		if ($allowed[0] != 'all') {
+			redirect('admin/index', 'refresh');
+		}
+
+		$data = $this->data;
+		$error = '';
+
+		if ($this->input->server('REQUEST_METHOD') == 'POST') {
+			$email = trim($this->input->post('email'));
+			$all_chapters = $this->input->post('all_chapters');
+			$selected_chapters = $this->input->post('chapters');
+
+			// Validation
+			if (empty($email)) {
+				$error = lang('msg_invalid_email');
+			} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+				$error = lang('msg_invalid_email');
+			} else {
+				// Check unique email
+				$existing = $this->backend_model->check_login($email);
+				if (!empty($existing)) {
+					$error = lang('msg_email_exists');
+				}
+			}
+
+			// Validate chapters selection
+			if (empty($error)) {
+				if ($all_chapters == '1') {
+					$chapters_json = json_encode(array('all'));
+				} elseif (!empty($selected_chapters) && is_array($selected_chapters)) {
+					$chapters_json = json_encode($selected_chapters);
+				} else {
+					$error = lang('msg_please_select_chapter');
+				}
+			}
+
+			if (empty($error)) {
+				// Insert User
+				$new_user = array(
+					'email' => $email,
+					'chapter' => $chapters_json,
+					'last_login' => '0000-00-00 00:00:00'
+				);
+				$this->backend_model->insert_user($new_user);
+
+				// Log activity
+				$current_user_id = $this->session->userdata('user_id');
+				$this->backend_model->log_activity($current_user_id, 'Add API user: ' . $email . ' with chapters: ' . $chapters_json);
+
+				// Set flash message
+				$this->session->set_flashdata('message', lang('msg_add_success'));
+				redirect('admin/user/index', 'refresh');
+			}
+
+			// Pass posted values back to view on error
+			$data['email'] = $email;
+			$data['all_chapters'] = ($all_chapters == '1');
+			$data['selected_chapters'] = is_array($selected_chapters) ? $selected_chapters : array();
+		}
+
+		// Load chapters list for checkboxes
+		$data['chapters'] = $this->backend_model->get_all_chapter_url(array('all'));
+		$data['error'] = $error;
+
+		$this->load->view('admin/header', $data);
+		$this->load->view('admin/navigation', $data);
+		$this->load->view('admin/user_add_view', $data);
+		$this->load->view('admin/footer');
+	}
+
+	public function edit($user_id) {
+		// Only "all" (Super Admin) can manage users
+		$allowed = json_decode($this->session->userdata('chapter'), 1);
+		if ($allowed[0] != 'all') {
+			redirect('admin/index', 'refresh');
+		}
+
+		$data = $this->data;
+		$error = '';
+
+		// Get user details
+		$user = $this->backend_model->get_user_details($user_id);
+		if (empty($user)) {
+			redirect('admin/user/index', 'refresh');
+		}
+		$user = $user[0];
+
+		if ($this->input->server('REQUEST_METHOD') == 'POST') {
+			$email = trim($this->input->post('email'));
+			$all_chapters = $this->input->post('all_chapters');
+			$selected_chapters = $this->input->post('chapters');
+
+			// Validation
+			if (empty($email)) {
+				$error = lang('msg_invalid_email');
+			} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+				$error = lang('msg_invalid_email');
+			} else {
+				// Check unique email (ignoring current user_id)
+				$this->db = $this->load->database('local', TRUE);
+				$query = $this->db->query("SELECT * FROM tbs_api_user WHERE email = ? AND user_id <> ?", array($email, $user_id));
+				if ($query->num_rows() > 0) {
+					$error = lang('msg_email_exists');
+				}
+			}
+
+			// Validate chapters selection
+			if (empty($error)) {
+				if ($all_chapters == '1') {
+					$chapters_json = json_encode(array('all'));
+				} elseif (!empty($selected_chapters) && is_array($selected_chapters)) {
+					$chapters_json = json_encode($selected_chapters);
+				} else {
+					$error = lang('msg_please_select_chapter');
+				}
+			}
+
+			if (empty($error)) {
+				// Update User
+				$update_data = array(
+					'email' => $email,
+					'chapter' => $chapters_json
+				);
+				$this->backend_model->update_user($user_id, $update_data);
+
+				// Log activity
+				$current_user_id = $this->session->userdata('user_id');
+				$this->backend_model->log_activity($current_user_id, 'Modify API user (ID ' . $user_id . '): ' . $email . ' with chapters: ' . $chapters_json);
+
+				// Set flash message
+				$this->session->set_flashdata('message', lang('msg_edit_success'));
+				redirect('admin/user/index', 'refresh');
+			}
+
+			// Pass posted values back to view on error
+			$user['email'] = $email;
+			$user['chapter'] = $chapters_json;
+		}
+
+		// Load chapters list for checkboxes
+		$data['chapters'] = $this->backend_model->get_all_chapter_url(array('all'));
+		$data['error'] = $error;
+		
+		// Parse existing selected chapters
+		$parsed_chapters = json_decode($user['chapter'], 1);
+		$data['user'] = $user;
+		$data['all_chapters'] = (isset($parsed_chapters[0]) && $parsed_chapters[0] == 'all');
+		$data['selected_chapters'] = is_array($parsed_chapters) ? $parsed_chapters : array();
+
+		$this->load->view('admin/header', $data);
+		$this->load->view('admin/navigation', $data);
+		$this->load->view('admin/user_edit_view', $data);
+		$this->load->view('admin/footer');
+	}
 }
 
 ?>

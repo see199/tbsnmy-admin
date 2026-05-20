@@ -442,6 +442,71 @@ function toggle_form(){
                     </div>
 
                     <div class='row'>&nbsp;</div>
+                    <div class='row'>&nbsp;</div>
+
+                    <div class='row col-xs-10 col-xs-offset-1'>
+                        <div class='h3 strong_txt'><i class="fa fa-history"></i> 歷屆理事名單 (Historical Board Members)</div>
+                    </div>
+
+                    <div class='row row-data col-xs-10 col-xs-offset-1'>
+                        <?php if (empty($historical_elections)): ?>
+                            <p class="text-muted">目前尚未有歷屆理事改選的申報紀錄。</p>
+                        <?php else: ?>
+                            <div class="panel-group" id="accordionHistory" role="tablist" aria-multiselectable="true">
+                            <?php foreach ($historical_elections as $i => $hist): 
+                                $hist_data = json_decode($hist['submitted_data'], true);
+                                $hist_members = isset($hist_data['members']) ? $hist_data['members'] : array();
+                            ?>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" role="tab" id="headingHist<?= $i; ?>">
+                                        <h4 class="panel-title">
+                                            <a role="button" data-toggle="collapse" data-parent="#accordionHistory" href="#collapseHist<?= $i; ?>" aria-expanded="<?= $i == 0 ? 'true' : 'false'; ?>" aria-controls="collapseHist<?= $i; ?>">
+                                                任期: <?= isset($hist_data['ajk_session']) ? $hist_data['ajk_session'] : $hist['ajk_session']; ?> (審核通過日期: <?= date('Y-m-d', strtotime($hist['approved_at'])); ?>)
+                                            </a>
+                                            <a href="<?= base_url('admin/chapter/delete_election_submission/'.$hist['id']); ?>" class="btn btn-xs btn-danger pull-right" onclick="return confirm('確定要刪除這筆歷屆紀錄嗎？');" style="margin-top:-3px;"><i class="fa fa-trash"></i> 刪除</a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseHist<?= $i; ?>" class="panel-collapse collapse <?= $i == 0 ? 'in' : ''; ?>" role="tabpanel" aria-labelledby="headingHist<?= $i; ?>">
+                                        <div class="panel-body">
+                                            <table class="table table-striped table-bordered table-hover">
+                                                <thead>
+                                                    <tr class="active">
+                                                        <th>職位</th>
+                                                        <th>中文名</th>
+                                                        <th>法號</th>
+                                                        <th>英文名</th>
+                                                        <th>電話</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php foreach ($hist_members as $m): ?>
+                                                    <tr>
+                                                        <td><?= isset($m['position']) ? $m['position'] : ''; ?></td>
+                                                        <td><?= isset($m['name_chinese']) ? $m['name_chinese'] : ''; ?></td>
+                                                        <td><?= isset($m['name_dharma']) ? $m['name_dharma'] : ''; ?></td>
+                                                        <td><?= isset($m['name_malay']) ? $m['name_malay'] : ''; ?></td>
+                                                        <td><?= isset($m['phone_mobile']) ? $m['phone_mobile'] : ''; ?></td>
+                                                    </tr>
+                                                    <?php endforeach; ?>
+                                                </tbody>
+                                            </table>
+                                            
+                                            <?php if(isset($hist_data['contact_person'])): ?>
+                                            <div class="well well-sm" style="margin-bottom:0;">
+                                                <strong>官方聯絡人:</strong> <?= isset($hist_data['contact_person']['name']) ? $hist_data['contact_person']['name'] : '-'; ?> | 
+                                                <i class="fa fa-phone"></i> <?= isset($hist_data['contact_person']['phone']) ? $hist_data['contact_person']['phone'] : '-'; ?> | 
+                                                <i class="fa fa-envelope"></i> <?= isset($hist_data['contact_person']['email']) ? $hist_data['contact_person']['email'] : '-'; ?>
+                                            </div>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class='row'>&nbsp;</div>
 
                     <div class='row'>
                         <div class='col-xs-2 col-xs-offset-1'></div>

@@ -227,6 +227,7 @@ function generateMenuTitle($menuText){
             if($chapter_allowed[0] == 'all'){
               echo generateMenuItem(['divider']);
               echo generateMenuItem(['admin/chapter/list_all','fa fa-bank fa-fw','全馬道場列表']);
+              echo generateMenuItem(['admin/chapter/election_submissions','fa-solid fa-file-lines fa-fw','理事會改選申報']);
             }
           ?>
         </ul>

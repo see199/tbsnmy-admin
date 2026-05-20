@@ -46,9 +46,14 @@ class Chapter extends CI_Controller {
 
 		//NAS Location
 		$chapter['nas_location'] = $this->get_nas_location($chapter);
+        
+        // Historical Board Members (from Election Submissions)
+        $this->load->model('election_model');
+        $historical_elections = $this->election_model->get_approved_submissions_by_chapter($chapter['chapter_id']);
 
 		$data['chapter'] = $chapter;
 		$data['chapter_member'] = $chapter_member;
+        $data['historical_elections'] = $historical_elections;
 		$data['form_state'] = form_dropdown('chapter[state]', array(
 			'Johor' => 'Johor',
 			'Kedah' => 'Kedah',
@@ -614,8 +619,129 @@ class Chapter extends CI_Controller {
 	}
 
 
-	
+	// --- ELECTION SUBMISSION METHODS ---
 
+	public function election_submissions() {
+		$data = $this->data; // Contains common header data
+		$this->load->model('election_model');
+		$data['submissions'] = $this->election_model->get_all_submissions();
+		
+		// Get all chapters for the dropdown to generate new links
+		$data['all_chapters'] = $this->backend_model->get_all_chapter_url(json_decode($this->session->userdata('chapter'),1));
+
+		$this->load->view('admin/header', $data);
+		$this->load->view('admin/navigation', $data);
+		$this->load->view('admin/election_list_view', $data);
+		$this->load->view('admin/footer');
+	}
+
+	public function generate_election_link() {
+		$chapter_id = $this->input->post('chapter_id');
+		$ajk_session = $this->input->post('ajk_session');
+
+		if(empty($chapter_id) || empty($ajk_session)) {
+			show_error('請選擇道場並填寫任期');
+		}
+
+		$this->load->model('election_model');
+		$this->load->helper('string'); // For random_string
+
+		$token = random_string('alnum', 64);
+		$this->election_model->create_submission($chapter_id, $ajk_session, $token);
+
+		redirect('admin/chapter/election_submissions');
+	}
+
+	public function review_election_submission($id) {
+		$data = $this->data;
+		$this->load->model('election_model');
+		$this->load->model('contact_model');
+		
+		$submission = $this->election_model->get_submission_by_id($id);
+		if(!$submission) show_404();
+
+		$data['submission'] = $submission;
+		
+		// Current AJK
+		$current_ajk = $this->contact_model->get_chapter_ajk($submission['chapter_id']);
+		$data['current_ajk'] = $this->order_committee_members($current_ajk);
+		
+		// Submitted AJK
+		$submitted_data = json_decode($submission['submitted_data'], true);
+		$data['submitted_members'] = isset($submitted_data['members']) ? $submitted_data['members'] : array();
+		$data['submitted_contact'] = isset($submitted_data['contact_person']) ? $submitted_data['contact_person'] : array();
+		$data['submitted_session'] = isset($submitted_data['ajk_session']) ? $submitted_data['ajk_session'] : $submission['ajk_session'];
+
+		// Standard positions for dropdown
+		$data['standard_positions'] = array('主席', '署理主席', '副主席', '秘書', '副秘書', '財政', '副財政', '理事', '堂主', '顧問');
+
+		$this->load->view('admin/header', $data);
+		$this->load->view('admin/navigation', $data);
+		$this->load->view('admin/election_review_view', $data);
+		$this->load->view('admin/footer');
+	}
+
+	public function approve_election_submission($id) {
+		$this->load->model('election_model');
+		$this->load->helper('election_helper');
+		
+		$post = $this->input->post();
+		$members_post = isset($post['members']) ? $post['members'] : array();
+
+		$cleaned_members = array();
+		foreach ($members_post as $m) {
+			if (empty($m['nric']) && empty($m['name_chinese'])) continue;
+
+			$position = $m['position'];
+			if ($position === '其他') {
+				$position = isset($m['position_custom']) ? trim($m['position_custom']) : '理事';
+			}
+
+			// Apply translations and formatting again in case admin edited them
+			$cleaned_members[] = array(
+				'position'     => translate_simplified_to_traditional(trim($position)),
+				'name_chinese' => translate_simplified_to_traditional(trim($m['name_chinese'])),
+				'name_dharma'  => translate_simplified_to_traditional(trim($m['name_dharma'])),
+				'name_malay'   => strtoupper(trim($m['name_malay'])),
+				'nric'         => format_malaysian_nric(trim($m['nric'])),
+				'phone_mobile' => trim($m['phone_mobile']), // Remove formatting
+				'email'        => strtolower(trim($m['email'])),
+				'address'      => translate_simplified_to_traditional(trim($m['address']))
+			);
+		}
+
+		$contact_name = translate_simplified_to_traditional(trim($post['contact_name']));
+		$contact_phone = trim($post['contact_phone']);
+		
+		$data = array(
+			'ajk_session' => trim($post['ajk_session']),
+			'members' => $cleaned_members,
+			'contact_person' => array(
+				'name' => $contact_name,
+				'phone' => $contact_phone,
+				'email' => strtolower(trim($post['contact_email']))
+			)
+		);
+
+		$this->election_model->approve_submission($id, $data);
+		
+		$this->backend_model->log_activity($this->session->userdata('user_id'),'approve_election_submission: ID '.$id);
+
+		redirect('admin/chapter/election_submissions');
+	}
+
+    public function delete_election_submission($id) {
+        $this->load->model('election_model');
+        $this->election_model->delete_submission($id);
+        $this->backend_model->log_activity($this->session->userdata('user_id'),'delete_election_submission: ID '.$id);
+        
+        // If coming from chapter index, go back there. Otherwise go to election list.
+        if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'admin/chapter/election_submissions') === false) {
+            redirect('admin/chapter');
+        } else {
+            redirect('admin/chapter/election_submissions');
+        }
+    }
 
 }
 

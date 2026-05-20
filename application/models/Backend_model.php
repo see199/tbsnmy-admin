@@ -13,7 +13,7 @@ class Backend_model extends CI_Model {
 
 	public function get_all_chapter_url($allowed){
 		$this->db = $this->load->database('local', TRUE);
-		$query = "SELECT url_name, name_chinese FROM tbs_chapter WHERE url_name <> '' AND url_name IS NOT NULL";
+		$query = "SELECT chapter_id, url_name, name_chinese FROM tbs_chapter WHERE url_name <> '' AND url_name IS NOT NULL";
 		if($allowed[0] != 'all'){
 			$query .= ' AND url_name IN("'.join('","',$allowed).'")';
 		}

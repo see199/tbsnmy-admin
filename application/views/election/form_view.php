@@ -577,7 +577,7 @@ $(document).ready(function() {
     });
 
     // Auto format phone number on blur
-    $(document).on('blur', '.phone-input, #contact_phone', function() {
+    $(document).on('blur', '.phone-input', function() {
         var $input = $(this);
         var val = $input.val().trim();
         var digits = val.replace(/\D/g, '');

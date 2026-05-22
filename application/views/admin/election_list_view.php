@@ -3,6 +3,10 @@
 <!-- DataTables -->
 <script type="text/javascript" charset="utf8" src="<?= base_url('asset/js/jquery.dataTables.js'); ?>"></script>
 
+<!-- Select2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <div id="page-wrapper">
     <div class="row">
         <div class="col-lg-12">
@@ -20,7 +24,7 @@
                     <form action="<?= base_url('admin/chapter/generate_election_link'); ?>" method="post" class="form-inline">
                         <div class="form-group" style="margin-right: 15px;">
                             <label for="chapter_id" style="margin-right: 5px;">選擇道場：</label>
-                            <select name="chapter_id" id="chapter_id" class="form-control" required style="width: 250px;">
+                            <select name="chapter_id" id="chapter_id" class="form-control" required>
                                 <option value="">請選擇道場...</option>
                                 <?php foreach($all_chapters as $c): ?>
                                     <option value="<?= $c['chapter_id']; ?>"><?= $c['name_chinese']; ?> (<?= $c['url_name']; ?>)</option>
@@ -99,6 +103,12 @@
 <script>
 $(document).ready(function() {
     
+    $('#chapter_id').select2({
+        placeholder: "請選擇道場...",
+        allowClear: true,
+        width: '250px'
+    });
+
     $('#dataTables-example').dataTable({
         responsive: true,
         order: [[0, 'desc']]

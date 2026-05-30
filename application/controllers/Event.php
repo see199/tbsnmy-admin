@@ -65,8 +65,7 @@ class Event extends CI_Controller {
 
     public function ajax_get_chapter_by_country(){
         $country = $this->get_chinese_country($this->input->post('country'));
-
-
+        $lang = $this->input->post('lang');
 
         // Get Master by Country
         $this->db = $this->load->database('local', TRUE);
@@ -78,7 +77,12 @@ class Event extends CI_Controller {
 
         $options = array(array('value' => '', 'text' => ''));
         foreach($list as $chapter){
-            $options[] = array('value' => $chapter['chapter_id'], 'text' => $chapter['name']);
+            $name = ($lang == 'id' && isset($chapter['name_local']) && !empty($chapter['name_local'])) ? $chapter['name_local'] : $chapter['name'];
+            $options[] = array(
+                'value' => $chapter['chapter_id'], 
+                'text' => $name,
+                'name_cn' => $chapter['name']
+            );
         }
         echo json_encode($options);
     }

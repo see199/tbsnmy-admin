@@ -77,7 +77,11 @@ class Event extends CI_Controller {
 
         $options = array(array('value' => '', 'text' => ''));
         foreach($list as $chapter){
-            $name = ($lang == 'id' && isset($chapter['name_local']) && !empty($chapter['name_local'])) ? $chapter['name_local'] : $chapter['name'];
+            if ($lang == 'id' && isset($chapter['name_local']) && !empty($chapter['name_local']) && $chapter['name_local'] !== $chapter['name']) {
+                $name = $chapter['name'] . ' (' . $chapter['name_local'] . ')';
+            } else {
+                $name = $chapter['name'];
+            }
             $options[] = array(
                 'value' => $chapter['chapter_id'], 
                 'text' => $name,

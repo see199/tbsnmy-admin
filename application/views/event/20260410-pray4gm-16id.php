@@ -140,13 +140,7 @@ $event_list = array(
                 });
               }
             }else if(ui.item.option.parentElement.name == 'chapter_id'){
-                var nameCn = $(ui.item.option).attr('data-name-cn');
-                var nameLocal = ui.item.value;
-                if (nameCn && nameLocal && nameCn !== nameLocal) {
-                    $('#chapter_name').val(nameCn + ' (' + nameLocal + ')');
-                } else {
-                    $('#chapter_name').val(nameCn ? nameCn : nameLocal);
-                }
+                $('#chapter_name').val(ui.item.value);
 
                 $.ajax({
                     url: '<?= base_url();?>event/ajax_get_chapter_timezone/',

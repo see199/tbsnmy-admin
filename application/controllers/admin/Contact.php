@@ -258,9 +258,66 @@ class Contact extends CI_Controller {
 		}
 	}
 
+	public function check_ros_blacklist() {
+		// Verify session
+		if(!$this->session->userdata('access_token') || !$this->session->userdata('email')) {
+			echo json_encode(array('status' => 'ERROR', 'msg' => 'Unauthorized'));
+			return;
+		}
 
-	
+		$nric = $this->input->post('nric');
+		if (!$nric) {
+			echo json_encode(array('status' => 'ERROR', 'msg' => 'NRIC is empty'));
+			return;
+		}
 
+		// Remove dashes and spaces from NRIC
+		$nric = str_replace(array('-', ' '), '', $nric);
+		$nric = trim($nric);
+
+		$url = "https://a-erosesv2.ros.gov.my/society/blacklist-user/externalChecking?&identificationNo=" . urlencode($nric);
+
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+		curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+		
+		$response = curl_exec($ch);
+		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close($ch);
+
+		if ($response === false) {
+			echo json_encode(array('status' => 'ERROR', 'msg' => 'ROS Server Timeout or Unreachable'));
+			return;
+		}
+
+		// Update database if blacklisted
+		$responseData = json_decode($response, true);
+		if (isset($responseData['code']) && $responseData['code'] == 200 && !empty($responseData['data'])) {
+			$ros_data = json_encode($responseData['data'], JSON_UNESCAPED_UNICODE);
+			
+			$this->load->model('contact_model');
+			$db = $this->contact_model->db;
+			if (!$db->field_exists('ros_blacklist', 'tbs_contact')) {
+				$this->load->dbforge($db);
+				$fields = array(
+					'ros_blacklist' => array(
+						'type' => 'TEXT',
+						'null' => TRUE,
+					)
+				);
+				$this->dbforge->add_column('tbs_contact', $fields);
+			}
+			
+			$db->query("UPDATE tbs_contact SET ros_blacklist = ? WHERE REPLACE(REPLACE(nric, '-', ''), ' ', '') = ?", array($ros_data, $nric));
+		}
+
+		$this->output
+			->set_content_type('application/json')
+			->set_output($response);
+	}
 
 }
 

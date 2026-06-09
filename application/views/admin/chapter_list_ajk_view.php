@@ -46,7 +46,40 @@ $(document).ready(function() {
         if (currentNRIC.length === 14 && currentNRIC.includes('-')) { 
             validateAndFetchData(currentNRIC,this.id);
         }
+    });
+
+    $(document).on('click', '.check-ros-blacklist-btn', function() {
+        var btn = $(this);
+        var nric = btn.data('nric');
+        var container = btn.siblings('.ros-result-container');
         
+        btn.prop('disabled', true);
+        container.html('<i class="fa fa-spinner fa-spin"></i> 正在檢查...');
+        
+        $.ajax({
+            url: '<?= base_url('admin/contact/check_ros_blacklist'); ?>',
+            method: 'POST',
+            data: { nric: nric },
+            dataType: 'json',
+            success: function(response) {
+                btn.prop('disabled', false);
+                if (response.status === 'ERROR') {
+                    container.html('<span style="color:red"><i class="fa fa-exclamation-triangle"></i> ' + response.msg + '</span>');
+                } else if (response.code === 200 && response.data) {
+                    var offense = response.data.sectionOfOffense || '';
+                    var date = response.data.effectiveDate || '';
+                    container.html('<span style="color:red"><i class="fa fa-ban"></i> Blacklist ROS: ' + date + ', ' + offense + '</span>');
+                } else if (response.code === 204 || response.msgCode === 'SUCCESS_EMPTY') {
+                    container.html('<span style="color:green"><i class="fa fa-check-circle"></i> 沒有 blacklist</span>');
+                } else {
+                    container.html('<span style="color:orange"><i class="fa fa-question-circle"></i> 未知狀態</span>');
+                }
+            },
+            error: function() {
+                btn.prop('disabled', false);
+                container.html('<span style="color:red"><i class="fa fa-exclamation-triangle"></i> 請求失敗</span>');
+            }
+        });
     });
 
 });
@@ -120,7 +153,26 @@ $(document).ready(function() {
                                         <td><input type=text name="<?= "contact[{$cid}][{$v}]" ?>" value="<?= $c[$v];?>" class="form-control"/></td>
                                     <?php endif; ?>
                                     <?php endforeach; ?>
-                                    <td><a href="<?= base_url("admin/contact/details/".$c['contact_id']); ?>">View</a></td>
+                                     <td>
+                                         <a href="<?= base_url("admin/contact/details/".$c['contact_id']); ?>">View</a>
+                                         <?php if (!empty($c['nric'])): 
+                                             $nric_clean = str_replace(['-', ' '], '', $c['nric']);
+                                         ?>
+                                             <a href="javascript:void(0);" class="check-ros-blacklist-btn btn btn-xs btn-warning" data-nric="<?= html_escape($c['nric']); ?>" style="margin-left: 5px;" title="檢查 ROS 黑名單">
+                                                 <i class="fa fa-shield"></i>
+                                             </a>
+                                             <div class="ros-result-container" style="font-weight: bold; font-size: 11px; margin-top: 3px;">
+                                                 <?php 
+                                                 if (isset($c['ros_blacklist']) && !empty($c['ros_blacklist'])) {
+                                                     $blacklist_data = json_decode($c['ros_blacklist'], true);
+                                                     if (isset($blacklist_data['effectiveDate']) && isset($blacklist_data['sectionOfOffense'])) {
+                                                         echo '<span style="color:red"><i class="fa fa-ban"></i> Blacklist ROS: ' . html_escape($blacklist_data['effectiveDate']) . ', ' . html_escape($blacklist_data['sectionOfOffense']) . '</span>';
+                                                     }
+                                                 }
+                                                 ?>
+                                             </div>
+                                         <?php endif; ?>
+                                     </td>
                                     <td><?= form_checkbox("contact[{$cid}][delete]",1); ?></td>
                                 </tr>
                             <?php endforeach;?></tbody>

@@ -28,6 +28,40 @@ function confirm_delete(me){
                 }
             }
         });
+
+        $(document).on('click', '.check-ros-blacklist-btn', function() {
+            var btn = $(this);
+            var nric = btn.data('nric');
+            var container = btn.siblings('.ros-result-container');
+            
+            btn.prop('disabled', true);
+            container.html('<i class="fa fa-spinner fa-spin"></i> 正在檢查...');
+            
+            $.ajax({
+                url: '<?= base_url('admin/contact/check_ros_blacklist'); ?>',
+                method: 'POST',
+                data: { nric: nric },
+                dataType: 'json',
+                success: function(response) {
+                    btn.prop('disabled', false);
+                    if (response.status === 'ERROR') {
+                        container.html('<span style="color:red"><i class="fa fa-exclamation-triangle"></i> ' + response.msg + '</span>');
+                    } else if (response.code === 200 && response.data) {
+                        var offense = response.data.sectionOfOffense || '';
+                        var date = response.data.effectiveDate || '';
+                        container.html('<span style="color:red"><i class="fa fa-ban"></i> Blacklist ROS: ' + date + ', ' + offense + '</span>');
+                    } else if (response.code === 204 || response.msgCode === 'SUCCESS_EMPTY') {
+                        container.html('<span style="color:green"><i class="fa fa-check-circle"></i> 沒有 blacklist</span>');
+                    } else {
+                        container.html('<span style="color:orange"><i class="fa fa-question-circle"></i> 未知狀態</span>');
+                    }
+                },
+                error: function() {
+                    btn.prop('disabled', false);
+                    container.html('<span style="color:red"><i class="fa fa-exclamation-triangle"></i> 請求失敗</span>');
+                }
+            });
+        });
     });
 </script>
 <style>
@@ -88,7 +122,29 @@ function confirm_delete(me){
                         <div class='row row-data col-xs-10 col-xs-offset-1'>
                             <div class='col-xs-3 strong_txt'><?= lang('col_'.$col_name);?>:</div>
                             <div class='col-xs-9'>
-                                <div class='display'><?= $contact[$col_name]; ?></div>
+                                <div class='display'>
+                                    <?= $contact[$col_name]; ?>
+                                    <?php if ($col_name == 'nric' && !empty($contact[$col_name])): 
+                                        $nric_clean = str_replace(['-', ' '], '', $contact[$col_name]);
+                                    ?>
+                                        <a href="javascript:void(0);" class="check-ros-blacklist-btn btn btn-xs btn-warning" data-nric="<?= html_escape($contact[$col_name]); ?>" style="margin-left: 10px;" title="檢查 ROS 黑名單">
+                                            <i class="fa fa-shield"></i> 檢查黑名單
+                                        </a>
+                                        <a href="https://a-erosesv2.ros.gov.my/society/blacklist-user/externalChecking?&identificationNo=<?= $nric_clean; ?>" target="_blank" class="btn btn-xs btn-default" style="margin-left: 5px;" title="前往 ROS 網站">
+                                            <i class="fa fa-external-link"></i> ROS
+                                        </a>
+                                        <span class="ros-result-container" style="margin-left: 10px; font-weight: bold;">
+                                             <?php 
+                                             if (isset($contact['ros_blacklist']) && !empty($contact['ros_blacklist'])) {
+                                                 $blacklist_data = json_decode($contact['ros_blacklist'], true);
+                                                 if (isset($blacklist_data['effectiveDate']) && isset($blacklist_data['sectionOfOffense'])) {
+                                                     echo '<span style="color:red"><i class="fa fa-ban"></i> Blacklist ROS: ' . html_escape($blacklist_data['effectiveDate']) . ', ' . html_escape($blacklist_data['sectionOfOffense']) . '</span>';
+                                                 }
+                                             }
+                                             ?>
+                                         </span>
+                                    <?php endif; ?>
+                                </div>
                                 <div class='form form-group'><?= $input_box; ?></div>
                             </div>
                         </div>

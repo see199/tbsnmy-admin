@@ -113,11 +113,3 @@ class Email extends CI_Controller {
 }
 
 ?>
-
-
-	
-
-
-}
-
-?>

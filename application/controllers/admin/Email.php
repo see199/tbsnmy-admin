@@ -53,9 +53,66 @@ class Email extends CI_Controller {
 		$this->load->view('admin/navigation', $data);
 		$this->load->view('admin/email/member_view',$data);
 		$this->load->view('admin/footer');
-
-
 	}
+
+	public function export_member_excel(){
+		$members = $this->backend_model->get_active_members();
+
+		$spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+		$sheet = $spreadsheet->getActiveSheet();
+
+		// Set column header titles
+		$headers = [
+			'A1' => 'No. 會員編號 / ID',
+			'B1' => 'Nama',
+			'C1' => '姓名',
+			'D1' => '法號',
+			'E1' => 'NRIC',
+			'F1' => 'Contact'
+		];
+
+		foreach ($headers as $cell => $val) {
+			$sheet->setCellValue($cell, $val);
+		}
+
+		// Style header row
+		$sheet->getStyle('A1:F1')->getFont()->setBold(true);
+		$sheet->getStyle('A1:F1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
+		$sheet->getStyle('A1:F1')->getFill()->getStartColor()->setARGB('D9EDF7');
+
+		$rowNum = 2;
+		foreach ($members as $m) {
+			$sheet->setCellValue("A{$rowNum}", $m['membership_id']);
+			$sheet->setCellValue("B{$rowNum}", $m['name_malay']);
+			$sheet->setCellValue("C{$rowNum}", $m['name_chinese']);
+			$sheet->setCellValue("D{$rowNum}", $m['name_dharma']);
+			$sheet->setCellValueExplicit("E{$rowNum}", (string)$m['nric'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+			$sheet->setCellValueExplicit("F{$rowNum}", (string)$m['phone_mobile'], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+			$rowNum++;
+		}
+
+		foreach (range('A', 'F') as $col) {
+			$sheet->getColumnDimension($col)->setAutoSize(true);
+		}
+
+		if (ob_get_level() > 0) {
+			ob_end_clean();
+		}
+
+		$filename = 'Active_Members_' . date('Ymd') . '.xlsx';
+
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header('Content-Disposition: attachment;filename="' . $filename . '"');
+		header('Cache-Control: max-age=0');
+
+		$writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+		$writer->save('php://output');
+		exit;
+	}
+
+}
+
+?>
 
 
 	

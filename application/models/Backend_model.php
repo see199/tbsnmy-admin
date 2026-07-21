@@ -71,6 +71,18 @@ class Backend_model extends CI_Model {
 		return ($res->num_rows() > 0) ? $res->result_array() : array();
 	}
 
+	public function get_active_members(){
+		$this->db = $this->load->database('local', TRUE);
+
+		$this->db->select('m.membership_id, c.name_malay, c.name_chinese, c.name_dharma, c.nric, c.phone_mobile')
+				->where('m.status','A')
+				->from('tbs_member m')
+				->join('tbs_contact c','c.contact_id = m.member_id', 'left')
+				->order_by('m.membership_id');
+		$res = $this->db->get();
+		return ($res->num_rows() > 0) ? $res->result_array() : array();
+	}
+
 	public function check_login($email){
 		$this->db = $this->load->database('local', TRUE);
 

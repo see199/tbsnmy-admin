@@ -3,6 +3,11 @@
         <div class="box">
             <div class="col-lg-8 col-lg-offset-2 text-center">
                 <h1>馬密總個人會員 Email List</h1>
+                <p style="margin-top: 15px;">
+                    <a href="<?= base_url('admin/email/export_member_excel'); ?>" class="btn btn-success">
+                        <i class="fa fa-file-excel-o"></i> Export XLS (Active Members)
+                    </a>
+                </p>
             </div>
         </div>
     </div>

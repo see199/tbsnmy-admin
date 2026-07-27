@@ -450,7 +450,7 @@ function check_tracking(tracking_no){
                             <!-- Highlight if Payment not Fully Paid and Gift Sent -->
                             <?php if(!$c['package'][$year]['payment_done'] && !$c['package'][$year]['fullpayment'] && $c['package'][$year]['gift_taken']): ?><tr class='danger'>
                             <!-- Highlight if Payment Fully Paid and Gift not yet Sent -->
-                            <?php elseif($c['package'][$year]['payment_done'] && $c['package'][$year]['fullpayment'] && !$c['package'][$year]['gift_taken']): ?><tr class='success'>
+                            <?php elseif($c['package'][$year]['payment_done'] && !$c['package'][$year]['gift_taken']): ?><tr class='success'>
                             <?php else: ?><tr>
                             <?php endif; ?>
                                 <td><textarea style="display:none;"><?= json_encode($c); ?></textarea>

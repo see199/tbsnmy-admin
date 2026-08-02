@@ -193,6 +193,14 @@ class Event extends CI_Controller {
         // Chapter's Country Multi-language
         $event_reg['chapter_country'] = (isset($event_reg['chapter_country'])) ? $this->get_chinese_country($event_reg['chapter_country']) : "";
 
+        // Optional fields handling
+        if (isset($event_reg['join_count']) && $event_reg['join_count'] === '') {
+            $event_reg['join_count'] = NULL;
+        }
+        if (isset($event_reg['join_location']) && $event_reg['join_location'] === '') {
+            $event_reg['join_location'] = NULL;
+        }
+
         // Check duplicates for Unique
         $this->db = $this->load->database('local', TRUE);
         $q = $this->db;

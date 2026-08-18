@@ -87,7 +87,7 @@ class Wenxuan_model extends CI_Model {
 		}
 
 		// Get Subscriber
-		$this->db->select('s.*, y.wenxuan_id, y.package_id, y.fullpayment, y.status, y.gift_taken, y.md5_id, y.start_date, y.end_date, y.remarks, p.year, y.create_date, y.register_blessing, y.pos_tracking, y.self_pickup, y.source, p.parcel_content, p.parcel_value, p.weight_in_kg')
+		$this->db->select('y.id as sub_year_id, s.*, y.wenxuan_id, y.package_id, y.fullpayment, y.status, y.gift_taken, y.md5_id, y.start_date, y.end_date, y.remarks, p.year, y.create_date, y.register_blessing, y.pos_tracking, y.self_pickup, y.source, p.parcel_content, p.parcel_value, p.weight_in_kg')
 			->from('tbs_wenxuan_subscriber_year y')
 			->join('tbs_wenxuan_subscriber_package p','y.package_id = p.package_id', 'left')
 			->join('tbs_wenxuan_subscriber s','s.wenxuan_id = y.wenxuan_id')
@@ -97,8 +97,9 @@ class Wenxuan_model extends CI_Model {
 		$i = $this->db->get();
 		$res = array();
 		foreach($i->result_array() as $r){
-			$res[$r['wenxuan_id']] = $res2[$r['wenxuan_id']];
-			$res[$r['wenxuan_id']]['package'][$r['year']] = $r;
+			$key = $r['wenxuan_id'] . '_' . $r['sub_year_id'];
+			$res[$key] = $res2[$r['wenxuan_id']];
+			$res[$key]['package'][$r['year']] = $r;
 		}
 
 		return $res;
@@ -203,5 +204,17 @@ class Wenxuan_model extends CI_Model {
 		$this->db->where('wenxuan_id',$wenxuan_id)
 			->where('package_id',$package_id)
 			->update('tbs_wenxuan_subscriber_year',array('pos_tracking' => $pos_tracking));
+	}
+
+	public function update_tracking_by_id($sub_id, $pos_tracking){
+		$this->db = $this->load->database('local', TRUE);
+		$this->db->where('id', $sub_id)
+			->update('tbs_wenxuan_subscriber_year', array('pos_tracking' => $pos_tracking));
+	}
+
+	public function update_package_year_by_id($sub_id, $data){
+		$this->db = $this->load->database('local', TRUE);
+		$this->db->where('id', $sub_id)
+			->update('tbs_wenxuan_subscriber_year', $data);
 	}
 }

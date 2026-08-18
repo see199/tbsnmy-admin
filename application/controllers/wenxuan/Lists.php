@@ -76,7 +76,7 @@ class Lists extends CI_Controller {
 
 		$list = $this->wenxuan_model->get_subscriber_list($year);
 		//echo'<pre>';print_r($list);
-		foreach($list as $wenxuan_id => $subscriber){
+		foreach($list as $sub_key => $subscriber){
 			$package_id   = $subscriber['package'][$year]['package_id'];
 			$package_date = $subscriber['package'][$year]['create_date'];
 			@$total[$package_id] += 1;
@@ -84,8 +84,8 @@ class Lists extends CI_Controller {
 			//$payment_done_temp = ($subscriber['package'][$year]['status'] + $subscriber['package'][$year]['fullpayment'] > 0) ? 1 : 0;
 			$payment_done_temp = $subscriber['package'][$year]['status'];
 			$payment_done += $payment_done_temp;
-			$list[$wenxuan_id]['package'][$year]['payment_done'] = $payment_done_temp;
-			$sorting[$package_date][$wenxuan_id] = $wenxuan_id;
+			$list[$sub_key]['package'][$year]['payment_done'] = $payment_done_temp;
+			$sorting[$package_date][$sub_key] = $sub_key;
 
 			@$stats['raw_data'][substr($package_date, 0, 7)][$package_id] += 1;
 			@$stats['packages'][$package_id] = $package_id;
@@ -117,8 +117,8 @@ class Lists extends CI_Controller {
 
 		//Sort Users based on package create date instead of user create date
 		foreach($sorting as $create_date => $subscribers){
-			foreach($subscribers as $wenxuan_id => $s){
-				$sorted_list[$wenxuan_id] = $list[$wenxuan_id];
+			foreach($subscribers as $sub_key => $s){
+				$sorted_list[$sub_key] = $list[$sub_key];
 			}
 		}
 
@@ -129,7 +129,7 @@ class Lists extends CI_Controller {
 		$data['gift_sent']    = $gift_sent;
 		$data['payment_done'] = $payment_done;
 		$data['package']      = $package;
-		$data['form_url']     = $this->config->item('url_wenxuan_form').'/viewform/';
+		$data['form_url']     = base_url('wenxuan/viewform/');
 
 		$this->load->view('wenxuan/header', $data);
 		$this->load->view('wenxuan/navigation', $data);
@@ -160,24 +160,28 @@ class Lists extends CI_Controller {
 	public function ajax_contact_update(){
 		$post_data = $this->input->post();
 		$subscriber_data['update_by'] = $this->session->userdata('email');
+		$package_data = array();
 
 		foreach($post_data as $k => $v){
 			if (strpos($k,"package_") === FALSE) {
 				$subscriber_data[$k] = $v;
-			}else{
-				list(,$package_id,$new_k) = explode("_", $k,3);
+			} else {
+				list(,$sub_id,$new_k) = explode("_", $k, 3);
 
 				if($v == 'true') $v = 1;
 				elseif($v == 'false') $v = 0;
-				$package_data[$package_id][$new_k] = $v;
+				$package_data[$sub_id][$new_k] = $v;
 			}
 		}
 		$this->wenxuan_model->replace_subscriber($subscriber_data,$post_data['wenxuan_id'],'contact');
 
-		if($post_data['wenxuan_id']){
-			foreach($package_data as $pid => $new_v){
-				$new_v['md5_id'] = md5($post_data['wenxuan_id'].$new_v['package_id']);
-				if($new_v['package_id']) $this->wenxuan_model->replace_package_year($new_v,$post_data['wenxuan_id']);
+		if (!empty($package_data)) {
+			foreach($package_data as $sub_id => $new_v){
+				if (is_numeric($sub_id) && $sub_id > 0) {
+					$this->wenxuan_model->update_package_year_by_id($sub_id, $new_v);
+				} else if(!empty($new_v['package_id'])) {
+					$this->wenxuan_model->replace_package_year($new_v, $post_data['wenxuan_id']);
+				}
 			}
 		}
 		echo 1;
@@ -190,8 +194,8 @@ class Lists extends CI_Controller {
 			'sp'      => isset($post_data['package']) ? $post_data['package'] : array(),
 			'package' => $this->wenxuan_model->get_package(),
 			'wenxuan_contact' => $post_data['wenxuan_contact'],
-			'receipt_url' => $this->config->item('url_wenxuan_form').'	/receipt/',
-			'form_url' => $this->config->item('url_wenxuan_form').'	/viewform/',
+			'receipt_url' => base_url('wenxuan/receipt/'),
+			'form_url' => base_url('wenxuan/viewform/'),
 		), TRUE);
 		echo json_encode(array('html' => $html));
 	}
@@ -204,7 +208,12 @@ class Lists extends CI_Controller {
 
 	public function ajax_tracking_update(){
 		$post_data = $this->input->post();
-		$this->wenxuan_model->update_tracking($post_data['wenxuan_id'],$post_data['package_id'],$post_data['pos_tracking']);
+		$sub_id = !empty($post_data['sub_year_id']) ? $post_data['sub_year_id'] : (!empty($post_data['id']) ? $post_data['id'] : NULL);
+		if ($sub_id) {
+			$this->wenxuan_model->update_tracking_by_id($sub_id, $post_data['pos_tracking']);
+		} else {
+			$this->wenxuan_model->update_tracking($post_data['wenxuan_id'],$post_data['package_id'],$post_data['pos_tracking']);
+		}
 		echo 1;
 	}
 

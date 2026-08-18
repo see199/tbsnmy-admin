@@ -260,14 +260,15 @@ function delete_data(){
 
 }
 
-function update_tracking(wenxuan_id, package_id, pos_tracking){
+function update_tracking(wenxuan_id, package_id, pos_tracking, sub_year_id){
     $.ajax({
         type:"POST",
         url: "<?= base_url('wenxuan/lists/ajax_tracking_update'); ?>",
         data:{
             wenxuan_id : wenxuan_id,
             package_id : package_id,
-            pos_tracking : pos_tracking
+            pos_tracking : pos_tracking,
+            sub_year_id : sub_year_id
         }
     }).done(function(data) {
         console.log("Tracking updated: " + pos_tracking);
@@ -473,7 +474,7 @@ function check_tracking(tracking_no){
                                     <div style="display: flex; align-items: center; width: 150px;">
                                         <input class="form-control" style="flex: 1;" 
                                                onfocus="this.select()" 
-                                               onblur="update_tracking(<?=$c['wenxuan_id'];?>, <?=$c['package'][$year]['package_id'];?>, this.value)" 
+                                               onblur="update_tracking(<?=$c['wenxuan_id'];?>, <?=$c['package'][$year]['package_id'];?>, this.value, <?=$c['package'][$year]['sub_year_id'] ?? $c['package'][$year]['id'] ?? 'null';?>)" 
                                                value="<?= $c['package'][$year]['pos_tracking'];?>" 
                                                placeholder="Tracking #"/>
                                         <?php if($c['package'][$year]['pos_tracking'] && $c['package'][$year]['pos_tracking'] != "自取"): ?>

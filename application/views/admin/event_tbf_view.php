@@ -1,4 +1,8 @@
 <script>
+    var csrf = {
+        name: '<?= $this->security->get_csrf_token_name(); ?>',
+        hash: '<?= $this->security->get_csrf_hash(); ?>'
+    };
 function load_box(me){
 
     if(me == 'new'){
@@ -52,6 +56,7 @@ function post_data(refresh_page){
         date_end    : $('#date_end').val(),
         event_view  : $('#event_view').val(),
         stats_view  : $('#stats_view').val(),
+        [csrf.name]: csrf.hash
     };
     
     $.ajax({
@@ -73,7 +78,7 @@ function delete_data(){
     $.ajax({
         type:"POST",
         url: "<?= base_url('admin/event/ajax_delete_tbf'); ?>",
-        data:{event_id : $('#event_id').val()}
+        data:{event_id : $('#event_id').val(),[csrf.name]: csrf.hash}
     }).done(function(data) {
         var res = jQuery.parseJSON(data);
         setTimeout(function(){ location.reload();},200);
@@ -88,6 +93,7 @@ function load_view(view_name_id){
     $.ajax({
         type:"POST",
         url: "<?= base_url('admin/event/ajax_load_view'); ?>/"+view_name,
+        data:{[csrf.name]: csrf.hash}
     }).done(function(data) {
         var res = jQuery.parseJSON(data);
         $('#'+view_name_id).val(res.content).attr("rows", 5);
@@ -99,6 +105,7 @@ function save_view(view_name_id){
     var data = {
         view_name : view_name,
         content   : $('#'+view_name_id).val(),
+        [csrf.name]: csrf.hash 
     };
 
     if(data.content == ''){

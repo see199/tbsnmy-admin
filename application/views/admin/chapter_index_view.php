@@ -18,6 +18,12 @@
 <link rel="stylesheet" href="<?= base_url(); ?>asset/css/colpick.css" type="text/css"/>
 <script>
 $(document).ready(function() {
+
+    var csrf = {
+        name: '<?= $this->security->get_csrf_token_name(); ?>',
+        hash: '<?= $this->security->get_csrf_hash(); ?>'
+    };
+
     $('#picker').colpick({
         layout:'hex',
         submit:0,
@@ -42,7 +48,7 @@ $(document).ready(function() {
         $.ajax({
             url: '<?= base_url('admin/contact/check_ros_blacklist'); ?>',
             method: 'POST',
-            data: { nric: nric },
+            data: { nric: nric, [csrf.name]: csrf.hash  },
             dataType: 'json',
             success: function(response) {
                 btn.prop('disabled', false);

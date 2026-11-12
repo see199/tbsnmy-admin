@@ -8,6 +8,11 @@ $colstyle= ['120px','','120px','150px','','150',''];
 <script>
 $(document).ready(function() {
 
+    var csrf = {
+        name: '<?= $this->security->get_csrf_token_name(); ?>',
+        hash: '<?= $this->security->get_csrf_hash(); ?>'
+    };
+
     // Regular expression to match Malaysian NRIC format: xxxxxx-xx-xxxx
     var nricRegex = /^\d{6}-\d{2}-\d{4}$/;
 
@@ -17,7 +22,7 @@ $(document).ready(function() {
             $.ajax({
                 url: '<?= base_url('admin/chapter/ajax_get_contact'); ?>',
                 method: 'POST',
-                data: { nric: nricValue },
+                data: { nric: nricValue, [csrf.name]: csrf.hash },
                 success: function(response) {
                     var contact = JSON.parse(response);
                     var newId = newIdName.split(/[^0-9]/g).filter(part => part !== '');
@@ -59,7 +64,7 @@ $(document).ready(function() {
         $.ajax({
             url: '<?= base_url('admin/contact/check_ros_blacklist'); ?>',
             method: 'POST',
-            data: { nric: nric },
+            data: { nric: nric, [csrf.name]: csrf.hash },
             dataType: 'json',
             success: function(response) {
                 btn.prop('disabled', false);

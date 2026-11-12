@@ -7,6 +7,11 @@
 <script type="text/javascript" language="javascript" class="init">
 
 $(document).ready(function() {
+    var csrf = {
+        name: '<?= $this->security->get_csrf_token_name(); ?>',
+        hash: '<?= $this->security->get_csrf_hash(); ?>'
+    };
+
     var user_id = '<?= $user_id; ?>';
     select_box = 'select[name="example_length"]';
 
@@ -23,6 +28,7 @@ $(document).ready(function() {
                 "type": "POST",
                 "data": {
                     "user_id": user_id,
+                    [csrf.name]: csrf.hash
                 },
                 "dataType": "json",
             },

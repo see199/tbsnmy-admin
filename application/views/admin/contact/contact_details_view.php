@@ -20,6 +20,10 @@ function confirm_delete(me){
     $( document ).ready(function() {
         $( "#country" ).combobox();
         $( ".chapter_list" ).combobox();
+        var csrf = {
+            name: '<?= $this->security->get_csrf_token_name(); ?>',
+            hash: '<?= $this->security->get_csrf_hash(); ?>'
+        };
 
         $(document).on('keydown', function(e) {
             if (e.key === 'e' || e.key === 'E') {
@@ -40,7 +44,7 @@ function confirm_delete(me){
             $.ajax({
                 url: '<?= base_url('admin/contact/check_ros_blacklist'); ?>',
                 method: 'POST',
-                data: { nric: nric },
+                data: { nric: nric, [csrf.name]: csrf.hash  },
                 dataType: 'json',
                 success: function(response) {
                     btn.prop('disabled', false);

@@ -1,4 +1,8 @@
 <script>
+    var csrf = {
+        name: '<?= $this->security->get_csrf_token_name(); ?>',
+        hash: '<?= $this->security->get_csrf_hash(); ?>'
+    };
 function load_box(id){
 
     $('#myModalLabel').html('更新保險資料');
@@ -8,7 +12,7 @@ function load_box(id){
     $.ajax({
         type:"POST",
         url: "<?= base_url('admin/insurance/ajax_get_view'); ?>/"+id,
-        data:{}
+        data:{[csrf.name]: csrf.hash}
     }).done(function(data) {
         var res = jQuery.parseJSON(data);
         $('#myModalBody').html(res.html);
@@ -27,7 +31,8 @@ function post_data(){
         entry_age      : $('#entry_age').val(),
         date_issue     : $('#date_issue').val(),
         date_effective : $('#date_effective').val(),
-        date_expiry    : $('#date_expiry').val()
+        date_expiry    : $('#date_expiry').val(),
+        [csrf.name]: csrf.hash 
     };
 
     $('#myModalBody').html('<div class="text-center"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><span class="sr-only"><br />Saving...</span></div>');

@@ -21,6 +21,7 @@ $(document).ready(function() {
             "type": "POST",
             "dataType": "json",
             "data": function ( d ) {
+                d['<?= $this->security->get_csrf_token_name(); ?>'] = '<?= $this->security->get_csrf_hash(); ?>';
                 if($('#f_exam_batch').length) d.f_exam_batch = $('#f_exam_batch').val();
                 if($('#f_status').length) d.f_status = $('#f_status').val();
                 if($('#f_member').length) d.f_member = $('#f_member').val();

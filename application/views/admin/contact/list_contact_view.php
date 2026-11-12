@@ -21,6 +21,9 @@ $(document).ready(function() {
                 "url": "list",
                 "type": "POST",
                 "dataType": "json",
+                "data": function ( d ) {
+                    d['<?= $this->security->get_csrf_token_name(); ?>'] = '<?= $this->security->get_csrf_hash(); ?>';
+                }
             },
             "columns": [
                 { "data": "<?= $list_column; ?>" }

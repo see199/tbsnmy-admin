@@ -22,6 +22,7 @@
                 </div>
                 <div class="panel-body">
                     <form action="<?= base_url('admin/chapter/generate_election_link'); ?>" method="post" class="form-inline">
+                        <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
                         <div class="form-group" style="margin-right: 15px;">
                             <label for="chapter_id" style="margin-right: 5px;">選擇道場：</label>
                             <select name="chapter_id" id="chapter_id" class="form-control" required>

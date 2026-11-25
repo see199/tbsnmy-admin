@@ -16,6 +16,7 @@
     <?php endif; ?>
 
     <form action="<?= base_url('admin/chapter/approve_election_submission/'.$submission['id']); ?>" method="post">
+        <input type="hidden" name="<?= $this->security->get_csrf_token_name(); ?>" value="<?= $this->security->get_csrf_hash(); ?>">
         
         <!-- 任期 -->
         <div class="row">
